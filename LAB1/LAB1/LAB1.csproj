@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>aspnet-LAB1-7718D38B-719A-4B22-9C11-B334FFEF75CE</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
+    </ItemGroup>
+
+</Project>
