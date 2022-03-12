@@ -1,5 +1,5 @@
 namespace LAB1.Entities.UserCategories;
 
-public class Administrator
+public class Administrator : User
 {
 }
