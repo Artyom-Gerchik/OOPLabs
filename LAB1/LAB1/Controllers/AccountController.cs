@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using LAB1.Data;
-using LAB1.Entities;
 using LAB1.Models;
 using LAB1.Entities.UserCategories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,21 +21,16 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public IActionResult Profile()
     {
         return View(new RoleModel() { Roles = _context.Roles.ToList() });
     }
 
-    [HttpGet]
-    public IActionResult Register()
-    {
-        return View();
-    }
-
     [HttpPost]
     public async Task<IActionResult> Profile(RoleModel model)
     {
-        User user = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name));
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name));
 
         if (model.IdOfSelectedRole != null)
         {
@@ -51,10 +46,10 @@ public class AccountController : Controller
         return RedirectToAction("Profile", "Account");
     }
 
-    public async Task<IActionResult> Logout()
+    [HttpGet]
+    public IActionResult Register()
     {
-        await HttpContext.SignOutAsync();
-        return RedirectToAction("Register", "Account");
+        return View();
     }
 
     [HttpPost]
@@ -63,13 +58,10 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            User user = (await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email))!;
+            var user = (await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email))!;
             if (user == null)
             {
-                if (model.PhoneNumber.Length < 6)
-                {
-                    return RedirectToAction("Register", "Account");
-                }
+                if (model.PhoneNumber.Length < 6) return RedirectToAction("Register", "Account");
 
                 user = new User
                 {
@@ -78,15 +70,12 @@ public class AccountController : Controller
                     Name = model.Name,
                     Surname = model.Surname,
                     Patronymic = model.Patronymic,
-                    PhoneNumber = model.PhoneNumber,
+                    PhoneNumber = model.PhoneNumber
                     //IdentificationNumber = model.IdentificationNumber,
                     //SeriesAndPassportNumber = model.SeriesAndPassportNumber
                 };
-                Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "user");
-                if (userRole != null)
-                {
-                    user.Role = userRole;
-                }
+                var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "user");
+                if (userRole != null) user.Role = userRole;
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
@@ -96,7 +85,9 @@ public class AccountController : Controller
                 return RedirectToAction("Index", "Home");
             }
             else
+            {
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+            }
         }
 
         return View(model);
@@ -114,14 +105,14 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            User user = await _context.Users
+            var user = await _context.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
             if (user != null)
             {
                 await Authenticate(user);
-
-                return RedirectToAction("Index", "Home");
+                //await HttpContext.SignInAsync();
+                return RedirectToAction("Profile", "Account");
             }
 
             ModelState.AddModelError("", "Некорректные логин и(или) пароль");
@@ -130,14 +121,23 @@ public class AccountController : Controller
         return View(model);
     }
 
+    [Authorize]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignOutAsync();
+        HttpContext.Response.Cookies.Delete(".AspNetCore.Cookies");
+        return RedirectToAction("Index", "Home");
+    }
+
     private async Task Authenticate(User user)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-            new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name)
+            new(ClaimsIdentity.DefaultNameClaimType, user.Email),
+            new(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name)
         };
-        ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
+        var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
             ClaimsIdentity.DefaultRoleClaimType);
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
     }
