@@ -1,26 +1,40 @@
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<IdentityUser> _signInManager
+@inject UserManager<IdentityUser> _userManager
 
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+    @if (_signInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-        </li>
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-            </form>
-        </li>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Account"
+                   asp-action="Profile">
+                    Profile
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Account"
+                   asp-action="Logout">
+                    Logout
+                </a>
+            </li>
+        </ul>
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-        </li>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Account"
+                   asp-action="Login">
+                    Login
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Account"
+                   asp-action="Register">
+                    Register
+                </a>
+            </li>
+        </ul>
     }
 </ul>

@@ -41,4 +41,18 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+// app.UseCookieAuthentication(options =>
+// {
+//     options.AutomaticAuthenticate = true;
+//     options.AutomaticChallenge = true;
+// });
+
+// await SetupData(app);
 app.Run();
+
+// static async Task SetupData(WebApplication app)
+// {
+//     using var scope = app.Services.CreateScope();
+//     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//     await DbInitializer.SeedData(context);
+// }
