@@ -4,11 +4,11 @@ namespace LAB1.Models;
 
 public class LoginModel
 {
-    [Required(ErrorMessage = "Не указан Email")]
+    [Required(ErrorMessage = "Email?")]
     [EmailAddress]
     public string Email { get; set; }
 
-    [Required(ErrorMessage = "Не указан пароль")]
+    [Required(ErrorMessage = "Password?")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
 }
