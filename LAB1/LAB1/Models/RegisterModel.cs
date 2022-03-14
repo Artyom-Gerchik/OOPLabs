@@ -22,12 +22,6 @@ public class RegisterModel : IValidatableObject
     [Display(Name = "Patronymic")]
     public string Patronymic { get; set; }
 
-    [Display(Name = "Passport Number And Series")]
-    public string PassportNumberAndSeries { get; set; }
-
-    [Display(Name = "Identification Number")]
-    public string IdentificationNumber { get; set; }
-
     [Required]
     [Display(Name = "Phone Number")]
     [DataType(DataType.PhoneNumber)]
@@ -71,20 +65,7 @@ public class RegisterModel : IValidatableObject
         {
             errors.Add(new ValidationResult("Second Name can't contain digits"));
         }
-
-        if (this.IdentificationNumber[..6].Any(x => char.IsLetter(x)) ||
-            char.IsDigit(this.IdentificationNumber[7]) ||
-            this.IdentificationNumber[^2..^1].Any(x => char.IsDigit(x)))
-        {
-            errors.Add(new ValidationResult("Passport Identification number is not correct"));
-        }
-
-        if (this.PassportNumberAndSeries.Length != 9)
-        {
-            errors.Add(new ValidationResult("Passport series and number are not correct"));
-        }
-
-
+        
         return errors;
     }
 }

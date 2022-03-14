@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using LAB1.Data;
+using LAB1.Entities;
 using LAB1.Models;
 using LAB1.Entities.UserCategories;
 using Microsoft.AspNetCore.Authentication;
@@ -24,7 +25,24 @@ public class AccountController : Controller
     [Authorize]
     public IActionResult Profile()
     {
-        return View(new RoleModel() { Roles = _context.Roles.ToList() });
+        User user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+        Client client = _context.Clients.FirstOrDefault(c => c.Email.Equals(User.Identity.Name));
+
+        if (user.RoleId == 3) // 3 is client
+        {
+            if (client.IdentificationNumber != null)
+            {
+                return RedirectToAction("Profile", "Client");
+            }
+
+            return RedirectToAction("GetAdditionalInfo", "Client");
+        }
+
+        return View(new RoleModel()
+        {
+            Roles = _context.Roles.ToList(),
+            User = user
+        });
     }
 
     [HttpPost]
@@ -71,8 +89,6 @@ public class AccountController : Controller
                     Surname = model.Surname,
                     Patronymic = model.Patronymic,
                     PhoneNumber = model.PhoneNumber
-                    //IdentificationNumber = model.IdentificationNumber,
-                    //SeriesAndPassportNumber = model.SeriesAndPassportNumber
                 };
                 var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "user");
                 if (userRole != null) user.Role = userRole;
@@ -108,10 +124,16 @@ public class AccountController : Controller
             var user = await _context.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+
             if (user != null)
             {
+                if (user.RoleId == 3)
+                {
+                    await Authenticate(user);
+                    return RedirectToAction("Profile", "Client");
+                }
+
                 await Authenticate(user);
-                //await HttpContext.SignInAsync();
                 return RedirectToAction("Profile", "Account");
             }
 

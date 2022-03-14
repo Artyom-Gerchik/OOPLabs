@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LAB1.Migrations
 {
-    public partial class InitiallMigration : Migration
+    public partial class RolesUpdated : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

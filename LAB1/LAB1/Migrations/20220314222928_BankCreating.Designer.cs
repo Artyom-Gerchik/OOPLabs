@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220313102413_InitiallMigration")]
-    partial class InitiallMigration
+    [Migration("20220314222928_BankCreating")]
+    partial class BankCreating
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,9 +25,76 @@ namespace LAB1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("AmountOfAdministrators")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AmountOfClients")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AmountOfManagers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("AmountOfMoney")
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("AmountOfOperators")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BankIdentificationCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LegalAddress")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LegalName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PayerAccountNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Banks");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AmountOfAdministrators = 0,
+                            AmountOfClients = 0,
+                            AmountOfManagers = 0,
+                            AmountOfMoney = 100500.0,
+                            AmountOfOperators = 0,
+                            BankIdentificationCode = "1234567890",
+                            LegalAddress = "Dzerzhinskogo District",
+                            LegalName = "firstBank",
+                            PayerAccountNumber = "123456789",
+                            Type = "OOO"
+                        });
+                });
+
+            modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BankId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("BankAccount");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Role", b =>
@@ -62,16 +129,21 @@ namespace LAB1.Migrations
                         new
                         {
                             Id = 4,
-                            Name = "specialist"
+                            Name = "foreignClient"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "manager"
+                            Name = "specialist"
                         },
                         new
                         {
                             Id = 6,
+                            Name = "manager"
+                        },
+                        new
+                        {
+                            Id = 7,
                             Name = "operator"
                         });
                 });
@@ -81,6 +153,10 @@ namespace LAB1.Migrations
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
@@ -108,6 +184,8 @@ namespace LAB1.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -306,6 +384,33 @@ namespace LAB1.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
+                {
+                    b.HasBaseType("LAB1.Entities.UserCategories.User");
+
+                    b.Property<int?>("BankId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("IdentificationNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PassportNumberAndSeries")
+                        .HasColumnType("TEXT");
+
+                    b.HasDiscriminator().HasValue("Client");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
+                {
+                    b.HasOne("LAB1.Entities.Bank", null)
+                        .WithMany("OpennedBankAccounts")
+                        .HasForeignKey("BankId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.Client", null)
+                        .WithMany("OpennedBankAccounts")
+                        .HasForeignKey("ClientId");
+                });
+
             modelBuilder.Entity("LAB1.Entities.UserCategories.User", b =>
                 {
                     b.HasOne("LAB1.Entities.Role", "Role")
@@ -366,9 +471,19 @@ namespace LAB1.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LAB1.Entities.Bank", b =>
+                {
+                    b.Navigation("OpennedBankAccounts");
+                });
+
             modelBuilder.Entity("LAB1.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
+                {
+                    b.Navigation("OpennedBankAccounts");
                 });
 #pragma warning restore 612, 618
         }

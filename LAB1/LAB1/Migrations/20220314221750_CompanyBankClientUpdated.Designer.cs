@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220314221750_CompanyBankClientUpdated")]
+    partial class CompanyBankClientUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -56,22 +58,6 @@ namespace LAB1.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Banks");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AmountOfAdministrators = 0,
-                            AmountOfClients = 0,
-                            AmountOfManagers = 0,
-                            AmountOfMoney = 100500.0,
-                            AmountOfOperators = 0,
-                            BankIdentificationCode = "1234567890",
-                            LegalAddress = "Dzerzhinskogo District",
-                            LegalName = "firstBank",
-                            PayerAccountNumber = "123456789",
-                            Type = "OOO"
-                        });
                 });
 
             modelBuilder.Entity("LAB1.Entities.BankAccount", b =>

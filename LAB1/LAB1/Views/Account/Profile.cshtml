@@ -11,7 +11,10 @@
             <option selected>Choose...</option>
             @foreach (var i in Model.Roles)
             {
-                <option value="@i.Id">@i.Name</option>
+                if (!Model.User.Role.Equals(i))
+                {
+                    <option value="@i.Id">@i.Name</option>
+                }
             }
 
         </select>

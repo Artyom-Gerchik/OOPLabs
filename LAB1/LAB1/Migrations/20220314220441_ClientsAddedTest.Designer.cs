@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220314220441_ClientsAddedTest")]
+    partial class ClientsAddedTest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -23,76 +25,9 @@ namespace LAB1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AmountOfAdministrators")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("AmountOfClients")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("AmountOfManagers")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("AmountOfMoney")
-                        .HasColumnType("REAL");
-
-                    b.Property<int?>("AmountOfOperators")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("BankIdentificationCode")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LegalAddress")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LegalName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PayerAccountNumber")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.ToTable("Banks");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AmountOfAdministrators = 0,
-                            AmountOfClients = 0,
-                            AmountOfManagers = 0,
-                            AmountOfMoney = 100500.0,
-                            AmountOfOperators = 0,
-                            BankIdentificationCode = "1234567890",
-                            LegalAddress = "Dzerzhinskogo District",
-                            LegalName = "firstBank",
-                            PayerAccountNumber = "123456789",
-                            Type = "OOO"
-                        });
-                });
-
-            modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("BankId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BankId");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("BankAccount");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Role", b =>
@@ -398,17 +333,6 @@ namespace LAB1.Migrations
                     b.HasDiscriminator().HasValue("Client");
                 });
 
-            modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
-                {
-                    b.HasOne("LAB1.Entities.Bank", null)
-                        .WithMany("OpennedBankAccounts")
-                        .HasForeignKey("BankId");
-
-                    b.HasOne("LAB1.Entities.UserCategories.Client", null)
-                        .WithMany("OpennedBankAccounts")
-                        .HasForeignKey("ClientId");
-                });
-
             modelBuilder.Entity("LAB1.Entities.UserCategories.User", b =>
                 {
                     b.HasOne("LAB1.Entities.Role", "Role")
@@ -469,19 +393,9 @@ namespace LAB1.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LAB1.Entities.Bank", b =>
-                {
-                    b.Navigation("OpennedBankAccounts");
-                });
-
             modelBuilder.Entity("LAB1.Entities.Role", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
-                {
-                    b.Navigation("OpennedBankAccounts");
                 });
 #pragma warning restore 612, 618
         }

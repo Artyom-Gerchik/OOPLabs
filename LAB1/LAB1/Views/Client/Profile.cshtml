@@ -1,0 +1,45 @@
+@model ClientModel
+
+<form asp-action="Profile" asp-controller="Client" asp-anti-forgery="true">
+
+    <table class="table table-hover table-dark">
+        <tbody>
+        <tr>
+            <th scope="row">Id</th>
+            <td>@Model.Client.Id.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Name</th>
+            <td>@Model.Client.Name</td>
+        </tr>
+        <tr>
+            <th scope="row">Surname</th>
+            <td>@Model.Client.Surname</td>
+        </tr>
+        <tr>
+            <th scope="row">Patronymic</th>
+            <td>@Model.Client.Patronymic</td>
+        </tr>
+        <tr>
+            <th scope="row">Email</th>
+            <td>@Model.Client.Email</td>
+        </tr>
+        <tr>
+            <th scope="row">Phone Number</th>
+            <td>@Model.Client.PhoneNumber</td>
+        </tr>
+        <tr>
+            <th scope="row">Role Id</th>
+            <td>@Model.Client.RoleId.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Passport Number And Series</th>
+            <td>@Model.Client.PassportNumberAndSeries</td>
+        </tr>
+        <tr>
+            <th scope="row">IdentificationNumber</th>
+            <td>@Model.Client.IdentificationNumber</td>
+        </tr>
+        </tbody>
+    </table>
+</form>
