@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LAB1.Entities.UserCategories;
 
-[Table("Users")]
+//[Table("Users")]
 
 public class User
 {

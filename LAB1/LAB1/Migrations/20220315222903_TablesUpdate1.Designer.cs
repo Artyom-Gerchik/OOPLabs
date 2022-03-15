@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220314120413_RolesUpdatedAgain")]
-    partial class RolesUpdatedAgain
+    [Migration("20220315222903_TablesUpdate1")]
+    partial class TablesUpdate1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,9 +25,76 @@ namespace LAB1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("AmountOfAdministrators")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AmountOfClients")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AmountOfManagers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("AmountOfMoney")
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("AmountOfOperators")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BankIdentificationCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LegalAddress")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LegalName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PayerAccountNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Banks");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AmountOfAdministrators = 0,
+                            AmountOfClients = 0,
+                            AmountOfManagers = 0,
+                            AmountOfMoney = 100500.0,
+                            AmountOfOperators = 0,
+                            BankIdentificationCode = "1234567890",
+                            LegalAddress = "Dzerzhinskogo District",
+                            LegalName = "firstBank",
+                            PayerAccountNumber = "123456789",
+                            Type = "OOO"
+                        });
+                });
+
+            modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BankId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("BankAccount");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Role", b =>
@@ -112,7 +179,7 @@ namespace LAB1.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -311,6 +378,60 @@ namespace LAB1.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
+                {
+                    b.HasBaseType("LAB1.Entities.UserCategories.User");
+
+                    b.Property<bool?>("ApprovedByManager")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BankId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("IdentificationNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PassportNumberAndSeries")
+                        .HasColumnType("TEXT");
+
+                    b.HasIndex("BankId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.ToTable("Clients", (string)null);
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
+                {
+                    b.HasBaseType("LAB1.Entities.UserCategories.User");
+
+                    b.Property<int?>("BankId")
+                        .HasColumnType("INTEGER");
+
+                    b.ToTable("Operators", (string)null);
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
+                {
+                    b.HasBaseType("LAB1.Entities.UserCategories.Operator");
+
+                    b.ToTable("Managers", (string)null);
+                });
+
+            modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
+                {
+                    b.HasOne("LAB1.Entities.Bank", null)
+                        .WithMany("OpennedBankAccounts")
+                        .HasForeignKey("BankId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.Client", null)
+                        .WithMany("OpennedBankAccounts")
+                        .HasForeignKey("ClientId");
+                });
+
             modelBuilder.Entity("LAB1.Entities.UserCategories.User", b =>
                 {
                     b.HasOne("LAB1.Entities.Role", "Role")
@@ -371,9 +492,61 @@ namespace LAB1.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
+                {
+                    b.HasOne("LAB1.Entities.Bank", null)
+                        .WithMany("Clients")
+                        .HasForeignKey("BankId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.User", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.UserCategories.Client", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LAB1.Entities.UserCategories.Manager", null)
+                        .WithMany("WaitingForRegistrationApprove")
+                        .HasForeignKey("ManagerId");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.User", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.UserCategories.Operator", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.Operator", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.UserCategories.Manager", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LAB1.Entities.Bank", b =>
+                {
+                    b.Navigation("Clients");
+
+                    b.Navigation("OpennedBankAccounts");
+                });
+
             modelBuilder.Entity("LAB1.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
+                {
+                    b.Navigation("OpennedBankAccounts");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
+                {
+                    b.Navigation("WaitingForRegistrationApprove");
                 });
 #pragma warning restore 612, 618
         }

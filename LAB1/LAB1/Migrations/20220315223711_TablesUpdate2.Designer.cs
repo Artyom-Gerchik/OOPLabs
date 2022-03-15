@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220314220441_ClientsAddedTest")]
-    partial class ClientsAddedTest
+    [Migration("20220315223711_TablesUpdate2")]
+    partial class TablesUpdate2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,9 +25,76 @@ namespace LAB1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("AmountOfAdministrators")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AmountOfClients")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AmountOfManagers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("AmountOfMoney")
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("AmountOfOperators")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BankIdentificationCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LegalAddress")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LegalName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PayerAccountNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Banks");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AmountOfAdministrators = 0,
+                            AmountOfClients = 0,
+                            AmountOfManagers = 0,
+                            AmountOfMoney = 100500.0,
+                            AmountOfOperators = 0,
+                            BankIdentificationCode = "1234567890",
+                            LegalAddress = "Dzerzhinskogo District",
+                            LegalName = "firstBank",
+                            PayerAccountNumber = "123456789",
+                            Type = "OOO"
+                        });
+                });
+
+            modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BankId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("BankAccount");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Role", b =>
@@ -87,10 +154,6 @@ namespace LAB1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
@@ -116,9 +179,7 @@ namespace LAB1.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -321,6 +382,9 @@ namespace LAB1.Migrations
                 {
                     b.HasBaseType("LAB1.Entities.UserCategories.User");
 
+                    b.Property<bool?>("ApprovedByManager")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("BankId")
                         .HasColumnType("INTEGER");
 
@@ -330,7 +394,37 @@ namespace LAB1.Migrations
                     b.Property<string>("PassportNumberAndSeries")
                         .HasColumnType("TEXT");
 
-                    b.HasDiscriminator().HasValue("Client");
+                    b.HasIndex("BankId");
+
+                    b.ToTable("Clients", (string)null);
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
+                {
+                    b.HasBaseType("LAB1.Entities.UserCategories.User");
+
+                    b.Property<int?>("BankId")
+                        .HasColumnType("INTEGER");
+
+                    b.ToTable("Operators", (string)null);
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
+                {
+                    b.HasBaseType("LAB1.Entities.UserCategories.Operator");
+
+                    b.ToTable("Managers", (string)null);
+                });
+
+            modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
+                {
+                    b.HasOne("LAB1.Entities.Bank", null)
+                        .WithMany("OpennedBankAccounts")
+                        .HasForeignKey("BankId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.Client", null)
+                        .WithMany("OpennedBankAccounts")
+                        .HasForeignKey("ClientId");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.User", b =>
@@ -393,9 +487,52 @@ namespace LAB1.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
+                {
+                    b.HasOne("LAB1.Entities.Bank", null)
+                        .WithMany("Clients")
+                        .HasForeignKey("BankId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.User", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.UserCategories.Client", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.User", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.UserCategories.Operator", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.Operator", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.UserCategories.Manager", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LAB1.Entities.Bank", b =>
+                {
+                    b.Navigation("Clients");
+
+                    b.Navigation("OpennedBankAccounts");
+                });
+
             modelBuilder.Entity("LAB1.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
+                {
+                    b.Navigation("OpennedBankAccounts");
                 });
 #pragma warning restore 612, 618
         }

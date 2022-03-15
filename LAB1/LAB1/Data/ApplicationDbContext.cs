@@ -105,10 +105,10 @@ public sealed class ApplicationDbContext : IdentityDbContext
         modelBuilder.Entity<Role>().HasData(administratorRole, userRole, clientRole, foreignClientRole, specialistRole,
             managerRole, operatorRole);
         modelBuilder.Entity<Bank>().HasData(firstBank);
-        modelBuilder.Entity<User>().ToTable("Users");
-        modelBuilder.Entity<Client>().ToTable("Clients");
-        modelBuilder.Entity<Operator>().ToTable("Operators");
-        modelBuilder.Entity<Manager>().ToTable("Managers");
+        // modelBuilder.Entity<User>().ToTable("Users");
+        // modelBuilder.Entity<Client>().ToTable("Clients");
+        // modelBuilder.Entity<Operator>().ToTable("Operators");
+        // modelBuilder.Entity<Manager>().ToTable("Managers");
         base.OnModelCreating(modelBuilder);
     }
 }

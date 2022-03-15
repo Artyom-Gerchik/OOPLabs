@@ -3,8 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LAB1.Entities.UserCategories;
 
-[Table("Clients")]
-
+//[Table("Clients")]
 public class Client : User
 {
     public string? PassportNumberAndSeries { get; set; }
@@ -15,4 +14,6 @@ public class Client : User
     public List<BankAccount>? OpennedBankAccounts { get; set; }
 
     public bool? ApprovedByManager { get; set; }
+
+    //public int? ManagerId { get; set; }
 }

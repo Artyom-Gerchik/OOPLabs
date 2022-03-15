@@ -59,7 +59,7 @@ public class AccountController : Controller
             case 6: // manager
                 if (manager != null)
                 {
-                    manager.WaitingForRegistrationApprove = new List<Client>();
+                    //manager.WaitingForRegistrationApprove = new List<Client>();
                     return RedirectToAction("GetBank", "Manager");
                 }
 
