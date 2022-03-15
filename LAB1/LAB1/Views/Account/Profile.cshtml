@@ -4,9 +4,6 @@
 
 <form asp-action="Profile" asp-controller="Account" asp-anti-forgery="true" method="post">
     <div class="input-group mb-3">
-        @* <div class="input-group-prepend"> *@
-        @*     <label class="input-group-text" for="inputGroupSelect01">Options</label> *@
-        @* </div> *@
         <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfSelectedRole">
             <option selected>Choose...</option>
             @foreach (var i in Model.Roles)

@@ -26,16 +26,48 @@ public class AccountController : Controller
     public IActionResult Profile()
     {
         User user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
-        Client client = _context.Clients.FirstOrDefault(c => c.Email.Equals(User.Identity.Name));
+        Client client = _context.Clients.FirstOrDefaultAsync(c => c.Email.Equals(User.Identity.Name)).Result;
+        Operator bankOperator = _context.Operators.FirstOrDefaultAsync(o => o.Email.Equals(User.Identity.Name)).Result;
+        Manager manager = _context.Managers.FirstOrDefaultAsync(m => m.Email.Equals(User.Identity.Name)).Result;
 
-        if (user.RoleId == 3) // 3 is client
+        switch (user.RoleId)
         {
-            if (client.IdentificationNumber != null)
-            {
-                return RedirectToAction("Profile", "Client");
-            }
+            case 1: // administrator
+                break;
+            case 2: // user
+                return View(new RoleModel()
+                {
+                    Roles = _context.Roles.ToList(),
+                    User = user
+                });
+                break;
+            case 3:
+                if (client != null)
+                {
+                    return RedirectToAction("Profile", "Client");
+                }
+                else
+                {
+                    return RedirectToAction("GetAdditionalInfo", "Client");
+                }
 
-            return RedirectToAction("GetAdditionalInfo", "Client");
+                break;
+            case 4: // foreignClient
+                break;
+            case 5: // specialist
+                break;
+            case 6: // manager
+                if (manager != null)
+                {
+                    manager.WaitingForRegistrationApprove = new List<Client>();
+                    return RedirectToAction("GetBank", "Manager");
+                }
+
+                break;
+            case 7: // operator
+                //return RedirectToAction("Profile", "Operator");
+
+                break;
         }
 
         return View(new RoleModel()
@@ -98,7 +130,7 @@ public class AccountController : Controller
 
                 await Authenticate(user);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Profile", "Account");
             }
             else
             {

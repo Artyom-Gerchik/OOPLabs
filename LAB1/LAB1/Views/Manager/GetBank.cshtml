@@ -1,0 +1,17 @@
+@model LAB1.Models.Manager.ManagerGetBankModel
+<form asp-action="GetBank" asp-controller="Manager" asp-anti-forgery="true" method="post">
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
+            <option selected>Choose...</option>
+            @foreach (var i in Model.Banks)
+            {
+                <option value="@i.Id">@i.LegalName</option>
+            }
+
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn"/>
+        </div>
+    </div>
+
+</form>

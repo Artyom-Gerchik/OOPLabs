@@ -1,5 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace LAB1.Entities.UserCategories;
 
-public class Manager : User
+[Table("Managers")]
+
+public class Manager : Operator
 {
+    public List<Client> WaitingForRegistrationApprove { get; set; }
 }

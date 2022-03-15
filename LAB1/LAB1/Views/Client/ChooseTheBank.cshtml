@@ -1,0 +1,22 @@
+@model BanksModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutClientWithBanks.cshtml";
+}
+<h2>Choose The Bank Page</h2>
+
+<form asp-action="ChooseTheBank" asp-controller="Client" asp-anti-forgery="true" method="post">
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
+            <option selected>Choose...</option>
+            @foreach (var i in Model.Banks)
+            {
+                <option value="@i.Id">@i.LegalName</option>
+            }
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn"/>
+        </div>
+    </div>
+
+</form>

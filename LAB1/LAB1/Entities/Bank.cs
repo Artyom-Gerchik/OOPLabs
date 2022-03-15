@@ -1,3 +1,5 @@
+using LAB1.Entities.UserCategories;
+
 namespace LAB1.Entities;
 
 public class Bank : Company
@@ -7,5 +9,7 @@ public class Bank : Company
     public int? AmountOfManagers { get; set; }
     public int? AmountOfAdministrators { get; set; }
     public double? AmountOfMoney { get; set; }
+
+    public List<Client>? Clients { get; set; }
     public List<BankAccount>? OpennedBankAccounts { get; set; }
 }

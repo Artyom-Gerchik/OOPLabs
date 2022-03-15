@@ -1,7 +1,19 @@
-@model ClientModel
+@model LAB1.Models.Client.ClientProfileModel
+
+@{
+    if (Model.Client.BankId == 0)
+    {
+        Layout = "~/Views/Shared/_LayoutClientWithBanks.cshtml";
+    }
+    if (Model.Client.ApprovedByManager == false)
+    {
+        Layout = "~/Views/Shared/_LayoutClientWithRequestApprove.cshtml";
+    }
+}
 
 <form asp-action="Profile" asp-controller="Client" asp-anti-forgery="true">
 
+    <h3>Hello @Model.Client.Name</h3>
     <table class="table table-hover table-dark">
         <tbody>
         <tr>
@@ -37,8 +49,16 @@
             <td>@Model.Client.PassportNumberAndSeries</td>
         </tr>
         <tr>
-            <th scope="row">IdentificationNumber</th>
+            <th scope="row">Identification Number</th>
             <td>@Model.Client.IdentificationNumber</td>
+        </tr>
+        <tr>
+            <th scope="row">Bank Id</th>
+            <td>@Model.Client.BankId.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Approved by manager?</th>
+            <td>@Model.Client.ApprovedByManager.ToString()</td>
         </tr>
         </tbody>
     </table>

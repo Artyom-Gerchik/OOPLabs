@@ -1,0 +1,22 @@
+@model LAB1.Models.Client.ClientGetApproveModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutClientWithRequestApprove.cshtml";
+}
+<h2>Request an a Approve from existing Manager</h2>
+
+<form asp-action="RequestApprove" asp-controller="Client" asp-anti-forgery="true" method="post">
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfSelectedManager">
+            <option selected>Choose...</option>
+            @foreach (var i in Model.Managers)
+            {
+                <option value="@i.Id">@i.Name @i.Surname</option>
+            }
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn"/>
+        </div>
+    </div>
+
+</form>
