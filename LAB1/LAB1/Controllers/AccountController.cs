@@ -59,8 +59,11 @@ public class AccountController : Controller
             case 6: // manager
                 if (manager != null)
                 {
-                    //manager.WaitingForRegistrationApprove = new List<Client>();
-                    return RedirectToAction("GetBank", "Manager");
+                    return RedirectToAction("Profile", "Manager");
+                }
+                else
+                {
+                    return RedirectToAction("GetAdditionalInfo", "Manager");
                 }
 
                 break;

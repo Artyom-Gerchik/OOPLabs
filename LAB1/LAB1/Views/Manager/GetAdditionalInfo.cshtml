@@ -1,5 +1,8 @@
-@model LAB1.Models.Manager.ManagerGetBankModel
-<form asp-action="GetBank" asp-controller="Manager" asp-anti-forgery="true" method="post">
+@model LAB1.Models.Manager.ManagerAdditionalInfoModel
+
+<h1>Choose the bank where you work</h1>
+
+<form asp-action="GetAdditionalInfo" asp-controller="Manager" asp-anti-forgery="true" method="post">
     <div class="input-group mb-3">
         <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
             <option selected>Choose...</option>

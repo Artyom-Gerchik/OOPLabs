@@ -1,6 +1,7 @@
 ﻿using LAB1.Entities;
 using LAB1.Entities.UserCategories;
 using LAB1.Models;
+using LAB1.Models.Manager;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -105,10 +106,13 @@ public sealed class ApplicationDbContext : IdentityDbContext
         modelBuilder.Entity<Role>().HasData(administratorRole, userRole, clientRole, foreignClientRole, specialistRole,
             managerRole, operatorRole);
         modelBuilder.Entity<Bank>().HasData(firstBank);
-        // modelBuilder.Entity<User>().ToTable("Users");
-        // modelBuilder.Entity<Client>().ToTable("Clients");
-        // modelBuilder.Entity<Operator>().ToTable("Operators");
-        // modelBuilder.Entity<Manager>().ToTable("Managers");
+        modelBuilder.Entity<User>().ToTable("Users");
+        modelBuilder.Entity<Client>().ToTable("Clients");
+        modelBuilder.Entity<Operator>().ToTable("Operators");
+        modelBuilder.Entity<Manager>().ToTable("Managers");
+        // modelBuilder.Entity<Manager>()
+        //     .HasMany(c => c.WaitingForRegistrationApprove)
+        //     .WithOne(e => e.ManagerWhoApproves);
         base.OnModelCreating(modelBuilder);
     }
 }

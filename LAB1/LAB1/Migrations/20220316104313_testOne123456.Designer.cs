@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220316104313_testOne123456")]
+    partial class testOne123456
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -389,13 +391,13 @@ namespace LAB1.Migrations
                     b.Property<string>("IdentificationNumber")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ManagerId")
+                    b.Property<int>("ManagerWhoApprovesId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PassportNumberAndSeries")
                         .HasColumnType("TEXT");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("ManagerWhoApprovesId");
 
                     b.ToTable("Clients", (string)null);
                 });
@@ -496,9 +498,13 @@ namespace LAB1.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LAB1.Entities.UserCategories.Manager", null)
+                    b.HasOne("LAB1.Entities.UserCategories.Manager", "ManagerWhoApproves")
                         .WithMany("WaitingForRegistrationApprove")
-                        .HasForeignKey("ManagerId");
+                        .HasForeignKey("ManagerWhoApprovesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ManagerWhoApproves");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>

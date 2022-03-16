@@ -1,0 +1,21 @@
+@model LAB1.Models.Manager.ManagerApproveModel
+
+@{
+}
+
+<form asp-action="Approve" asp-controller="Manager" asp-anti-forgery="true" method="post">
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfApprovedClient">
+            <option selected>Choose...</option>
+            @foreach (var client in Model.ClientsToApprove)
+            {
+                <option value="@client.Id">@client.Name</option>
+            }
+
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Approve" class="btn"/>
+        </div>
+    </div>
+
+</form>

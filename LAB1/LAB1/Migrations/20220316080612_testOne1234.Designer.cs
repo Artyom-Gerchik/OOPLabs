@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220316080612_testOne1234")]
+    partial class testOne1234
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -389,13 +391,8 @@ namespace LAB1.Migrations
                     b.Property<string>("IdentificationNumber")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ManagerId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("PassportNumberAndSeries")
                         .HasColumnType("TEXT");
-
-                    b.HasIndex("ManagerId");
 
                     b.ToTable("Clients", (string)null);
                 });
@@ -495,10 +492,6 @@ namespace LAB1.Migrations
                         .HasForeignKey("LAB1.Entities.UserCategories.Client", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("LAB1.Entities.UserCategories.Manager", null)
-                        .WithMany("WaitingForRegistrationApprove")
-                        .HasForeignKey("ManagerId");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
@@ -517,6 +510,24 @@ namespace LAB1.Migrations
                         .HasForeignKey("LAB1.Entities.UserCategories.Manager", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("System.Collections.Generic.List<int>", "IdsOfClientsWaitingForRegistrationApprove", b1 =>
+                        {
+                            b1.Property<int>("ManagerId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<int>("Capacity")
+                                .HasColumnType("INTEGER");
+
+                            b1.HasKey("ManagerId");
+
+                            b1.ToTable("Managers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ManagerId");
+                        });
+
+                    b.Navigation("IdsOfClientsWaitingForRegistrationApprove");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Bank", b =>
@@ -532,11 +543,6 @@ namespace LAB1.Migrations
             modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
                 {
                     b.Navigation("OpennedBankAccounts");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
-                {
-                    b.Navigation("WaitingForRegistrationApprove");
                 });
 #pragma warning restore 612, 618
         }

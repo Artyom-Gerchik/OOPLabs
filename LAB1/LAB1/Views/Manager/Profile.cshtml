@@ -1,6 +1,10 @@
 @model LAB1.Models.Manager.ManagerProfileModel
 
 @{
+    if (Model.Manager.WaitingForRegistrationApprove.Count != 0)
+    {
+        Layout = "~/Views/Shared/_LayoutManagerWithApproves.cshtml";
+    }
 }
 
 <form asp-action="Profile" asp-controller="Manager" asp-anti-forgery="true">

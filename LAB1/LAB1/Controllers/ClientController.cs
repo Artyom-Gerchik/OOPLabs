@@ -53,10 +53,7 @@ public class ClientController : Controller
 
             if (client != null)
             {
-                //var entry = _context.Entry(client);
-                //var tmp = entry.Metadata.FindForeignKey("").Properties.Select()
                 _context.Users.Remove(user);
-                //await _context.SaveChangesAsync();
                 _context.Clients.Add(client);
                 await _context.SaveChangesAsync();
 
@@ -68,7 +65,7 @@ public class ClientController : Controller
     }
 
     [HttpGet]
-    [Authorize(Roles = "client")]
+    [Authorize]
     public IActionResult Profile()
     {
         return View(new ClientProfileModel()
@@ -139,14 +136,17 @@ public class ClientController : Controller
             {
                 if (model.IdOfSelectedManager != null)
                 {
-                    Manager manager = await _context.Managers.FirstOrDefaultAsync(m =>
-                        m.Id.ToString().Equals(model.IdOfSelectedManager.ToString()));
-                    // if (!manager.WaitingForRegistrationApprove.Contains(client))
-                    // {
-                    //     manager?.WaitingForRegistrationApprove.Add(client);
-                    //     _context.Managers.Update(manager!);
-                    //     await _context.SaveChangesAsync();
-                    // }
+                    var manager = _context.Managers.Include(m => m.WaitingForRegistrationApprove)
+                        .FirstAsync(m => m.Id == model.IdOfSelectedManager).Result;
+                    if (!manager.WaitingForRegistrationApprove.Contains(client))
+                    {
+                        manager.WaitingForRegistrationApprove.Add(client);
+                        _context.Managers.Update(manager);
+                        await _context.SaveChangesAsync();
+
+                        Manager test = ((await _context.Managers.FirstOrDefaultAsync(m =>
+                            m.Id == model.IdOfSelectedManager))!);
+                    }
                 }
             }
 
