@@ -399,8 +399,6 @@ namespace LAB1.Migrations
                     b.Property<string>("PassportNumberAndSeries")
                         .HasColumnType("TEXT");
 
-                    b.HasIndex("BankId");
-
                     b.HasDiscriminator().HasValue("Client");
                 });
 
@@ -492,17 +490,8 @@ namespace LAB1.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
-                {
-                    b.HasOne("LAB1.Entities.Bank", null)
-                        .WithMany("Clients")
-                        .HasForeignKey("BankId");
-                });
-
             modelBuilder.Entity("LAB1.Entities.Bank", b =>
                 {
-                    b.Navigation("Clients");
-
                     b.Navigation("OpennedBankAccounts");
                 });
 

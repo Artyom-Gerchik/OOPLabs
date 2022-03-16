@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220315223711_TablesUpdate2")]
-    partial class TablesUpdate2
+    [Migration("20220315232553_testOne1")]
+    partial class testOne1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -154,6 +154,10 @@ namespace LAB1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
@@ -179,7 +183,9 @@ namespace LAB1.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -386,7 +392,8 @@ namespace LAB1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("BankId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("Client_BankId");
 
                     b.Property<string>("IdentificationNumber")
                         .HasColumnType("TEXT");
@@ -396,7 +403,7 @@ namespace LAB1.Migrations
 
                     b.HasIndex("BankId");
 
-                    b.ToTable("Clients", (string)null);
+                    b.HasDiscriminator().HasValue("Client");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
@@ -406,14 +413,14 @@ namespace LAB1.Migrations
                     b.Property<int?>("BankId")
                         .HasColumnType("INTEGER");
 
-                    b.ToTable("Operators", (string)null);
+                    b.HasDiscriminator().HasValue("Operator");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
                 {
                     b.HasBaseType("LAB1.Entities.UserCategories.Operator");
 
-                    b.ToTable("Managers", (string)null);
+                    b.HasDiscriminator().HasValue("Manager");
                 });
 
             modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
@@ -492,30 +499,6 @@ namespace LAB1.Migrations
                     b.HasOne("LAB1.Entities.Bank", null)
                         .WithMany("Clients")
                         .HasForeignKey("BankId");
-
-                    b.HasOne("LAB1.Entities.UserCategories.User", null)
-                        .WithOne()
-                        .HasForeignKey("LAB1.Entities.UserCategories.Client", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
-                {
-                    b.HasOne("LAB1.Entities.UserCategories.User", null)
-                        .WithOne()
-                        .HasForeignKey("LAB1.Entities.UserCategories.Operator", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
-                {
-                    b.HasOne("LAB1.Entities.UserCategories.Operator", null)
-                        .WithOne()
-                        .HasForeignKey("LAB1.Entities.UserCategories.Manager", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("LAB1.Entities.Bank", b =>

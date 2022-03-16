@@ -4,7 +4,7 @@
 
 namespace LAB1.Migrations
 {
-    public partial class TablesUpdate1 : Migration
+    public partial class testOne1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

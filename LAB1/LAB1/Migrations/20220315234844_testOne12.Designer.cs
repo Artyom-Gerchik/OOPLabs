@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220315220601_TablesUpdate")]
-    partial class TablesUpdate
+    [Migration("20220315234844_testOne12")]
+    partial class testOne12
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -154,6 +154,10 @@ namespace LAB1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
@@ -179,7 +183,9 @@ namespace LAB1.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -386,22 +392,16 @@ namespace LAB1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("BankId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("Client_BankId");
 
                     b.Property<string>("IdentificationNumber")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ManagerId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("PassportNumberAndSeries")
                         .HasColumnType("TEXT");
 
-                    b.HasIndex("BankId");
-
-                    b.HasIndex("ManagerId");
-
-                    b.ToTable("Clients", (string)null);
+                    b.HasDiscriminator().HasValue("Client");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
@@ -411,14 +411,14 @@ namespace LAB1.Migrations
                     b.Property<int?>("BankId")
                         .HasColumnType("INTEGER");
 
-                    b.ToTable("Operators", (string)null);
+                    b.HasDiscriminator().HasValue("Operator");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
                 {
                     b.HasBaseType("LAB1.Entities.UserCategories.Operator");
 
-                    b.ToTable("Managers", (string)null);
+                    b.HasDiscriminator().HasValue("Manager");
                 });
 
             modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
@@ -492,45 +492,8 @@ namespace LAB1.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
-                {
-                    b.HasOne("LAB1.Entities.Bank", null)
-                        .WithMany("Clients")
-                        .HasForeignKey("BankId");
-
-                    b.HasOne("LAB1.Entities.UserCategories.User", null)
-                        .WithOne()
-                        .HasForeignKey("LAB1.Entities.UserCategories.Client", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LAB1.Entities.UserCategories.Manager", null)
-                        .WithMany("WaitingForRegistrationApprove")
-                        .HasForeignKey("ManagerId");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
-                {
-                    b.HasOne("LAB1.Entities.UserCategories.User", null)
-                        .WithOne()
-                        .HasForeignKey("LAB1.Entities.UserCategories.Operator", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
-                {
-                    b.HasOne("LAB1.Entities.UserCategories.Operator", null)
-                        .WithOne()
-                        .HasForeignKey("LAB1.Entities.UserCategories.Manager", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("LAB1.Entities.Bank", b =>
                 {
-                    b.Navigation("Clients");
-
                     b.Navigation("OpennedBankAccounts");
                 });
 
@@ -542,11 +505,6 @@ namespace LAB1.Migrations
             modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
                 {
                     b.Navigation("OpennedBankAccounts");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
-                {
-                    b.Navigation("WaitingForRegistrationApprove");
                 });
 #pragma warning restore 612, 618
         }

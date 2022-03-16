@@ -53,8 +53,10 @@ public class ClientController : Controller
 
             if (client != null)
             {
+                //var entry = _context.Entry(client);
+                //var tmp = entry.Metadata.FindForeignKey("").Properties.Select()
                 _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
                 _context.Clients.Add(client);
                 await _context.SaveChangesAsync();
 

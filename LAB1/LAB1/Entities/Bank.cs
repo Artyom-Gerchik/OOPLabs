@@ -10,6 +10,6 @@ public class Bank : Company
     public int? AmountOfAdministrators { get; set; }
     public double? AmountOfMoney { get; set; }
 
-    public List<Client>? Clients { get; set; }
+    //public List<Client>? Clients { get; set; }
     public List<BankAccount>? OpennedBankAccounts { get; set; }
 }

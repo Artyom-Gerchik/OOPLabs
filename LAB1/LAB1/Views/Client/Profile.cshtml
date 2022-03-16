@@ -5,7 +5,7 @@
     {
         Layout = "~/Views/Shared/_LayoutClientWithBanks.cshtml";
     }
-    if (Model.Client.ApprovedByManager == false)
+    if (Model.Client.ApprovedByManager == false && Model.Client.BankId != 0)
     {
         Layout = "~/Views/Shared/_LayoutClientWithRequestApprove.cshtml";
     }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220315230546_TablesUpdate3")]
-    partial class TablesUpdate3
+    [Migration("20220315232111_testOne")]
+    partial class testOne
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

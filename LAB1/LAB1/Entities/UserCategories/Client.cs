@@ -8,11 +8,8 @@ public class Client : User
 {
     public string? PassportNumberAndSeries { get; set; }
     public string? IdentificationNumber { get; set; }
-
     public int? BankId { get; set; }
-
     public List<BankAccount>? OpennedBankAccounts { get; set; }
-
     public bool? ApprovedByManager { get; set; }
 
     //public int? ManagerId { get; set; }
