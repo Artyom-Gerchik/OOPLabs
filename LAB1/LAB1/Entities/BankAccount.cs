@@ -7,4 +7,6 @@ public class BankAccount
     [Key] public int? Id { get; set; }
     public int? ClientId { get; set; }
     public int? BankId { get; set; }
+    public double? AmountOfMoney { get; set; }
+    public string? Name { get; set; }
 }

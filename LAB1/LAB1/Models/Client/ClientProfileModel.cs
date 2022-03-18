@@ -7,5 +7,5 @@ public class ClientProfileModel
 {
     public Entities.UserCategories.Client Client { get; set; }
     public int? SelectedBankId { get; set; }
-    public List<Bank> Banks { get; set; }
+    public List<Entities.Bank> Banks { get; set; }
 }

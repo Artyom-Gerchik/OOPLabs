@@ -1,3 +1,4 @@
+@using LAB1.Entities.UserCategories
 @model LAB1.Models.Client.ClientProfileModel
 
 @{
@@ -5,10 +6,10 @@
     {
         Layout = "~/Views/Shared/_LayoutClientWithBanks.cshtml";
     }
-    // if (Model.Client.BanksAndApproves.Count != 0 && Model.Client.BanksAndApproves.Approved == false && Model.Client.CurrentBankId != 0)
-    // {
-    //     Layout = "~/Views/Shared/_LayoutClientWithRequestApprove.cshtml";
-    // }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutClientWithRequestApprove.cshtml";
+    }
 }
 
 <form asp-action="Profile" asp-controller="Client" asp-anti-forgery="true">
@@ -53,30 +54,33 @@
             <td>@Model.Client.IdentificationNumber</td>
         </tr>
         <tr>
-            <th scope="row">Bank Id</th>
+            <th scope="row">Current Bank Id</th>
             <td>@Model.Client.CurrentBankId.ToString()</td>
         </tr>
         <tr>
             <th scope="row">Current Balance</th>
             <td>@Model.Client.BankBalance.ToString()</td>
         </tr>
-        <tr>
-            @if (@Model.Client.Banks.Count != 0)
-            {
-                <div class="input-group mb-3">
-                    <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
-                        <option selected>Choose...</option>
-                        @foreach (var i in Model.Client.Banks)
-                        {
-                            <option value="@i.Id">@i.LegalName</option>
-                        }
-                    </select>
-                    <div class="form-group">
-                        <input type="submit" value="Submit" class="btn"/>
-                    </div>
-                </div>
-            }
-        </tr>
         </tbody>
     </table>
+</form>
+
+<form asp-action="BankProfileForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+
+    @if (@Model.Client.Banks.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
+                <option selected>Choose...</option>
+                @foreach (var i in Model.Client.Banks)
+                {
+                    <option value="@i.Id">@i.LegalName</option>
+                }
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn"/>
+            </div>
+        </div>
+    }
+
 </form>

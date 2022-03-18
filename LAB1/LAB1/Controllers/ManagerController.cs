@@ -95,7 +95,8 @@ public class ManagerController : Controller
         if (ModelState.IsValid)
         {
             Client client =
-                _context.Clients.FirstOrDefault(u => u.Id == model.IdOfApprovedClient)!;
+                _context.Clients.Include(c => c.BanksAndApproves).ThenInclude(c => c.Bank)
+                    .FirstOrDefault(u => u.Id == model.IdOfApprovedClient)!;
             var manager = _context.Managers.Include(m => m.WaitingForRegistrationApprove)
                 .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
             if (client != null)
@@ -128,7 +129,6 @@ public class ManagerController : Controller
 
         return View(new ManagerProfileModel()
         {
-            //Manager = _context.Managers.FirstOrDefault(c => c.Id.ToString().Equals(2.ToString()))!,
             Manager = manager.Result,
         });
     }

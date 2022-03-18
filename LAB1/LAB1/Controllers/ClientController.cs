@@ -71,9 +71,22 @@ public class ClientController : Controller
     [Authorize]
     public IActionResult Profile()
     {
+        var client = _context.Clients
+            .Include(c => c.Banks).Include(c => c.OpennedBankAccounts).Include(c => c.BanksAndApproves)
+            .ThenInclude(c => c.Bank)
+            .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+        List<Bank> BanksWhereApproved = new List<Bank>();
+        foreach (var bank in client.BanksAndApproves)
+        {
+            if (bank.Approved!.Value)
+            {
+                BanksWhereApproved.Add(bank.Bank!);
+            }
+        }
+
         return View(new ClientProfileModel()
         {
-            Banks = _context.Banks.ToList(),
+            Banks = BanksWhereApproved,
             Client = _context.Clients
                 .Include(c => c.Banks).Include(c => c.OpennedBankAccounts).Include(c => c.BanksAndApproves)
                 .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result
@@ -163,9 +176,6 @@ public class ClientController : Controller
                         manager.WaitingForRegistrationApprove.Add(client);
                         _context.Managers.Update(manager);
                         await _context.SaveChangesAsync();
-
-                        Manager test = ((await _context.Managers.FirstOrDefaultAsync(m =>
-                            m.Id == model.IdOfSelectedManager))!);
                     }
                 }
             }

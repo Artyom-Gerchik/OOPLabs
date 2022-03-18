@@ -1,0 +1,38 @@
+@model LAB1.Models.Bank.BankProfileModel
+
+<form asp-action="BankProfileForClient" asp-controller="Bank" asp-anti-forgery="true">
+
+    <h3>Bank @Model.Bank.Type @Model.Bank.LegalName</h3>
+    <table class="table table-hover table-dark">
+        <tbody>
+        <tr>
+            <th scope="row">Id</th>
+            <td>@Model.Bank.Id.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Address</th>
+            <td>@Model.Bank.LegalAddress</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</form>
+
+<form asp-action="OpenBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+    <input class="btn btn-success" type="submit" value="Open An Bank Account">
+</form>
+
+<form>
+    <input class="btn btn-success" type="submit" value="Get An Installment Plan">
+</form>
+
+<form>
+    <label for="basic-url" class="form-label">Withdraw Money From BankAccount</label>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Money Amount" aria-label="MoneyAmount" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">Withdraw</button>
+        </div>
+    </div>
+</form>
