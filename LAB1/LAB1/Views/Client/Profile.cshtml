@@ -1,4 +1,3 @@
-@using LAB1.Entities.UserCategories
 @model LAB1.Models.Client.ClientProfileModel
 
 @{
@@ -6,11 +5,32 @@
     {
         Layout = "~/Views/Shared/_LayoutClientWithBanks.cshtml";
     }
-    else
+    else if (!Model.BanksWhereApproved.Contains(Model.Banks[(int)Model.Client.CurrentBankId - 1]))
     {
         Layout = "~/Views/Shared/_LayoutClientWithRequestApprove.cshtml";
     }
 }
+
+<form asp-action="BankProfileForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+
+    @if (@Model.Client.Banks.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
+                <option selected>Choose...</option>
+                @foreach (var i in Model.Client.Banks)
+                {
+                    <option value="@i.Id">@i.LegalName</option>
+                }
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn"/>
+            </div>
+        </div>
+    }
+
+</form>
+
 
 <form asp-action="Profile" asp-controller="Client" asp-anti-forgery="true">
 
@@ -63,24 +83,26 @@
         </tr>
         </tbody>
     </table>
-</form>
-
-<form asp-action="BankProfileForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
-
-    @if (@Model.Client.Banks.Count != 0)
-    {
-        <div class="input-group mb-3">
-            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
-                <option selected>Choose...</option>
-                @foreach (var i in Model.Client.Banks)
-                {
-                    <option value="@i.Id">@i.LegalName</option>
-                }
-            </select>
-            <div class="form-group">
-                <input type="submit" value="Submit" class="btn"/>
-            </div>
-        </div>
-    }
-
+    <br>
+    <hr class="style1">
+    <br>
+    <table class="table table-hover table-dark">
+        <tbody>
+        @foreach (var i in Model.Client.OpennedBankAccounts)
+        {
+            <tr>
+                <th scope="row">Id Of Oppened bank account</th>
+                <td>@i.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Name Of Oppened bank account</th>
+                <td>@i.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                <td>@i.AmountOfMoney.ToString()</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </form>

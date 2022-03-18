@@ -72,9 +72,15 @@ public class ClientController : Controller
     public IActionResult Profile()
     {
         var client = _context.Clients
-            .Include(c => c.Banks).Include(c => c.OpennedBankAccounts).Include(c => c.BanksAndApproves)
+            .Include(c => c.Banks)
+            .Include(c => c.OpennedBankAccounts)
+            .Include(c => c.BanksAndApproves)!
             .ThenInclude(c => c.Bank)
             .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+
+        var banks = _context.Banks.Include(b => b.OpennedBankAccounts).ToList();
+
+
         List<Bank> BanksWhereApproved = new List<Bank>();
         foreach (var bank in client.BanksAndApproves)
         {
@@ -86,10 +92,9 @@ public class ClientController : Controller
 
         return View(new ClientProfileModel()
         {
-            Banks = BanksWhereApproved,
-            Client = _context.Clients
-                .Include(c => c.Banks).Include(c => c.OpennedBankAccounts).Include(c => c.BanksAndApproves)
-                .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result
+            BanksWhereApproved = BanksWhereApproved,
+            Client = client,
+            Banks = banks
         });
     }
 
@@ -109,7 +114,8 @@ public class ClientController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = _context.Clients.Include(c => c.Banks).Include(c => c.OpennedBankAccounts)
+            var client = _context.Clients.Include(c => c.Banks)
+                .Include(c => c.OpennedBankAccounts)
                 .Include(c => c.BanksAndApproves)
                 .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
             if (client != null)

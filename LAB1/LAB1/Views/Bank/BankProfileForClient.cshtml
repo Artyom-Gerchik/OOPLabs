@@ -19,13 +19,32 @@
 
 </form>
 
-<form asp-action="OpenBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
-    <input class="btn btn-success" type="submit" value="Open An Bank Account">
-</form>
+<table class="table table-hover table-dark">
+    <tbody>
+    <tr>
+        <th scope="row">
+            <form asp-action="OpenBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Open An Bank Account">
+            </form>
+        </th>
+    </tr>
+    <tr>
+        <th scope="row">
+            <form asp-action="CloseBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-danger" type="submit" value="Close An Bank Account">
+            </form>
+        </th>
+    </tr>
+    <tr>
+        <th scope="row">
+            <form>
+                <input class="btn btn-success" type="submit" value="Get An Installment Plan">
+            </form>
+        </th>
+    </tr>
+    </tbody>
+</table>
 
-<form>
-    <input class="btn btn-success" type="submit" value="Get An Installment Plan">
-</form>
 
 <form>
     <label for="basic-url" class="form-label">Withdraw Money From BankAccount</label>
