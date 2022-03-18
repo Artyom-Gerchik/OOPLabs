@@ -100,7 +100,14 @@ public class ManagerController : Controller
                 .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
             if (client != null)
             {
-                client.ApprovedByManager = true;
+                foreach (var banks in client.BanksAndApproves)
+                {
+                    if (banks.Bank!.Id == manager.BankId)
+                    {
+                        banks.Approved = true;
+                    }
+                }
+
                 manager.WaitingForRegistrationApprove.Remove(client);
                 _context.Clients.Update(client);
                 _context.Managers.Update(manager);

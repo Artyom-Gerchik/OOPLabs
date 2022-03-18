@@ -1,14 +1,14 @@
 @model LAB1.Models.Client.ClientProfileModel
 
 @{
-    if (Model.Client.BankId == 0)
+    if (Model.Client.CurrentBankId == 0)
     {
         Layout = "~/Views/Shared/_LayoutClientWithBanks.cshtml";
     }
-    if (Model.Client.ApprovedByManager == false && Model.Client.BankId != 0)
-    {
-        Layout = "~/Views/Shared/_LayoutClientWithRequestApprove.cshtml";
-    }
+    // if (Model.Client.BanksAndApproves.Count != 0 && Model.Client.BanksAndApproves.Approved == false && Model.Client.CurrentBankId != 0)
+    // {
+    //     Layout = "~/Views/Shared/_LayoutClientWithRequestApprove.cshtml";
+    // }
 }
 
 <form asp-action="Profile" asp-controller="Client" asp-anti-forgery="true">
@@ -54,11 +54,28 @@
         </tr>
         <tr>
             <th scope="row">Bank Id</th>
-            <td>@Model.Client.BankId.ToString()</td>
+            <td>@Model.Client.CurrentBankId.ToString()</td>
         </tr>
         <tr>
-            <th scope="row">Approved by manager?</th>
-            <td>@Model.Client.ApprovedByManager.ToString()</td>
+            <th scope="row">Current Balance</th>
+            <td>@Model.Client.BankBalance.ToString()</td>
+        </tr>
+        <tr>
+            @if (@Model.Client.Banks.Count != 0)
+            {
+                <div class="input-group mb-3">
+                    <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
+                        <option selected>Choose...</option>
+                        @foreach (var i in Model.Client.Banks)
+                        {
+                            <option value="@i.Id">@i.LegalName</option>
+                        }
+                    </select>
+                    <div class="form-group">
+                        <input type="submit" value="Submit" class="btn"/>
+                    </div>
+                </div>
+            }
         </tr>
         </tbody>
     </table>
