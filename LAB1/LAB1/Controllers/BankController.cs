@@ -94,7 +94,9 @@ public class BankController : Controller
             .Include(c => c.BanksAndApproves)!
             .ThenInclude(c => c.Bank)
             .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
-        var bank = client.Banks![(int)client.CurrentBankId - 1];
+        var bank = _context.Banks
+            .Include(b => b.OpennedBankAccounts)
+            .FirstAsync(b => b.Id == client.CurrentBankId).Result;
 
 
         return View(new CloseBankAccountForClientModel
@@ -132,6 +134,183 @@ public class BankController : Controller
 
             client.OpennedBankAccounts.Remove(bankAccountToRemove);
             bank.OpennedBankAccounts?.Remove(bankAccountToRemove);
+
+            _context.Clients.Update(client);
+            _context.Banks.Update(bank);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Client");
+        }
+
+        return View(model);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult GetMoneyFromBankAccountForClient()
+    {
+        var client = _context.Clients
+            .Include(c => c.Banks)!
+            .ThenInclude(c => c.OpennedBankAccounts)
+            .Include(c => c.OpennedBankAccounts)
+            .Include(c => c.BanksAndApproves)!
+            .ThenInclude(c => c.Bank)
+            .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+        var bank = _context.Banks
+            .Include(b => b.OpennedBankAccounts)
+            .FirstAsync(b => b.Id == client.CurrentBankId).Result;
+
+
+        return View(new GetMoneyFromBankAccountForClientModel
+        {
+            Client = client,
+            Bank = bank
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> GetMoneyFromBankAccountForClient(GetMoneyFromBankAccountForClientModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var client = _context.Clients
+                .Include(c => c.Banks)!
+                .ThenInclude(c => c.OpennedBankAccounts)
+                .Include(c => c.OpennedBankAccounts)
+                .Include(c => c.BanksAndApproves)!
+                .ThenInclude(c => c.Bank)
+                .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+
+            var bank = _context.Banks
+                .Include(b => b.OpennedBankAccounts)
+                .FirstAsync(b => b.Id == client.CurrentBankId).Result;
+
+            var bankAccountToWithDraw = new BankAccount();
+            foreach (var bankAccount in client.OpennedBankAccounts)
+            {
+                if (bankAccount.Id == model.IdOfBankAccountToWithdraw)
+                {
+                    bankAccountToWithDraw = bankAccount;
+                    break;
+                }
+            }
+
+            bankAccountToWithDraw.AmountOfMoney -= model.AmountOfMoney;
+            client.BankBalance += model.AmountOfMoney;
+
+            _context.Clients.Update(client);
+            await _context.SaveChangesAsync();
+
+
+            return RedirectToAction("Profile", "Client");
+        }
+
+        return View(model);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult MoveMoneyBetweenBankAccount()
+    {
+        var client = _context.Clients
+            .Include(c => c.Banks)!
+            .ThenInclude(c => c.OpennedBankAccounts)
+            .Include(c => c.OpennedBankAccounts)
+            .Include(c => c.BanksAndApproves)!
+            .ThenInclude(c => c.Bank)
+            .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+        var bank = _context.Banks
+            .Include(b => b.OpennedBankAccounts)
+            .FirstAsync(b => b.Id == client.CurrentBankId).Result;
+
+
+        return View(new MoveMoneyBetweenBankAccountModel
+        {
+            Client = client,
+            Bank = bank
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> MoveMoneyBetweenBankAccount(MoveMoneyBetweenBankAccountModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var client = _context.Clients
+                .Include(c => c.Banks)!
+                .ThenInclude(c => c.OpennedBankAccounts)
+                .Include(c => c.OpennedBankAccounts)
+                .Include(c => c.BanksAndApproves)!
+                .ThenInclude(c => c.Bank)
+                .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+
+            var bankAccountToWithDraw = new BankAccount();
+            var bankAccountToDeposit = new BankAccount();
+            foreach (var bankAccount in client.OpennedBankAccounts)
+            {
+                if (bankAccount.Id == model.IdOfBankAccountToWithdraw)
+                {
+                    bankAccountToWithDraw = bankAccount;
+                    //break;
+                }
+
+                if (bankAccount.Id == model.IdOfBankAccountToDeposit)
+                {
+                    bankAccountToDeposit = bankAccount;
+                }
+            }
+
+            bankAccountToWithDraw.AmountOfMoney -= model.AmountOfMoney;
+            bankAccountToDeposit.AmountOfMoney += model.AmountOfMoney;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Client");
+        }
+
+        return View(model);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult OpenBankDepositForClient()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> OpenBankDepositForClient(OpenBankDepositForClientModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var client = _context.Clients
+                .Include(c => c.Banks)!
+                .ThenInclude(c => c.OpennedBankAccounts)
+                .Include(c => c.OpennedBankAccounts)
+                .Include(c => c.BanksAndApproves)!
+                .ThenInclude(c => c.Bank)
+                .Include(c => c.OpennedBankDeposits)
+                .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+
+            var bank = _context.Banks
+                .Include(b => b.OpennedBankAccounts)
+                .Include(b => b.OpennedBankDeposits)
+                .FirstAsync(b => b.Id == client.CurrentBankId).Result;
+
+            BankDeposit bankDeposit = new BankDeposit();
+
+            bankDeposit.Name = model.Name;
+            bankDeposit.AmountOfMoney = model.AmountOfMoney;
+            bankDeposit.DateOfDeal = DateTime.Today;
+            bankDeposit.DateOfMoneyBack = model.DateOfMoneyBack;
+            TimeSpan HowMuchLasts = new TimeSpan();
+            HowMuchLasts = DateTime.Today.Subtract((DateTime)model.DateOfMoneyBack); // наоборот надо
+            bankDeposit.HowMuchLasts = Math.Abs(HowMuchLasts.Days);
+
+            client.OpennedBankDeposits!.Add(bankDeposit);
+            bank.OpennedBankDeposits!.Add(bankDeposit);
 
             _context.Clients.Update(client);
             _context.Banks.Update(bank);

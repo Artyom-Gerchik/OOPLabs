@@ -1,0 +1,61 @@
+@model LAB1.Models.Bank.MoveMoneyBetweenBankAccountModel
+
+@foreach (var i in Model.Client.OpennedBankAccounts)
+{
+    if (i.BankId == Model.Bank.Id)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Id Of Oppened bank account</th>
+                <td>@i.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Name Of Oppened bank account</th>
+                <td>@i.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                <td>@i.AmountOfMoney.ToString()</td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr class="style1">
+        <br>
+    }
+}
+
+<form asp-action="MoveMoneyBetweenBankAccount" asp-controller="Bank" asp-anti-forgery="true" method="post">
+    @if (Model.Client.OpennedBankAccounts.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfBankAccountToWithdraw">
+                <option selected>Choose to Withdraw</option>
+                @foreach (var OpennedBankAccount in Model.Client.OpennedBankAccounts)
+                {
+                    <option value="@OpennedBankAccount.Id">@OpennedBankAccount.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfBankAccountToDeposit">
+                <option selected>Choose to Deposit</option>
+                @foreach (var OpennedBankAccount in Model.Client.OpennedBankAccounts)
+                {
+                    <option value="@OpennedBankAccount.Id">@OpennedBankAccount.Name</option>
+                }
+            </select>
+        </div>
+        <div>
+            <div>
+                <label asp-for="AmountOfMoney">Amount Of Monney</label><br/>
+                <input type="double" asp-for="AmountOfMoney"/>
+            </div>
+            <div>
+                <input type="submit" value="Withdraw"/>
+            </div>
+        </div>
+    }
+</form>

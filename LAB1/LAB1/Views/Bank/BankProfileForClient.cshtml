@@ -24,14 +24,33 @@
     <tr>
         <th scope="row">
             <form asp-action="OpenBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                <input class="btn btn-success" type="submit" value="Open An Bank Account">
+                <input class="btn btn-primary" type="submit" value="Open An Bank Account">
             </form>
         </th>
+        <td>
+            <form asp-action="OpenBankDepositForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-primary" type="submit" value="Open An Bank Deposit">
+            </form>
+        </td>
     </tr>
     <tr>
         <th scope="row">
             <form asp-action="CloseBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
                 <input class="btn btn-danger" type="submit" value="Close An Bank Account">
+            </form>
+        </th>
+    </tr>
+    <tr>
+        <th scope="row">
+            <form asp-action="GetMoneyFromBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Get Money From An Bank Account">
+            </form>
+        </th>
+    </tr>
+    <tr>
+        <th scope="row">
+            <form asp-action="MoveMoneyBetweenBankAccount" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-warning" type="submit" value="Move Money Between Bank Accounts">
             </form>
         </th>
     </tr>
@@ -44,14 +63,3 @@
     </tr>
     </tbody>
 </table>
-
-
-<form>
-    <label for="basic-url" class="form-label">Withdraw Money From BankAccount</label>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Money Amount" aria-label="MoneyAmount" aria-describedby="basic-addon2">
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button">Withdraw</button>
-        </div>
-    </div>
-</form>

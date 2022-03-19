@@ -76,10 +76,10 @@ public class ClientController : Controller
             .Include(c => c.OpennedBankAccounts)
             .Include(c => c.BanksAndApproves)!
             .ThenInclude(c => c.Bank)
+            .Include(c => c.OpennedBankDeposits)
             .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
 
         var banks = _context.Banks.Include(b => b.OpennedBankAccounts).ToList();
-
 
         var BanksWhereApproved = new List<Bank>();
         foreach (var bank in client.BanksAndApproves)

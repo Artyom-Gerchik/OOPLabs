@@ -13,11 +13,14 @@
 
 <form asp-action="ChangeBankId" asp-controller="Client" asp-anti-forgery="true" method="get">
 
+    <h4>Travel to bank page</h4>
+
+
     @if (Model.Client.Banks.Count != 0)
     {
         <div class="input-group mb-3">
             <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
-                <option selected>Choose...</option>
+                <option selected>Choose Bank</option>
                 @foreach (var bank in Model.Client.Banks)
                 {
                     foreach (var approvedBank in Model.Client.BanksAndApproves)
@@ -36,7 +39,9 @@
     }
 
 </form>
-
+<br>
+<hr class="style1">
+<br>
 
 <form asp-action="Profile" asp-controller="Client" asp-anti-forgery="true">
 
@@ -84,7 +89,7 @@
             <td>@Model.Client.CurrentBankId.ToString()</td>
         </tr>
         <tr>
-            <th scope="row">Current Balance</th>
+            <th scope="row">Current Cash Balance</th>
             <td>@Model.Client.BankBalance.ToString()</td>
         </tr>
         </tbody>
@@ -92,10 +97,11 @@
     <br>
     <hr class="style1">
     <br>
-    <table class="table table-hover table-dark">
-        <tbody>
-        @foreach (var i in Model.Client.OpennedBankAccounts)
-        {
+
+    @foreach (var i in Model.Client.OpennedBankAccounts)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
             <tr>
                 <th scope="row">Id Of Bank, where bank account was opened</th>
                 <td>@i.BankId.ToString()</td>
@@ -112,7 +118,51 @@
                 <th scope="row">AmountOfMoney Of Oppened bank account</th>
                 <td>@i.AmountOfMoney.ToString()</td>
             </tr>
-        }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+        <br>
+        <hr class="style1">
+        <br>
+    }
+
+    @foreach (var i in Model.Client.OpennedBankDeposits)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Id Of Bank, where bank deposit was opened</th>
+                <td>@i.BankId.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Id Of Oppened bank Deposit</th>
+                <td>@i.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Name Of Oppened bank Deposit</th>
+                <td>@i.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
+                <td>@i.AmountOfMoney.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Opened</th>
+                <td>@i.DateOfDeal.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Will close</th>
+                <td>@i.DateOfMoneyBack.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Days remaining</th>
+                <td>(@i.HowMuchLasts.ToString())</td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr class="style1">
+        <br>
+    }
+
+
 </form>
