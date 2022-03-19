@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace LAB1.Entities;
 
 public class BankAccount

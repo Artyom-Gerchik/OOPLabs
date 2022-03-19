@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using LAB1.Entities.UserCategories;
-
 namespace LAB1.Entities;
 
 public class Bank : Company

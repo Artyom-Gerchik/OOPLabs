@@ -3,30 +3,33 @@
 
 @foreach (var i in Model.Client.OpennedBankAccounts)
 {
-    <table class="table table-hover table-dark">
-        <tbody>
-        <tr>
-            <th scope="row">Id Of Oppened bank account</th>
-            <td>@i.Id.ToString()</td>
-        </tr>
-        <tr>
-            <th scope="row">Name Of Oppened bank account</th>
-            <td>@i.Name</td>
-        </tr>
-        <tr>
-            <th scope="row">AmountOfMoney Of Oppened bank account</th>
-            <td>@i.AmountOfMoney.ToString()</td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-    <hr class="style1">
-    <br>
+    if (i.BankId == Model.Bank.Id)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Id Of Oppened bank account</th>
+                <td>@i.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Name Of Oppened bank account</th>
+                <td>@i.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                <td>@i.AmountOfMoney.ToString()</td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr class="style1">
+        <br>
+    }
 }
 
 <form asp-action="CloseBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="post">
 
-    @if (@Model.Client.Banks.Count != 0)
+    @if (Model.Client.Banks.Count != 0)
     {
         <div class="input-group mb-3">
             <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfBankAccountToClose">

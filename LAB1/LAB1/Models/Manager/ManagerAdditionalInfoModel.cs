@@ -1,5 +1,3 @@
-using LAB1.Entities;
-
 namespace LAB1.Models.Manager;
 
 public class ManagerAdditionalInfoModel

@@ -1,5 +1,3 @@
-using LAB1.Entities.UserCategories;
-
 namespace LAB1.Models.Client;
 
 public class ClientGetApproveModel

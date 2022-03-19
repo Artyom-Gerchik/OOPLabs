@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220319095107_testOne1234567890100099999")]
+    partial class testOne1234567890100099999
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -76,20 +78,6 @@ namespace LAB1.Migrations
                             LegalName = "firstBank",
                             PayerAccountNumber = "123456789",
                             Type = "OOO"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AmountOfAdministrators = 0,
-                            AmountOfClients = 0,
-                            AmountOfManagers = 0,
-                            AmountOfMoney = 1005005.0,
-                            AmountOfOperators = 0,
-                            BankIdentificationCode = "1234557890",
-                            LegalAddress = "Dzerzhinskogo District 88",
-                            LegalName = "secondBank",
-                            PayerAccountNumber = "123456787",
-                            Type = "OAO"
                         });
                 });
 

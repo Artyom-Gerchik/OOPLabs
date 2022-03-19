@@ -1,14 +1,12 @@
 using System.Security.Claims;
 using LAB1.Data;
-using LAB1.Entities;
-using LAB1.Models;
 using LAB1.Entities.UserCategories;
+using LAB1.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 
 namespace LAB1.Controllers;
 
@@ -25,17 +23,17 @@ public class AccountController : Controller
     [Authorize]
     public IActionResult Profile()
     {
-        User user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
-        Client client = _context.Clients.FirstOrDefaultAsync(c => c.Email.Equals(User.Identity.Name)).Result;
-        Operator bankOperator = _context.Operators.FirstOrDefaultAsync(o => o.Email.Equals(User.Identity.Name)).Result;
-        Manager manager = _context.Managers.FirstOrDefaultAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+        var user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+        var client = _context.Clients.FirstOrDefaultAsync(c => c.Email.Equals(User.Identity.Name)).Result;
+        var bankOperator = _context.Operators.FirstOrDefaultAsync(o => o.Email.Equals(User.Identity.Name)).Result;
+        var manager = _context.Managers.FirstOrDefaultAsync(m => m.Email.Equals(User.Identity.Name)).Result;
 
         switch (user.RoleId)
         {
             case 1: // administrator
                 break;
             case 2: // user
-                return View(new RoleModel()
+                return View(new RoleModel
                 {
                     Roles = _context.Roles.ToList(),
                     User = user
@@ -43,13 +41,9 @@ public class AccountController : Controller
                 break;
             case 3:
                 if (client != null)
-                {
                     return RedirectToAction("Profile", "Client");
-                }
                 else
-                {
                     return RedirectToAction("GetAdditionalInfo", "Client");
-                }
 
                 break;
             case 4: // foreignClient
@@ -58,13 +52,9 @@ public class AccountController : Controller
                 break;
             case 6: // manager
                 if (manager != null)
-                {
                     return RedirectToAction("Profile", "Manager");
-                }
                 else
-                {
                     return RedirectToAction("GetAdditionalInfo", "Manager");
-                }
 
                 break;
             case 7: // operator
@@ -73,7 +63,7 @@ public class AccountController : Controller
                 break;
         }
 
-        return View(new RoleModel()
+        return View(new RoleModel
         {
             Roles = _context.Roles.ToList(),
             User = user
@@ -135,10 +125,8 @@ public class AccountController : Controller
 
                 return RedirectToAction("Profile", "Account");
             }
-            else
-            {
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
-            }
+
+            ModelState.AddModelError("", "Некорректные логин и(или) пароль");
         }
 
         return View(model);

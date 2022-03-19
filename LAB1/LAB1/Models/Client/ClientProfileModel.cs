@@ -1,6 +1,3 @@
-using LAB1.Entities;
-using Microsoft.AspNetCore.Mvc;
-
 namespace LAB1.Models.Client;
 
 public class ClientProfileModel

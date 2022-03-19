@@ -1,7 +1,7 @@
 @model LAB1.Models.Client.ClientProfileModel
 
 @{
-    if (Model.Client.CurrentBankId == 0)
+    if (Model.Client.Banks.Count != Model.Banks.Count)
     {
         Layout = "~/Views/Shared/_LayoutClientWithBanks.cshtml";
     }
@@ -11,16 +11,22 @@
     }
 }
 
-<form asp-action="BankProfileForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+<form asp-action="ChangeBankId" asp-controller="Client" asp-anti-forgery="true" method="get">
 
-    @if (@Model.Client.Banks.Count != 0)
+    @if (Model.Client.Banks.Count != 0)
     {
         <div class="input-group mb-3">
             <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
                 <option selected>Choose...</option>
-                @foreach (var i in Model.Client.Banks)
+                @foreach (var bank in Model.Client.Banks)
                 {
-                    <option value="@i.Id">@i.LegalName</option>
+                    foreach (var approvedBank in Model.Client.BanksAndApproves)
+                    {
+                        if (bank.Equals(approvedBank.Bank) && approvedBank.Approved == true)
+                        {
+                            <option value="@bank.Id">@bank.LegalName</option>
+                        }
+                    }
                 }
             </select>
             <div class="form-group">
@@ -90,6 +96,10 @@
         <tbody>
         @foreach (var i in Model.Client.OpennedBankAccounts)
         {
+            <tr>
+                <th scope="row">Id Of Bank, where bank account was opened</th>
+                <td>@i.BankId.ToString()</td>
+            </tr>
             <tr>
                 <th scope="row">Id Of Oppened bank account</th>
                 <td>@i.Id.ToString()</td>

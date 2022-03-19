@@ -1,8 +1,5 @@
 using LAB1.Data;
-using LAB1.Entities;
 using LAB1.Entities.UserCategories;
-using LAB1.Models;
-using LAB1.Models.Client;
 using LAB1.Models.Manager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +20,7 @@ public class ManagerController : Controller
     [Authorize]
     public IActionResult GetAdditionalInfo()
     {
-        return View(new ManagerAdditionalInfoModel()
+        return View(new ManagerAdditionalInfoModel
         {
             Banks = _context.Banks.ToList()
         });
@@ -35,10 +32,10 @@ public class ManagerController : Controller
     {
         if (ModelState.IsValid)
         {
-            User user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
-            Role managerRole = (await _context.Roles.FirstOrDefaultAsync(r => r.Name == "manager"))!;
+            var user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+            var managerRole = (await _context.Roles.FirstOrDefaultAsync(r => r.Name == "manager"))!;
 
-            Manager manager = new Manager
+            var manager = new Manager
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -55,7 +52,7 @@ public class ManagerController : Controller
 
             if (model.SelectedBankId != null)
             {
-                Bank bank = await _context.Banks.FirstOrDefaultAsync(b =>
+                var bank = await _context.Banks.FirstOrDefaultAsync(b =>
                     b.Id.ToString().Equals(model.SelectedBankId.ToString()));
                 bank.AmountOfManagers++;
             }
@@ -79,10 +76,10 @@ public class ManagerController : Controller
     {
         var manager = _context.Managers.Include(m => m.WaitingForRegistrationApprove)
             .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
-        List<Client> clientsToApprove = manager.WaitingForRegistrationApprove;
+        var clientsToApprove = manager.WaitingForRegistrationApprove;
 
 
-        return View(new ManagerApproveModel()
+        return View(new ManagerApproveModel
         {
             ClientsToApprove = clientsToApprove
         });
@@ -94,7 +91,7 @@ public class ManagerController : Controller
     {
         if (ModelState.IsValid)
         {
-            Client client =
+            var client =
                 _context.Clients.Include(c => c.BanksAndApproves).ThenInclude(c => c.Bank)
                     .FirstOrDefault(u => u.Id == model.IdOfApprovedClient)!;
             var manager = _context.Managers.Include(m => m.WaitingForRegistrationApprove)
@@ -102,12 +99,8 @@ public class ManagerController : Controller
             if (client != null)
             {
                 foreach (var banks in client.BanksAndApproves)
-                {
                     if (banks.Bank!.Id == manager.BankId)
-                    {
                         banks.Approved = true;
-                    }
-                }
 
                 manager.WaitingForRegistrationApprove.Remove(client);
                 _context.Clients.Update(client);
@@ -127,9 +120,9 @@ public class ManagerController : Controller
         var manager = _context.Managers.Include(m => m.WaitingForRegistrationApprove)
             .FirstAsync(m => m.Email.Equals(User.Identity.Name));
 
-        return View(new ManagerProfileModel()
+        return View(new ManagerProfileModel
         {
-            Manager = manager.Result,
+            Manager = manager.Result
         });
     }
 }

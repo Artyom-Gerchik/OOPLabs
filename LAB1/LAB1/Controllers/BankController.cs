@@ -1,6 +1,5 @@
 using LAB1.Data;
 using LAB1.Entities;
-using LAB1.Entities.UserCategories;
 using LAB1.Models.Bank;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,10 +27,10 @@ public class BankController : Controller
             .ThenInclude(c => c.Bank)
             .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
 
-        var bank = client.Banks![((int)client.CurrentBankId - 1)];
+        var bank = client.Banks![(int)client.CurrentBankId - 1];
 
 
-        return View(new BankProfileModel()
+        return View(new BankProfileModel
         {
             Client = client,
             Bank = bank
@@ -63,7 +62,7 @@ public class BankController : Controller
                 .Include(b => b.OpennedBankAccounts)
                 .FirstAsync(b => b.Id == client.CurrentBankId).Result;
 
-            BankAccount bankAccount = new BankAccount
+            var bankAccount = new BankAccount
             {
                 ClientId = client.Id,
                 BankId = bank.Id,
@@ -95,10 +94,10 @@ public class BankController : Controller
             .Include(c => c.BanksAndApproves)!
             .ThenInclude(c => c.Bank)
             .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
-        var bank = client.Banks![((int)client.CurrentBankId - 1)];
+        var bank = client.Banks![(int)client.CurrentBankId - 1];
 
 
-        return View(new CloseBankAccountForClientModel()
+        return View(new CloseBankAccountForClientModel
         {
             Client = client,
             Bank = bank
@@ -123,15 +122,13 @@ public class BankController : Controller
                 .Include(b => b.OpennedBankAccounts)
                 .FirstAsync(b => b.Id == client.CurrentBankId).Result;
 
-            BankAccount bankAccountToRemove = new BankAccount();
+            var bankAccountToRemove = new BankAccount();
             foreach (var bankAccount in client.OpennedBankAccounts)
-            {
                 if (bankAccount.Id == model.IdOfBankAccountToClose)
                 {
                     bankAccountToRemove = bankAccount;
                     break;
                 }
-            }
 
             client.OpennedBankAccounts.Remove(bankAccountToRemove);
             bank.OpennedBankAccounts?.Remove(bankAccountToRemove);
