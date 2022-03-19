@@ -10,4 +10,5 @@ public class BankDeposit
     public int? BankId { get; set; }
     public double? AmountOfMoney { get; set; }
     public string? Name { get; set; }
+    public double? Percent { get; set; }
 }

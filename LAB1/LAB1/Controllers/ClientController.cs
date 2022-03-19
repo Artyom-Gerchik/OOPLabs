@@ -79,6 +79,7 @@ public class ClientController : Controller
             .Include(c => c.OpennedBankDeposits)
             .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
 
+
         var banks = _context.Banks.Include(b => b.OpennedBankAccounts).ToList();
 
         var BanksWhereApproved = new List<Bank>();
@@ -111,9 +112,22 @@ public class ClientController : Controller
         var banksToPass = new List<Bank>();
 
         foreach (var bank in banks)
-        foreach (var approvedBank in client.BanksAndApproves!)
-            if (!bank.Equals(approvedBank.Bank))
+        {
+            if (client.BanksAndApproves.Count == banks.Count)
+            {
+                foreach (var approvedBank in client.BanksAndApproves!)
+                {
+                    if (!bank.Equals(approvedBank.Bank))
+                    {
+                        banksToPass.Add(bank);
+                    }
+                }
+            }
+            else
+            {
                 banksToPass.Add(bank);
+            }
+        }
 
 
         return View(new BanksModel

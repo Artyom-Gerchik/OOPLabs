@@ -1,0 +1,49 @@
+@model LAB1.Models.Bank.SpeedRunDepositModel
+
+@foreach (var OpennedDeposits in Model.Client.OpennedBankDeposits)
+{
+    if (OpennedDeposits.BankId == Model.Bank.Id)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Id Of Oppened bank account</th>
+                <td>@OpennedDeposits.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Name Of Oppened bank account</th>
+                <td>@OpennedDeposits.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                <td>@OpennedDeposits.AmountOfMoney.ToString()</td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr class="style1">
+        <br>
+    }
+}
+
+<form asp-action="SpeedRunDeposit" asp-controller="Bank" asp-anti-forgery="true" method="post">
+
+    @if (Model.Client.OpennedBankDeposits.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfDepositToSpeedRun">
+                <option selected>Choose...</option>
+                @foreach (var opennedBankDeposit in Model.Client.OpennedBankDeposits)
+                {
+                    if (opennedBankDeposit.HowMuchLasts != 0)
+                    {
+                        <option value="@opennedBankDeposit.Id">@opennedBankDeposit.Name</option>
+                    }
+                }
+            </select>
+            <div>
+                <input type="submit" value="Speed Run"/>
+            </div>
+        </div>
+    }
+</form>
