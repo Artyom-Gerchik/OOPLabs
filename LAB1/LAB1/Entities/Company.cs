@@ -10,4 +10,6 @@ public class Company
     public string? PayerAccountNumber { get; set; }
     public string? BankIdentificationCode { get; set; }
     public string? LegalAddress { get; set; }
+    
+    //public double? SalaryForWorkers { get; set; }
 }

@@ -47,15 +47,14 @@
                 <option selected>Choose to Deposit</option>
                 @foreach (var OpennedBankDeposit in Model.Client.OpennedBankDeposits)
                 {
-                    <option value="@OpennedBankDeposit.Id">@OpennedBankDeposit.Name</option>
+                    if (OpennedBankDeposit.HowMuchLasts != 0)
+                    {
+                        <option value="@OpennedBankDeposit.Id">@OpennedBankDeposit.Name</option>
+                    }
                 }
             </select>
         </div>
         <div>
-            @* <div> *@
-            @*     <label asp-for="AmountOfMoney">Amount Of Money</label><br/> *@
-            @*     <input type="double" asp-for="AmountOfMoney"/> *@
-            @* </div> *@
             <div>
                 <input type="submit" value="Move"/>
             </div>

@@ -16,6 +16,25 @@ public class ManagerController : Controller
         _context = context;
     }
 
+    public Client GetClient(int? id)
+    {
+        var client = _context.Clients
+            .Include(c => c.Banks)!
+            .ThenInclude(c => c.OpennedBankAccounts)
+            .Include(c => c.OpennedBankAccounts)
+            .Include(c => c.BanksAndApproves)!
+            .ThenInclude(c => c.Bank)
+            .Include(c => c.OpennedBankDeposits)
+            .Include(c => c.InstallmentPlansAndApproves)!
+            .ThenInclude(c => c.Bank)
+            .Include(c => c.InstallmentPlansAndApproves)!
+            .ThenInclude(c => c.InstallmentPlan)
+            .Include(c => c.CreditsAndApproves)!
+            .ThenInclude(c => c.Credit)
+            .FirstAsync(u => u.Id == id).Result;
+        return client;
+    }
+
     [HttpGet]
     [Authorize]
     public IActionResult GetAdditionalInfo()
@@ -47,7 +66,8 @@ public class ManagerController : Controller
                 RoleId = user.RoleId,
                 Role = managerRole,
                 BankId = model.SelectedBankId,
-                WaitingForRegistrationApprove = new List<Client>()
+                WaitingForRegistrationApprove = new List<Client>(),
+                WaitingForInstallmentPlanApprove = new List<Client>()
             };
 
             if (model.SelectedBankId != null)
@@ -74,14 +94,21 @@ public class ManagerController : Controller
     [Authorize(Roles = "manager")]
     public IActionResult Approve()
     {
-        var manager = _context.Managers.Include(m => m.WaitingForRegistrationApprove)
+        var manager = _context.Managers
+            .Include(m => m.WaitingForRegistrationApprove)
+            .Include(m => m.WaitingForInstallmentPlanApprove)
+            .Include(m => m.WaitingForCreditApprove)
             .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
-        var clientsToApprove = manager.WaitingForRegistrationApprove;
+        var clientsToApproveBankRegistration = manager.WaitingForRegistrationApprove;
+        var clientsToApproveInstallmentPlan = manager.WaitingForInstallmentPlanApprove;
+        var clientsToApproveCredit = manager.WaitingForCreditApprove;
 
 
         return View(new ManagerApproveModel
         {
-            ClientsToApprove = clientsToApprove
+            ClientsToApproveBankRegistration = clientsToApproveBankRegistration,
+            ClientsToApproveInstallmentPlan = clientsToApproveInstallmentPlan,
+            WaitingForCreditApprove = clientsToApproveCredit
         });
     }
 
@@ -91,21 +118,79 @@ public class ManagerController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client =
-                _context.Clients.Include(c => c.BanksAndApproves).ThenInclude(c => c.Bank)
-                    .FirstOrDefault(u => u.Id == model.IdOfApprovedClient)!;
-            var manager = _context.Managers.Include(m => m.WaitingForRegistrationApprove)
-                .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
-            if (client != null)
+            if (model.IdOfApprovedClientForRegistration != null)
             {
-                foreach (var banks in client.BanksAndApproves)
-                    if (banks.Bank!.Id == manager.BankId)
-                        banks.Approved = true;
+                var clientToApproveRegistration = GetClient(model.IdOfApprovedClientForRegistration);
+                var manager = _context.Managers
+                    .Include(m => m.WaitingForRegistrationApprove)
+                    .Include(m => m.WaitingForInstallmentPlanApprove)
+                    .Include(m => m.WaitingForCreditApprove)
+                    .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+                if (clientToApproveRegistration != null)
+                {
+                    foreach (var banks in clientToApproveRegistration.BanksAndApproves)
+                    {
+                        if (banks.Bank!.Id == manager.BankId)
+                        {
+                            banks.Approved = true;
+                        }
+                    }
 
-                manager.WaitingForRegistrationApprove.Remove(client);
-                _context.Clients.Update(client);
-                _context.Managers.Update(manager);
-                await _context.SaveChangesAsync();
+                    manager.WaitingForRegistrationApprove.Remove(clientToApproveRegistration);
+                    _context.Clients.Update(clientToApproveRegistration);
+                    _context.Managers.Update(manager);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            if (model.IdOfApprovedClientForInstallmentPlan != null)
+            {
+                var clientToApproveInstallmentPlan = GetClient(model.IdOfApprovedClientForInstallmentPlan);
+                var manager = _context.Managers
+                    .Include(m => m.WaitingForInstallmentPlanApprove)
+                    .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+                if (clientToApproveInstallmentPlan != null)
+                {
+                    foreach (var installmentPlans in clientToApproveInstallmentPlan.InstallmentPlansAndApproves!)
+                    {
+                        if (installmentPlans.InstallmentPlan!.BankId == manager.BankId)
+                        {
+                            installmentPlans.Approved = true;
+                            clientToApproveInstallmentPlan.BankBalance +=
+                                installmentPlans.InstallmentPlan!.AmountOfMoney;
+                        }
+                    }
+
+                    manager.WaitingForInstallmentPlanApprove.Remove(clientToApproveInstallmentPlan);
+                    _context.Clients.Update(clientToApproveInstallmentPlan);
+                    _context.Managers.Update(manager);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            if (model.IdOfApprovedClientForCredit != null)
+            {
+                var clientToApproveCredit = GetClient(model.IdOfApprovedClientForCredit);
+                var manager = _context.Managers
+                    .Include(m => m.WaitingForCreditApprove)
+                    .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+                if (clientToApproveCredit != null)
+                {
+                    foreach (var credit in clientToApproveCredit.CreditsAndApproves!)
+                    {
+                        if (credit.Credit!.BankId == manager.BankId)
+                        {
+                            credit.Approved = true;
+                            clientToApproveCredit.BankBalance +=
+                                credit.Credit!.AmountOfMoney;
+                        }
+                    }
+
+                    manager.WaitingForCreditApprove!.Remove(clientToApproveCredit);
+                    _context.Clients.Update(clientToApproveCredit);
+                    _context.Managers.Update(manager);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 
@@ -117,12 +202,15 @@ public class ManagerController : Controller
     [Authorize(Roles = "manager")]
     public IActionResult Profile()
     {
-        var manager = _context.Managers.Include(m => m.WaitingForRegistrationApprove)
-            .FirstAsync(m => m.Email.Equals(User.Identity.Name));
+        var manager = _context.Managers
+            .Include(m => m.WaitingForRegistrationApprove)
+            .Include(m => m.WaitingForInstallmentPlanApprove)
+            .Include(m => m.WaitingForCreditApprove)
+            .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
 
         return View(new ManagerProfileModel
         {
-            Manager = manager.Result
+            Manager = manager
         });
     }
 }

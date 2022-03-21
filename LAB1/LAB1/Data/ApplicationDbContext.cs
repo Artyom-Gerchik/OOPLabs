@@ -46,7 +46,8 @@ public sealed class ApplicationDbContext : IdentityDbContext
             AmountOfAdministrators = 0,
             AmountOfMoney = 100500,
             OpennedBankAccounts = new List<BankAccount>(),
-            OpennedBankDeposits = new List<BankDeposit>()
+            OpennedBankDeposits = new List<BankDeposit>(),
+            OpennedInstallmentPlans = new List<InstallmentPlan>()
         };
 
         var secondBank = new Bank
@@ -63,7 +64,8 @@ public sealed class ApplicationDbContext : IdentityDbContext
             AmountOfAdministrators = 0,
             AmountOfMoney = 1005005,
             OpennedBankAccounts = new List<BankAccount>(),
-            OpennedBankDeposits = new List<BankDeposit>()
+            OpennedBankDeposits = new List<BankDeposit>(),
+            OpennedInstallmentPlans = new List<InstallmentPlan>()
         };
 
 

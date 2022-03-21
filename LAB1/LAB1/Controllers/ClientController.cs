@@ -18,6 +18,36 @@ public class ClientController : Controller
         _context = context;
     }
 
+    public Client GetClient()
+    {
+        var client = _context.Clients
+            .Include(c => c.Banks)!
+            .ThenInclude(c => c.OpennedBankAccounts)
+            .Include(c => c.OpennedBankAccounts)
+            .Include(c => c.BanksAndApproves)!
+            .ThenInclude(c => c.Bank)
+            .Include(c => c.OpennedBankDeposits)
+            .Include(c => c.InstallmentPlansAndApproves)!
+            .ThenInclude(c => c.Bank)
+            .Include(c => c.InstallmentPlansAndApproves)!
+            .ThenInclude(c => c.InstallmentPlan)
+            .Include(c => c.CreditsAndApproves)!
+            .ThenInclude(c => c.Credit)
+            .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+        return client;
+    }
+
+    public Bank GetBank(Client client)
+    {
+        var bank = _context.Banks
+            .Include(b => b.OpennedBankAccounts)
+            .Include(b => b.OpennedBankDeposits)
+            .Include(b => b.OpennedInstallmentPlans)
+            .FirstAsync(b => b.Id == client.CurrentBankId).Result;
+        return bank;
+    }
+
+
     [HttpGet]
     [Authorize]
     public IActionResult GetAdditionalInfo()
@@ -51,7 +81,8 @@ public class ClientController : Controller
                 BanksAndApproves = new List<BankApproves>(),
                 BankBalance = 1000.0,
                 Banks = new List<Bank>(),
-                OpennedBankAccounts = new List<BankAccount>()
+                OpennedBankAccounts = new List<BankAccount>(),
+                InstallmentPlansAndApproves = new List<InstallmentPlanApproves>()
             };
 
             if (client != null)
@@ -71,18 +102,11 @@ public class ClientController : Controller
     [Authorize]
     public IActionResult Profile()
     {
-        var client = _context.Clients
-            .Include(c => c.Banks)
-            .Include(c => c.OpennedBankAccounts)
-            .Include(c => c.BanksAndApproves)!
-            .ThenInclude(c => c.Bank)
-            .Include(c => c.OpennedBankDeposits)
-            .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
-
-
+        var client = GetClient();
         var banks = _context.Banks.Include(b => b.OpennedBankAccounts).ToList();
-
         var BanksWhereApproved = new List<Bank>();
+
+
         foreach (var bank in client.BanksAndApproves)
             if (bank.Approved!.Value)
                 BanksWhereApproved.Add(bank.Bank!);
@@ -99,12 +123,7 @@ public class ClientController : Controller
     [Authorize]
     public IActionResult ChooseTheBank()
     {
-        var client = _context.Clients
-            .Include(c => c.Banks)
-            .Include(c => c.OpennedBankAccounts)
-            .Include(c => c.BanksAndApproves)!
-            .ThenInclude(c => c.Bank)
-            .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+        var client = GetClient();
 
         var banks = _context.Banks
             .Include(b => b.OpennedBankAccounts).ToList();
@@ -112,22 +131,16 @@ public class ClientController : Controller
         var banksToPass = new List<Bank>();
 
         foreach (var bank in banks)
-        {
             if (client.BanksAndApproves.Count == banks.Count)
             {
                 foreach (var approvedBank in client.BanksAndApproves!)
-                {
                     if (!bank.Equals(approvedBank.Bank))
-                    {
                         banksToPass.Add(bank);
-                    }
-                }
             }
             else
             {
                 banksToPass.Add(bank);
             }
-        }
 
 
         return View(new BanksModel
@@ -142,10 +155,8 @@ public class ClientController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = _context.Clients.Include(c => c.Banks)
-                .Include(c => c.OpennedBankAccounts)
-                .Include(c => c.BanksAndApproves)
-                .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+            var client = GetClient();
+
             if (client != null)
                 if (model.SelectedBankId != null)
                 {
@@ -172,8 +183,8 @@ public class ClientController : Controller
     [Authorize]
     public IActionResult RequestApprove()
     {
-        var client = _context.Clients.Include(c => c.Banks).Include(c => c.OpennedBankAccounts)
-            .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+        var client = GetClient();
+
         var managers = new List<Manager>();
         foreach (var manager in _context.Managers)
             if (manager.BankId == client.CurrentBankId)
@@ -191,12 +202,13 @@ public class ClientController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = await _context.Clients.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name));
+            var client = GetClient();
 
             if (client != null)
                 if (model.IdOfSelectedManager != null)
                 {
-                    var manager = _context.Managers.Include(m => m.WaitingForRegistrationApprove)
+                    var manager = _context.Managers
+                        .Include(m => m.WaitingForRegistrationApprove)
                         .FirstAsync(m => m.Id == model.IdOfSelectedManager).Result;
                     if (!manager.WaitingForRegistrationApprove.Contains(client))
                     {
@@ -216,7 +228,7 @@ public class ClientController : Controller
     [Authorize]
     public IActionResult ChangeBankId(ClientProfileModel model)
     {
-        var client = _context.Clients.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+        var client = GetClient();
 
         client!.CurrentBankId = model.SelectedBankId;
 
@@ -224,5 +236,64 @@ public class ClientController : Controller
         _context.SaveChanges();
 
         return RedirectToAction("BankProfileForClient", "Bank");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult AddMoneyForClient()
+    {
+        var client = GetClient();
+
+        client!.BankBalance += 10000;
+
+        _context.Clients.Update(client);
+        _context.SaveChangesAsync();
+
+        return RedirectToAction("Profile", "Client");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RemoveAllMoneyFromClient()
+    {
+        var client = GetClient();
+
+        client!.BankBalance = 0;
+
+        _context.Clients.Update(client);
+        _context.SaveChangesAsync();
+
+        return RedirectToAction("Profile", "Client");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult PayDay()
+    {
+        return RedirectToAction("Profile", "Client");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult Wipe()
+    {
+        var client = GetClient();
+        var bank = GetBank(client);
+
+        client.CreditsAndApproves = new List<CreditsAndApproves>();
+        client.OpennedBankAccounts = new List<BankAccount>();
+        client.OpennedBankDeposits = new List<BankDeposit>();
+        client.InstallmentPlansAndApproves = new List<InstallmentPlanApproves>();
+        client.CreditsAndApproves = new List<CreditsAndApproves>();
+
+        bank.OpennedBankAccounts = new List<BankAccount>();
+        bank.OpennedBankDeposits = new List<BankDeposit>();
+        bank.OpennedInstallmentPlans = new List<InstallmentPlan>();
+
+        _context.Clients.Update(client);
+        _context.Banks.Update(bank);
+        _context.SaveChangesAsync();
+
+        return RedirectToAction("Profile", "Client");
     }
 }

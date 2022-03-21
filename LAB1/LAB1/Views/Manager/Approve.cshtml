@@ -3,11 +3,15 @@
 @{
 }
 
+<br>
+<hr class="style1">
+<br>
+<h1>Approve Registration</h1>
 <form asp-action="Approve" asp-controller="Manager" asp-anti-forgery="true" method="post">
     <div class="input-group mb-3">
-        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfApprovedClient">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfApprovedClientForRegistration">
             <option selected>Choose...</option>
-            @foreach (var client in Model.ClientsToApprove)
+            @foreach (var client in Model.ClientsToApproveBankRegistration)
             {
                 <option value="@client.Id">@client.Name</option>
             }
@@ -17,5 +21,55 @@
             <input type="submit" value="Approve" class="btn"/>
         </div>
     </div>
-
 </form>
+<br>
+<hr class="style1">
+<br>
+
+<br>
+<hr class="style1">
+<br>
+<h1>Approve InstallmentPlan</h1>
+
+<form asp-action="Approve" asp-controller="Manager" asp-anti-forgery="true" method="post">
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect02" asp-for="@Model!.IdOfApprovedClientForInstallmentPlan">
+            <option selected>Choose...</option>
+            @foreach (var client in Model.ClientsToApproveInstallmentPlan)
+            {
+                <option value="@client.Id">@client.Name</option>
+            }
+
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Approve" class="btn"/>
+        </div>
+    </div>
+</form>
+<br>
+<hr class="style1">
+<br>
+
+<br>
+<hr class="style1">
+<br>
+<h1>Approve Credit</h1>
+
+<form asp-action="Approve" asp-controller="Manager" asp-anti-forgery="true" method="post">
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect03" asp-for="@Model!.IdOfApprovedClientForCredit">
+            <option selected>Choose...</option>
+            @foreach (var client in Model.WaitingForCreditApprove)
+            {
+                <option value="@client.Id">@client.Name</option>
+            }
+
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Approve" class="btn"/>
+        </div>
+    </div>
+</form>
+<br>
+<hr class="style1">
+<br>

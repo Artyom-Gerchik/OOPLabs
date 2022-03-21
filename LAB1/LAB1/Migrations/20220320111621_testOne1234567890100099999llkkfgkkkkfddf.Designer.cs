@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220320111621_testOne1234567890100099999llkkfgkkkkfddf")]
+    partial class testOne1234567890100099999llkkfgkkkkfddf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -183,61 +185,6 @@ namespace LAB1.Migrations
                     b.ToTable("BankDeposit");
                 });
 
-            modelBuilder.Entity("LAB1.Entities.Credit", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("AmountOfMoney")
-                        .HasColumnType("REAL");
-
-                    b.Property<int?>("BankId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("DurationInMonths")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("Percent")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Credit");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.CreditsAndApproves", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool?>("Approved")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("BankId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("CreditId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BankId");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("CreditId");
-
-                    b.ToTable("CreditsAndApproves");
-                });
-
             modelBuilder.Entity("LAB1.Entities.InstallmentPlan", b =>
                 {
                     b.Property<int?>("Id")
@@ -263,36 +210,10 @@ namespace LAB1.Migrations
 
                     b.HasIndex("BankId");
 
+                    b.HasIndex("ClientId")
+                        .IsUnique();
+
                     b.ToTable("InstallmentPlan");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.InstallmentPlanApproves", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool?>("Approved")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("BankId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("InstallmentPlanId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BankId");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("InstallmentPlanId");
-
-                    b.ToTable("InstallmentPlanApproves");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Role", b =>
@@ -592,20 +513,10 @@ namespace LAB1.Migrations
                     b.Property<int?>("ManagerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ManagerId1")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ManagerId2")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("PassportNumberAndSeries")
                         .HasColumnType("TEXT");
 
                     b.HasIndex("ManagerId");
-
-                    b.HasIndex("ManagerId1");
-
-                    b.HasIndex("ManagerId2");
 
                     b.ToTable("Clients", (string)null);
                 });
@@ -669,49 +580,15 @@ namespace LAB1.Migrations
                         .HasForeignKey("ClientId");
                 });
 
-            modelBuilder.Entity("LAB1.Entities.CreditsAndApproves", b =>
-                {
-                    b.HasOne("LAB1.Entities.Bank", "Bank")
-                        .WithMany()
-                        .HasForeignKey("BankId");
-
-                    b.HasOne("LAB1.Entities.UserCategories.Client", null)
-                        .WithMany("CreditsAndApproves")
-                        .HasForeignKey("ClientId");
-
-                    b.HasOne("LAB1.Entities.Credit", "Credit")
-                        .WithMany()
-                        .HasForeignKey("CreditId");
-
-                    b.Navigation("Bank");
-
-                    b.Navigation("Credit");
-                });
-
             modelBuilder.Entity("LAB1.Entities.InstallmentPlan", b =>
                 {
                     b.HasOne("LAB1.Entities.Bank", null)
                         .WithMany("OpennedInstallmentPlans")
                         .HasForeignKey("BankId");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.InstallmentPlanApproves", b =>
-                {
-                    b.HasOne("LAB1.Entities.Bank", "Bank")
-                        .WithMany()
-                        .HasForeignKey("BankId");
 
                     b.HasOne("LAB1.Entities.UserCategories.Client", null)
-                        .WithMany("InstallmentPlansAndApproves")
-                        .HasForeignKey("ClientId");
-
-                    b.HasOne("LAB1.Entities.InstallmentPlan", "InstallmentPlan")
-                        .WithMany()
-                        .HasForeignKey("InstallmentPlanId");
-
-                    b.Navigation("Bank");
-
-                    b.Navigation("InstallmentPlan");
+                        .WithOne("OpennedInstallmentPlan")
+                        .HasForeignKey("LAB1.Entities.InstallmentPlan", "ClientId");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.User", b =>
@@ -783,16 +660,8 @@ namespace LAB1.Migrations
                         .IsRequired();
 
                     b.HasOne("LAB1.Entities.UserCategories.Manager", null)
-                        .WithMany("WaitingForCreditApprove")
-                        .HasForeignKey("ManagerId");
-
-                    b.HasOne("LAB1.Entities.UserCategories.Manager", null)
-                        .WithMany("WaitingForInstallmentPlanApprove")
-                        .HasForeignKey("ManagerId1");
-
-                    b.HasOne("LAB1.Entities.UserCategories.Manager", null)
                         .WithMany("WaitingForRegistrationApprove")
-                        .HasForeignKey("ManagerId2");
+                        .HasForeignKey("ManagerId");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
@@ -833,21 +702,16 @@ namespace LAB1.Migrations
 
                     b.Navigation("BanksAndApproves");
 
-                    b.Navigation("CreditsAndApproves");
-
-                    b.Navigation("InstallmentPlansAndApproves");
-
                     b.Navigation("OpennedBankAccounts");
 
                     b.Navigation("OpennedBankDeposits");
+
+                    b.Navigation("OpennedInstallmentPlan")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
                 {
-                    b.Navigation("WaitingForCreditApprove");
-
-                    b.Navigation("WaitingForInstallmentPlanApprove");
-
                     b.Navigation("WaitingForRegistrationApprove");
                 });
 #pragma warning restore 612, 618

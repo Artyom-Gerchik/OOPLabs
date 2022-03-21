@@ -1,0 +1,30 @@
+@model LAB1.Models.Bank.GetAnInstallmentPlanModel
+
+<form asp-action="GetAnInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="post">
+    <div>
+        <div>
+            <label asp-for="DurationInMonths">DurationInMonths</label><br/>
+            <input type="text" asp-for="DurationInMonths"/>
+        </div>
+        <div>
+            <label asp-for="Percent">Percent</label><br/>
+            <input type="text" asp-for="Percent"/>
+        </div>
+        <div>
+            <label asp-for="AmountOfMoney">AmountOfMoney</label><br/>
+            <input type="text" asp-for="AmountOfMoney"/>
+        </div>
+    </div>
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfSelectedManager">
+            <option selected>Choose Manager To Approve</option>
+            @foreach (var i in Model.Managers)
+            {
+                <option value="@i.Id">@i.Name @i.Surname</option>
+            }
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn"/>
+        </div>
+    </div>
+</form>
