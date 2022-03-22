@@ -116,9 +116,8 @@ namespace LAB1.Migrations
                     b.Property<string>("BankIdentificationCode")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<bool?>("IsItBank")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LegalAddress")
                         .HasColumnType("TEXT");
@@ -137,9 +136,119 @@ namespace LAB1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Company");
+                    b.HasData(
+                        new
+                        {
+                            Id = 4,
+                            BankIdentificationCode = "1111111111",
+                            IsItBank = false,
+                            LegalAddress = "Palmyra",
+                            LegalName = "Vagner Group",
+                            PayerAccountNumber = "123456789",
+                            SalaryForWorkers = 100000.0,
+                            Type = "OPG"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BankIdentificationCode = "1111111111",
+                            IsItBank = false,
+                            LegalAddress = "Sirya",
+                            LegalName = "Slavic Union",
+                            PayerAccountNumber = "123456788",
+                            SalaryForWorkers = 200000.0,
+                            Type = "OPG"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BankIdentificationCode = "1111111111",
+                            IsItBank = false,
+                            LegalAddress = "Burdj-Halif",
+                            LegalName = "VDV",
+                            PayerAccountNumber = "123456787",
+                            SalaryForWorkers = 300000.0,
+                            Type = "OPG"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BankIdentificationCode = "1111111111",
+                            IsItBank = false,
+                            LegalAddress = "Grozniy",
+                            LegalName = "CCO",
+                            PayerAccountNumber = "123456786",
+                            SalaryForWorkers = 400000.0,
+                            Type = "OPG"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BankIdentificationCode = "2222222222",
+                            IsItBank = false,
+                            LegalAddress = "London",
+                            LegalName = "SAS",
+                            PayerAccountNumber = "123456785",
+                            SalaryForWorkers = 500000.0,
+                            Type = "OPG"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BankIdentificationCode = "2222222222",
+                            IsItBank = false,
+                            LegalAddress = "Paris",
+                            LegalName = "GIGN",
+                            PayerAccountNumber = "123456784",
+                            SalaryForWorkers = 600000.0,
+                            Type = "OPG"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            BankIdentificationCode = "2222222222",
+                            IsItBank = false,
+                            LegalAddress = "Berlin",
+                            LegalName = "KSK",
+                            PayerAccountNumber = "123456783",
+                            SalaryForWorkers = 700000.0,
+                            Type = "OPG"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            BankIdentificationCode = "3333333333",
+                            IsItBank = false,
+                            LegalAddress = "Poznan",
+                            LegalName = "GROM",
+                            PayerAccountNumber = "123456782",
+                            SalaryForWorkers = 800000.0,
+                            Type = "OPG"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            BankIdentificationCode = "3333333333",
+                            IsItBank = false,
+                            LegalAddress = "St-Petersburg",
+                            LegalName = "FSKN",
+                            PayerAccountNumber = "123456781",
+                            SalaryForWorkers = 900000.0,
+                            Type = "OPG"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            BankIdentificationCode = "3333333333",
+                            IsItBank = false,
+                            LegalAddress = "Moscow",
+                            LegalName = "FSB",
+                            PayerAccountNumber = "123456780",
+                            SalaryForWorkers = 1000000.0,
+                            Type = "OPG"
+                        });
                 });
 
             modelBuilder.Entity("LAB1.Entities.Credit", b =>
@@ -576,19 +685,18 @@ namespace LAB1.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Companies");
-
-                    b.HasDiscriminator().HasValue("Bank");
+                    b.ToTable("Banks", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            BankIdentificationCode = "1234567890",
-                            LegalAddress = "Dzerzhinskogo District",
+                            BankIdentificationCode = "1111111111",
+                            IsItBank = true,
+                            LegalAddress = "Dzerzhinskogo District 1",
                             LegalName = "firstBank",
-                            PayerAccountNumber = "123456789",
-                            Type = "OOO",
+                            PayerAccountNumber = "111111111",
+                            Type = "OAO",
                             AmountOfAdministrators = 0,
                             AmountOfClients = 0,
                             AmountOfManagers = 0,
@@ -598,10 +706,26 @@ namespace LAB1.Migrations
                         new
                         {
                             Id = 2,
-                            BankIdentificationCode = "1234557890",
-                            LegalAddress = "Dzerzhinskogo District 88",
+                            BankIdentificationCode = "2222222222",
+                            IsItBank = true,
+                            LegalAddress = "Dzerzhinskogo District 2",
                             LegalName = "secondBank",
-                            PayerAccountNumber = "123456787",
+                            PayerAccountNumber = "222222222",
+                            Type = "OAO",
+                            AmountOfAdministrators = 0,
+                            AmountOfClients = 0,
+                            AmountOfManagers = 0,
+                            AmountOfMoney = 1005005.0,
+                            AmountOfOperators = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BankIdentificationCode = "3333333333",
+                            IsItBank = true,
+                            LegalAddress = "Dzerzhinskogo District 3",
+                            LegalName = "thirdBank",
+                            PayerAccountNumber = "333333333",
                             Type = "OAO",
                             AmountOfAdministrators = 0,
                             AmountOfClients = 0,
@@ -661,6 +785,18 @@ namespace LAB1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.ToTable("Operators", (string)null);
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Specialist", b =>
+                {
+                    b.HasBaseType("LAB1.Entities.UserCategories.User");
+
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Specialists", (string)null);
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
@@ -822,6 +958,12 @@ namespace LAB1.Migrations
                     b.HasOne("LAB1.Entities.UserCategories.Client", null)
                         .WithMany("Banks")
                         .HasForeignKey("ClientId");
+
+                    b.HasOne("LAB1.Entities.Company", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.Bank", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
@@ -858,6 +1000,19 @@ namespace LAB1.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Specialist", b =>
+                {
+                    b.HasOne("LAB1.Entities.Company", null)
+                        .WithMany("Specialists")
+                        .HasForeignKey("CompanyId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.User", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.UserCategories.Specialist", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
                 {
                     b.HasOne("LAB1.Entities.UserCategories.Operator", null)
@@ -869,6 +1024,8 @@ namespace LAB1.Migrations
 
             modelBuilder.Entity("LAB1.Entities.Company", b =>
                 {
+                    b.Navigation("Specialists");
+
                     b.Navigation("Workers");
                 });
 

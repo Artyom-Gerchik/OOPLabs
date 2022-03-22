@@ -15,4 +15,7 @@ public class Company
     public string? LegalAddress { get; set; }
     public List<Client>? Workers { get; set; }
     public double? SalaryForWorkers { get; set; }
+    public bool? IsItBank { get; set; }
+    public List<Specialist>? Specialists { get; set; }
+
 }
