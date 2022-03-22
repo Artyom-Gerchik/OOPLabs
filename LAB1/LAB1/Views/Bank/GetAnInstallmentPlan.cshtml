@@ -1,14 +1,11 @@
 @model LAB1.Models.Bank.GetAnInstallmentPlanModel
 
 <form asp-action="GetAnInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="post">
+    <div class="validation" asp-validation-summary="All"></div>
     <div>
         <div>
             <label asp-for="DurationInMonths">DurationInMonths</label><br/>
             <input type="text" asp-for="DurationInMonths"/>
-        </div>
-        <div>
-            <label asp-for="Percent">Percent</label><br/>
-            <input type="text" asp-for="Percent"/>
         </div>
         <div>
             <label asp-for="AmountOfMoney">AmountOfMoney</label><br/>
@@ -24,7 +21,7 @@
             }
         </select>
         <div class="form-group">
-            <input type="submit" value="Submit" class="btn"/>
+            <input type="submit" value="Submit"/>
         </div>
     </div>
 </form>

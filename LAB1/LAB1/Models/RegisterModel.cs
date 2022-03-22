@@ -14,7 +14,9 @@ public class RegisterModel : IValidatableObject
     [Display(Name = "Name")]
     public string Name { get; set; }
 
-    [Required] [Display(Name = "Surname")] public string Surname { get; set; }
+    [Required]
+    [Display(Name = "Surname")]
+    public string Surname { get; set; }
 
     [Required]
     [Display(Name = "Patronymic")]

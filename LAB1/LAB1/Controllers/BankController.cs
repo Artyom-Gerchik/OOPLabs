@@ -42,6 +42,7 @@ public class BankController : Controller
             .Include(b => b.OpennedBankAccounts)
             .Include(b => b.OpennedBankDeposits)
             .Include(b => b.OpennedInstallmentPlans)
+            .Include(b => b.OpennedCredits)
             .FirstAsync(b => b.Id == client.CurrentBankId).Result;
         return bank;
     }
@@ -410,6 +411,7 @@ public class BankController : Controller
 
         return View(new GetAnInstallmentPlanModel()
         {
+            Client = client,
             Managers = managers
         });
     }
@@ -429,13 +431,19 @@ public class BankController : Controller
 
             var installmentPlan = new InstallmentPlan();
 
-            installmentPlan.Percent = model.Percent;
+
             installmentPlan.DurationInMonths = model.DurationInMonths;
             installmentPlan.AmountOfMoney = model.AmountOfMoney;
             installmentPlan.BankId = bank.Id;
             installmentPlan.ClientId = client.Id;
+            installmentPlan.DateOfMoneyBack = DateTime.Today.AddMonths((int)installmentPlan.DurationInMonths);
+
+            var HowMuchLasts = new TimeSpan();
+            HowMuchLasts = DateTime.Today.Subtract((DateTime)installmentPlan.DateOfMoneyBack);
+            installmentPlan.HowMuchMonthsLasts = Math.Abs(HowMuchLasts.Days);
 
             client.InstallmentPlansAndApproves!.Add(new InstallmentPlanApproves(installmentPlan!, false));
+            bank.OpennedInstallmentPlans!.Add(installmentPlan);
 
             if (model.IdOfSelectedManager != null)
             {
@@ -500,8 +508,10 @@ public class BankController : Controller
             credit.AmountOfMoney = model.AmountOfMoney;
             credit.BankId = bank.Id;
             credit.ClientId = client.Id;
+            credit.DateOfMoneyBack = DateTime.Today.AddMonths((int)credit.DurationInMonths);
 
             client.CreditsAndApproves!.Add(new CreditsAndApproves(credit!, false));
+            bank.OpennedCredits!.Add(credit);
 
             if (model.IdOfSelectedManager != null)
             {
@@ -523,4 +533,160 @@ public class BankController : Controller
 
         return View(model);
     }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult SpeedRunInstallmentPlan()
+    {
+        var client = GetClient();
+        var bank = GetBank(client);
+
+
+        return View(new SpeedRunInstallmentPlanModel
+        {
+            Client = client,
+            Bank = bank
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> SpeedRunInstallmentPlan(SpeedRunInstallmentPlanModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var client = GetClient();
+
+            var installmentPlan =
+                client.InstallmentPlansAndApproves.Find(b => b.Id == model.IdOfInstallmentPlanToSpeedRun);
+
+            installmentPlan.InstallmentPlan.HowMuchMonthsLasts = 0;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Client");
+        }
+
+        return View(model);
+    }
+
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult SpeedRunCredit()
+    {
+        var client = GetClient();
+        var bank = GetBank(client);
+
+
+        return View(new SpeedRunCreditModel
+        {
+            Client = client,
+            Bank = bank
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> SpeedRunCredit(SpeedRunCreditModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var client = GetClient();
+
+            var credit =
+                client.CreditsAndApproves!.Find(c => c.Id == model.IdOfCreditToSpeedRun);
+
+            credit.Credit.HowMuchLasts = 0;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Client");
+        }
+
+        return View(model);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult PayForInstallmentPlan()
+    {
+        var client = GetClient();
+        var bank = GetBank(client);
+
+
+        return View(new PayForInstallmentPlanModel
+        {
+            Client = client,
+            Bank = bank
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> PayForInstallmentPlan(PayForInstallmentPlanModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var client = GetClient();
+            var bank = GetBank(client);
+
+            var installmentPlan = client.InstallmentPlansAndApproves.Find(b => b.Id == model.IdOfInstallmentPlanToPay);
+
+            client.BankBalance -= installmentPlan.InstallmentPlan.AmountOfMoney;
+
+            client.InstallmentPlansAndApproves.Remove(installmentPlan);
+            bank.OpennedInstallmentPlans!.Remove(installmentPlan.InstallmentPlan);
+
+            _context.Clients.Update(client);
+            _context.Banks.Update(bank);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Client");
+        }
+
+        return View(model);
+    }
+
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult PayForCredit()
+    {
+        var client = GetClient();
+        var bank = GetBank(client);
+
+
+        return View(new PayForCreditModel
+        {
+            Client = client,
+            Bank = bank
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> PayForCredit(PayForCreditModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var client = GetClient();
+            var bank = GetBank(client);
+
+            var credit = client.CreditsAndApproves.Find(b => b.Id == model.IdOfCreditToPay);
+
+            client.BankBalance -= (credit.Credit.AmountOfMoney +
+                                   (credit.Credit.AmountOfMoney * (credit.Credit.Percent / 100)));
+
+            client.CreditsAndApproves.Remove(credit);
+            bank.OpennedCredits!.Remove(credit.Credit);
+
+            _context.Clients.Update(client);
+            _context.Banks.Update(bank);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Client");
+        }
+
+        return View(model);
+    }
+
 }

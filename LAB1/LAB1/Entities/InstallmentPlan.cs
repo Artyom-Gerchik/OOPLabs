@@ -8,6 +8,7 @@ public class InstallmentPlan
     public int? BankId { get; set; }
     public int? ClientId { get; set; }
     public int? DurationInMonths { get; set; }
-    public double? Percent { get; set; }
     public double? AmountOfMoney { get; set; }
+    public DateTime? DateOfMoneyBack { get; set; }
+    public int? HowMuchMonthsLasts { get; set; }
 }

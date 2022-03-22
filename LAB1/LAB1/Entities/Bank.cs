@@ -10,5 +10,5 @@ public class Bank : Company
     public List<BankAccount>? OpennedBankAccounts { get; set; }
     public List<BankDeposit>? OpennedBankDeposits { get; set; }
     public List<InstallmentPlan>? OpennedInstallmentPlans { get; set; }
-
+    public List<Credit>? OpennedCredits { get; set; }
 }

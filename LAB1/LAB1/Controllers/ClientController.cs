@@ -43,6 +43,7 @@ public class ClientController : Controller
             .Include(b => b.OpennedBankAccounts)
             .Include(b => b.OpennedBankDeposits)
             .Include(b => b.OpennedInstallmentPlans)
+            .Include(b=>b.OpennedCredits)
             .FirstAsync(b => b.Id == client.CurrentBankId).Result;
         return bank;
     }
@@ -106,6 +107,10 @@ public class ClientController : Controller
         var banks = _context.Banks.Include(b => b.OpennedBankAccounts).ToList();
         var BanksWhereApproved = new List<Bank>();
 
+
+        client.Salary = 1000;
+        _context.Clients.Update(client);
+        _context.SaveChangesAsync();
 
         foreach (var bank in client.BanksAndApproves)
             if (bank.Approved!.Value)
@@ -270,6 +275,11 @@ public class ClientController : Controller
     [Authorize]
     public IActionResult PayDay()
     {
+        var client = GetClient();
+        client.BankBalance += client.Salary;
+
+        _context.Update(client);
+        _context.SaveChangesAsync();
         return RedirectToAction("Profile", "Client");
     }
 

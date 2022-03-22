@@ -1,0 +1,57 @@
+@model LAB1.Models.Bank.PayForInstallmentPlanModel
+
+@foreach (var opennedInstallmentPlan in Model.Client.InstallmentPlansAndApproves)
+{
+    if (opennedInstallmentPlan.InstallmentPlan.BankId == Model.Bank.Id && opennedInstallmentPlan.Approved == true)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
+                <td>@opennedInstallmentPlan.InstallmentPlan.BankId.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Id Of Oppened Installment Plan</th>
+                <td>@opennedInstallmentPlan.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Duration</th>
+                <td>@opennedInstallmentPlan.InstallmentPlan.DurationInMonths.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">AmountOfMoney</th>
+                <td>@opennedInstallmentPlan.InstallmentPlan.AmountOfMoney.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Approved</th>
+                <td>@opennedInstallmentPlan.Approved.ToString()</td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr class="style1">
+        <br>
+    }
+}
+
+<form asp-action="PayForInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="post">
+
+    @if (Model.Client.InstallmentPlansAndApproves.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfInstallmentPlanToPay">
+                <option selected>Choose...</option>
+                @foreach (var opennedInstallmentPlan in Model.Client.InstallmentPlansAndApproves)
+                {
+                    if (opennedInstallmentPlan.InstallmentPlan.BankId == Model.Bank.Id && opennedInstallmentPlan.Approved == true && opennedInstallmentPlan.InstallmentPlan.HowMuchMonthsLasts == 0)
+                    {
+                        <option value="@opennedInstallmentPlan.Id">@opennedInstallmentPlan.InstallmentPlan.AmountOfMoney.ToString()</option>
+                    }
+                }
+            </select>
+            <div>
+                <input type="submit" value="Pay"/>
+            </div>
+        </div>
+    }
+</form>

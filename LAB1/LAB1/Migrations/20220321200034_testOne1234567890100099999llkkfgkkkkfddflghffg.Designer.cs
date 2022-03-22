@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220321200034_testOne1234567890100099999llkkfgkkkkfddflghffg")]
+    partial class testOne1234567890100099999llkkfgkkkkfddflghffg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -198,21 +200,13 @@ namespace LAB1.Migrations
                     b.Property<int?>("ClientId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("DateOfMoneyBack")
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("DurationInMonths")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("HowMuchLasts")
                         .HasColumnType("INTEGER");
 
                     b.Property<double?>("Percent")
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BankId");
 
                     b.ToTable("Credit");
                 });
@@ -261,13 +255,7 @@ namespace LAB1.Migrations
                     b.Property<int?>("ClientId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("DateOfMoneyBack")
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("DurationInMonths")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("HowMuchMonthsLasts")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -612,9 +600,6 @@ namespace LAB1.Migrations
                     b.Property<string>("PassportNumberAndSeries")
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("Salary")
-                        .HasColumnType("REAL");
-
                     b.HasIndex("ManagerId");
 
                     b.HasIndex("ManagerId1");
@@ -681,13 +666,6 @@ namespace LAB1.Migrations
                     b.HasOne("LAB1.Entities.UserCategories.Client", null)
                         .WithMany("OpennedBankDeposits")
                         .HasForeignKey("ClientId");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.Credit", b =>
-                {
-                    b.HasOne("LAB1.Entities.Bank", null)
-                        .WithMany("OpennedCredits")
-                        .HasForeignKey("BankId");
                 });
 
             modelBuilder.Entity("LAB1.Entities.CreditsAndApproves", b =>
@@ -839,8 +817,6 @@ namespace LAB1.Migrations
                     b.Navigation("OpennedBankAccounts");
 
                     b.Navigation("OpennedBankDeposits");
-
-                    b.Navigation("OpennedCredits");
 
                     b.Navigation("OpennedInstallmentPlans");
                 });

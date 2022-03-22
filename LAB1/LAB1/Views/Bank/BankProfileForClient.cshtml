@@ -47,7 +47,7 @@
         </td>
         <td>
             <form asp-action="GetCredit" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                <input class="btn btn-outline-success" type="submit" value="Get Credit">
+                <input class="btn btn-success" type="submit" value="Get Credit">
             </form>
         </td>
     </tr>
@@ -62,6 +62,16 @@
                 <input class="btn btn-outline-success" type="submit" value="Get Money From Deposit">
             </form>
         </td>
+        <td>
+            <form asp-action="SpeedRunInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Speed Run Installment Plan">
+            </form>
+        </td>
+        <td>
+            <form asp-action="SpeedRunCredit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Speed Run Credit">
+            </form>
+        </td>
     </tr>
     <tr>
         <th scope="row">
@@ -72,6 +82,16 @@
         <td>
             <form asp-action="SpeedRunDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
                 <input class="btn btn-success" type="submit" value="Speed Run Deposit">
+            </form>
+        </td>
+        <td>
+            <form asp-action="PayForInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Pay For Installment Plan">
+            </form>
+        </td>
+        <td>
+            <form asp-action="PayForCredit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Pay For Credit">
             </form>
         </td>
     </tr>
