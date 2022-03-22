@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using LAB1.Entities;
 
 namespace LAB1.Models.Client;
 
@@ -9,7 +10,8 @@ public class ClientAdditionalInfoModel : IValidatableObject
 
     [Display(Name = "Identification Number")]
     public string IdentificationNumber { get; set; }
-
+    public int? IdOfSelectedCompany { get; set; }
+    public List<Company>? Companies { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

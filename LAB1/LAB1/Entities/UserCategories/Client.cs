@@ -16,4 +16,5 @@ public class Client : User
     public List<BankDeposit>? OpennedBankDeposits { get; set; }
     public List<InstallmentPlanApproves>? InstallmentPlansAndApproves { get; set; }
     public List<CreditsAndApproves>? CreditsAndApproves { get; set; }
+    public Company? Work { get; set; }
 }

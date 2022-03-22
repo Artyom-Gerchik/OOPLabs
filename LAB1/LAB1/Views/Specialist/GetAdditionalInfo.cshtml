@@ -1,0 +1,23 @@
+@model LAB1.Models.Specialist.SpecialistGetAdditionalInfoModel
+
+<h1>Choose the company where you work</h1>
+
+<form asp-action="GetAdditionalInfo" asp-controller="Specialist" asp-anti-forgery="true" method="post">
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfSelectedCompany">
+            <option selected>Choose...</option>
+            @foreach (var company in Model.Companies)
+            {
+                if ((bool)!company.IsItBank)
+                {
+                    <option value="@company.Id">@company.LegalName</option>
+                }
+            }
+
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn"/>
+        </div>
+    </div>
+
+</form>

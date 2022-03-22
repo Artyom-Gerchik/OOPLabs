@@ -1,0 +1,46 @@
+@model LAB1.Models.Specialist.SpecialistProfileModel
+
+<form asp-action="Profile" asp-controller="Specialist" asp-anti-forgery="true">
+
+    <h3>Hello @Model.Specialist.Name</h3>
+    <table class="table table-hover table-dark">
+        <tbody>
+        <tr>
+            <th scope="row">Id</th>
+            <td>@Model.Specialist.Id.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Name</th>
+            <td>@Model.Specialist.Name</td>
+        </tr>
+        <tr>
+            <th scope="row">Surname</th>
+            <td>@Model.Specialist.Surname</td>
+        </tr>
+        <tr>
+            <th scope="row">Patronymic</th>
+            <td>@Model.Specialist.Patronymic</td>
+        </tr>
+        <tr>
+            <th scope="row">Email</th>
+            <td>@Model.Specialist.Email</td>
+        </tr>
+        <tr>
+            <th scope="row">Phone Number</th>
+            <td>@Model.Specialist.PhoneNumber</td>
+        </tr>
+        <tr>
+            <th scope="row">Role Id</th>
+            <td>@Model.Specialist.RoleId.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Company Id</th>
+            <td>@Model.Specialist.CompanyId.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Company Name</th>
+            <td>@Model.Specialist.Company!.LegalName</td>
+        </tr>
+        </tbody>
+    </table>
+</form>

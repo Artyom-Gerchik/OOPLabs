@@ -5,7 +5,7 @@
     {
         Layout = "~/Views/Shared/_LayoutClientWithBanks.cshtml";
     }
-    else if (!Model.BanksWhereApproved.Contains(Model.Banks[(int)Model.Client.CurrentBankId - 1]))
+    if (Model.Client.Banks.Count != 0)
     {
         Layout = "~/Views/Shared/_LayoutClientWithRequestApprove.cshtml";
     }
@@ -126,6 +126,10 @@
     <tr>
         <th scope="row">Current Cash Balance</th>
         <td>@Model.Client.BankBalance.ToString()</td>
+    </tr>
+    <tr>
+        <th scope="row">Work</th>
+        <td>@Model.Client.Work.LegalName</td>
     </tr>
     </tbody>
 </table>

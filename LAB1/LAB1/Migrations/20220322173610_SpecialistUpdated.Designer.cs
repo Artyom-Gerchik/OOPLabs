@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220322173610_SpecialistUpdated")]
+    partial class SpecialistUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -742,6 +744,9 @@ namespace LAB1.Migrations
                     b.Property<double?>("BankBalance")
                         .HasColumnType("REAL");
 
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("CurrentBankId")
                         .HasColumnType("INTEGER");
 
@@ -766,8 +771,7 @@ namespace LAB1.Migrations
                     b.Property<int?>("SpecialistId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("WorkId")
-                        .HasColumnType("INTEGER");
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("ManagerId");
 
@@ -776,8 +780,6 @@ namespace LAB1.Migrations
                     b.HasIndex("ManagerId2");
 
                     b.HasIndex("SpecialistId");
-
-                    b.HasIndex("WorkId");
 
                     b.ToTable("Clients", (string)null);
                 });
@@ -973,6 +975,10 @@ namespace LAB1.Migrations
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
                 {
+                    b.HasOne("LAB1.Entities.Company", null)
+                        .WithMany("Workers")
+                        .HasForeignKey("CompanyId");
+
                     b.HasOne("LAB1.Entities.UserCategories.User", null)
                         .WithOne()
                         .HasForeignKey("LAB1.Entities.UserCategories.Client", "Id")
@@ -994,12 +1000,6 @@ namespace LAB1.Migrations
                     b.HasOne("LAB1.Entities.UserCategories.Specialist", null)
                         .WithMany("ClientsToPaymentProject")
                         .HasForeignKey("SpecialistId");
-
-                    b.HasOne("LAB1.Entities.Company", "Work")
-                        .WithMany("Workers")
-                        .HasForeignKey("WorkId");
-
-                    b.Navigation("Work");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>

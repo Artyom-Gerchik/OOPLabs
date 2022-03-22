@@ -33,6 +33,7 @@ public class ClientController : Controller
             .ThenInclude(c => c.InstallmentPlan)
             .Include(c => c.CreditsAndApproves)!
             .ThenInclude(c => c.Credit)
+            .Include(c => c.Work)
             .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
         return client;
     }
@@ -53,7 +54,10 @@ public class ClientController : Controller
     [Authorize]
     public IActionResult GetAdditionalInfo()
     {
-        return View();
+        return View(new ClientAdditionalInfoModel
+        {
+            Companies = _context.Companies.ToList()
+        });
     }
 
     [HttpPost]
@@ -64,6 +68,8 @@ public class ClientController : Controller
         {
             var user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
             var clientRole = (await _context.Roles.FirstOrDefaultAsync(r => r.Name == "client"))!;
+            var selectedCompany = _context.Companies.FirstOrDefaultAsync(c => c.Id == model.IdOfSelectedCompany).Result;
+
 
             var client = new Client
             {
@@ -83,7 +89,8 @@ public class ClientController : Controller
                 BankBalance = 1000.0,
                 Banks = new List<Bank>(),
                 OpennedBankAccounts = new List<BankAccount>(),
-                InstallmentPlansAndApproves = new List<InstallmentPlanApproves>()
+                InstallmentPlansAndApproves = new List<InstallmentPlanApproves>(),
+                Work = selectedCompany
             };
 
             if (client != null)
@@ -167,8 +174,7 @@ public class ClientController : Controller
                 {
                     var bank = await _context.Banks.FirstOrDefaultAsync(b =>
                         b.Id.ToString().Equals(model.SelectedBankId));
-                    client.BanksAndApproves.Add(new BankApproves(bank!, false));
-                    client.CurrentBankId = bank!.Id;
+                    client.BanksAndApproves!.Add(new BankApproves(bank!, false));
                     client.Banks!.Add(bank);
                     bank.AmountOfClients++;
                     _context.Clients.Update(client);
@@ -197,6 +203,7 @@ public class ClientController : Controller
 
         return View(new ClientGetApproveModel
         {
+            ClientBanks = client.Banks!,
             Managers = managers
         });
     }
@@ -209,13 +216,17 @@ public class ClientController : Controller
         {
             var client = GetClient();
 
+
             if (client != null)
-                if (model.IdOfSelectedManager != null)
+                if (model.IdOfSelectedBank != null)
                 {
                     var manager = _context.Managers
                         .Include(m => m.WaitingForRegistrationApprove)
-                        .FirstAsync(m => m.Id == model.IdOfSelectedManager).Result;
-                    if (!manager.WaitingForRegistrationApprove.Contains(client))
+                        .FirstAsync(m =>
+                            m.BankId == model.IdOfSelectedBank && m.WaitingForRegistrationApprove!.Count == 0).Result;
+
+                    if (!manager.WaitingForRegistrationApprove.Contains(client) &&
+                        manager.WaitingForRegistrationApprove.Count == 0)
                     {
                         manager.WaitingForRegistrationApprove.Add(client);
                         _context.Managers.Update(manager);

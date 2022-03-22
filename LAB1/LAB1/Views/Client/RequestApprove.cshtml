@@ -7,11 +7,11 @@
 
 <form asp-action="RequestApprove" asp-controller="Client" asp-anti-forgery="true" method="post">
     <div class="input-group mb-3">
-        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfSelectedManager">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfSelectedBank">
             <option selected>Choose...</option>
-            @foreach (var i in Model.Managers)
+            @foreach (var bank in Model.ClientBanks)
             {
-                <option value="@i.Id">@i.Name @i.Surname</option>
+                <option value="@bank.Id">@bank.LegalName</option>
             }
         </select>
         <div class="form-group">

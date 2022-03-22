@@ -27,6 +27,7 @@ public class AccountController : Controller
         var client = _context.Clients.FirstOrDefaultAsync(c => c.Email.Equals(User.Identity.Name)).Result;
         var bankOperator = _context.Operators.FirstOrDefaultAsync(o => o.Email.Equals(User.Identity.Name)).Result;
         var manager = _context.Managers.FirstOrDefaultAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+        var specialist = _context.Specialists.FirstOrDefaultAsync(m => m.Email.Equals(User.Identity.Name)).Result;
 
         switch (user.RoleId)
         {
@@ -49,6 +50,10 @@ public class AccountController : Controller
             case 4: // foreignClient
                 break;
             case 5: // specialist
+                if (specialist != null)
+                    return RedirectToAction("Profile", "Specialist");
+                else
+                    return RedirectToAction("GetAdditionalInfo", "Specialist");
                 break;
             case 6: // manager
                 if (manager != null)
