@@ -9,4 +9,7 @@ public class GetAnInstallmentPlanModel
     public List<Entities.UserCategories.Manager>? Managers { get; set; }
     public int? IdOfSelectedManager { get; set; }
     public Entities.UserCategories.Client? Client { get; set; }
+    public DateTime DateToPay { get; set; }
+    public List<int>? AmountOfMonths { get; set; }
+    public int? SelectedAmountOfMonth { get; set; }
 }

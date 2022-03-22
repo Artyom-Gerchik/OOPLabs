@@ -15,10 +15,6 @@
                 <td>@opennedInstallmentPlan.Id.ToString()</td>
             </tr>
             <tr>
-                <th scope="row">Duration</th>
-                <td>@opennedInstallmentPlan.InstallmentPlan.DurationInMonths.ToString()</td>
-            </tr>
-            <tr>
                 <th scope="row">AmountOfMoney</th>
                 <td>@opennedInstallmentPlan.InstallmentPlan.AmountOfMoney.ToString()</td>
             </tr>
@@ -43,7 +39,7 @@
                 <option selected>Choose...</option>
                 @foreach (var opennedInstallmentPlan in Model.Client.InstallmentPlansAndApproves)
                 {
-                    if (opennedInstallmentPlan.InstallmentPlan.BankId == Model.Bank.Id && opennedInstallmentPlan.Approved == true && opennedInstallmentPlan.InstallmentPlan.HowMuchMonthsLasts == 0)
+                    if (opennedInstallmentPlan.InstallmentPlan.BankId == Model.Bank.Id && opennedInstallmentPlan.Approved == true && opennedInstallmentPlan.InstallmentPlan.HowMuchLasts == 0)
                     {
                         <option value="@opennedInstallmentPlan.Id">@opennedInstallmentPlan.InstallmentPlan.AmountOfMoney.ToString()</option>
                     }

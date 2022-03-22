@@ -10,6 +10,7 @@ public class Credit
     public int? DurationInMonths { get; set; }
     public double? Percent { get; set; }
     public double? AmountOfMoney { get; set; }
-    public DateTime? DateOfMoneyBack { get; set; }
+    public DateTime DateOfDeal { get; set; }
+    public DateTime DateToPay { get; set; }
     public int? HowMuchLasts { get; set; }
 }

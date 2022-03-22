@@ -43,7 +43,7 @@ public class ClientController : Controller
             .Include(b => b.OpennedBankAccounts)
             .Include(b => b.OpennedBankDeposits)
             .Include(b => b.OpennedInstallmentPlans)
-            .Include(b=>b.OpennedCredits)
+            .Include(b => b.OpennedCredits)
             .FirstAsync(b => b.Id == client.CurrentBankId).Result;
         return bank;
     }
@@ -303,6 +303,31 @@ public class ClientController : Controller
         _context.Clients.Update(client);
         _context.Banks.Update(bank);
         _context.SaveChangesAsync();
+
+        return RedirectToAction("Profile", "Client");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult UpdateInfo()
+    {
+        var client = GetClient();
+        var bank = GetBank(client);
+
+        foreach (var deposit in client.OpennedBankDeposits!)
+        {
+            DateTime dateOfMoneyBack = (DateTime)deposit.DateOfMoneyBack;
+            int howMuchDaysLasts = dateOfMoneyBack.Subtract(DateTime.Today).Days;
+            deposit.HowMuchLasts = howMuchDaysLasts;
+        }
+
+        foreach (var installmentPlan in client.InstallmentPlansAndApproves!)
+        {
+            DateTime dateToPay = (DateTime)installmentPlan.InstallmentPlan.DateToPay;
+            int howMuchDaysLasts = dateToPay.Subtract(DateTime.Today).Days;
+            installmentPlan.InstallmentPlan.HowMuchLasts = howMuchDaysLasts / 30;
+        }
+
 
         return RedirectToAction("Profile", "Client");
     }

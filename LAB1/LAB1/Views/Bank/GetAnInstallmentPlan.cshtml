@@ -1,12 +1,7 @@
 @model LAB1.Models.Bank.GetAnInstallmentPlanModel
 
 <form asp-action="GetAnInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="post">
-    <div class="validation" asp-validation-summary="All"></div>
     <div>
-        <div>
-            <label asp-for="DurationInMonths">DurationInMonths</label><br/>
-            <input type="text" asp-for="DurationInMonths"/>
-        </div>
         <div>
             <label asp-for="AmountOfMoney">AmountOfMoney</label><br/>
             <input type="text" asp-for="AmountOfMoney"/>
@@ -18,6 +13,13 @@
             @foreach (var i in Model.Managers)
             {
                 <option value="@i.Id">@i.Name @i.Surname</option>
+            }
+        </select>
+        <select class="custom-select" id="inputGroupSelect02" asp-for="@Model!.SelectedAmountOfMonth">
+            <option selected>How Much Months</option>
+            @foreach (var i in Model.AmountOfMonths)
+            {
+                <option value="@i">@i.ToString()</option>
             }
         </select>
         <div class="form-group">

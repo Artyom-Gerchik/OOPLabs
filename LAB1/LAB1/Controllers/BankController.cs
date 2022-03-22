@@ -253,6 +253,7 @@ public class BankController : Controller
             bankDeposit.AmountOfMoney = model.AmountOfMoney;
             bankDeposit.DateOfDeal = DateTime.Today;
             bankDeposit.DateOfMoneyBack = model.DateOfMoneyBack;
+
             var HowMuchLasts = new TimeSpan();
             HowMuchLasts = DateTime.Today.Subtract((DateTime)model.DateOfMoneyBack);
             bankDeposit.HowMuchLasts = Math.Abs(HowMuchLasts.Days);
@@ -409,10 +410,14 @@ public class BankController : Controller
             }
         }
 
+        var months = new List<int>(new int[] { 3, 6, 9, 12, 24 });
+
+
         return View(new GetAnInstallmentPlanModel()
         {
             Client = client,
-            Managers = managers
+            Managers = managers,
+            AmountOfMonths = months
         });
     }
 
@@ -431,16 +436,14 @@ public class BankController : Controller
 
             var installmentPlan = new InstallmentPlan();
 
-
+            installmentPlan.DateOfDeal = DateTime.Today;
+            installmentPlan.DateToPay = installmentPlan.DateOfDeal.AddMonths((int)model.SelectedAmountOfMonth);
             installmentPlan.DurationInMonths = model.DurationInMonths;
+            installmentPlan.HowMuchLasts =
+                Math.Abs(installmentPlan.DateToPay.Subtract(installmentPlan.DateOfDeal).Days);
             installmentPlan.AmountOfMoney = model.AmountOfMoney;
             installmentPlan.BankId = bank.Id;
             installmentPlan.ClientId = client.Id;
-            installmentPlan.DateOfMoneyBack = DateTime.Today.AddMonths((int)installmentPlan.DurationInMonths);
-
-            var HowMuchLasts = new TimeSpan();
-            HowMuchLasts = DateTime.Today.Subtract((DateTime)installmentPlan.DateOfMoneyBack);
-            installmentPlan.HowMuchMonthsLasts = Math.Abs(HowMuchLasts.Days);
 
             client.InstallmentPlansAndApproves!.Add(new InstallmentPlanApproves(installmentPlan!, false));
             bank.OpennedInstallmentPlans!.Add(installmentPlan);
@@ -481,9 +484,13 @@ public class BankController : Controller
             }
         }
 
+        var months = new List<int>(new int[] { 3, 6, 9, 12, 24 });
+
+
         return View(new GetCreditModel()
         {
-            Managers = managers
+            Managers = managers,
+            AmountOfMonths = months
         });
     }
 
@@ -503,12 +510,15 @@ public class BankController : Controller
 
             var credit = new Credit();
 
-            credit.Percent = model.Percent;
+            credit.DateOfDeal = DateTime.Today;
+            credit.DateToPay = credit.DateOfDeal.AddMonths((int)model.SelectedAmountOfMonth);
             credit.DurationInMonths = model.DurationInMonths;
+            credit.HowMuchLasts =
+                Math.Abs(credit.DateToPay.Subtract(credit.DateOfDeal).Days);
             credit.AmountOfMoney = model.AmountOfMoney;
             credit.BankId = bank.Id;
             credit.ClientId = client.Id;
-            credit.DateOfMoneyBack = DateTime.Today.AddMonths((int)credit.DurationInMonths);
+            credit.Percent = model.Percent;
 
             client.CreditsAndApproves!.Add(new CreditsAndApproves(credit!, false));
             bank.OpennedCredits!.Add(credit);
@@ -560,7 +570,7 @@ public class BankController : Controller
             var installmentPlan =
                 client.InstallmentPlansAndApproves.Find(b => b.Id == model.IdOfInstallmentPlanToSpeedRun);
 
-            installmentPlan.InstallmentPlan.HowMuchMonthsLasts = 0;
+            installmentPlan.InstallmentPlan.HowMuchLasts = 0;
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Client");
@@ -688,5 +698,4 @@ public class BankController : Controller
 
         return View(model);
     }
-
 }
