@@ -316,18 +316,24 @@ public class ClientController : Controller
 
         foreach (var deposit in client.OpennedBankDeposits!)
         {
-            DateTime dateOfMoneyBack = (DateTime)deposit.DateOfMoneyBack;
+            DateTime dateOfMoneyBack = deposit.DateOfMoneyBack;
             int howMuchDaysLasts = dateOfMoneyBack.Subtract(DateTime.Today).Days;
             deposit.HowMuchLasts = howMuchDaysLasts;
         }
 
         foreach (var installmentPlan in client.InstallmentPlansAndApproves!)
         {
-            DateTime dateToPay = (DateTime)installmentPlan.InstallmentPlan.DateToPay;
+            DateTime dateToPay = installmentPlan.InstallmentPlan!.DateToPay;
             int howMuchDaysLasts = dateToPay.Subtract(DateTime.Today).Days;
-            installmentPlan.InstallmentPlan.HowMuchLasts = howMuchDaysLasts / 30;
+            installmentPlan.InstallmentPlan.HowMuchLasts = howMuchDaysLasts;
         }
 
+        foreach (var credit in client.CreditsAndApproves!)
+        {
+            DateTime dateToPay = credit.Credit!.DateToPay;
+            int howMuchDaysLasts = dateToPay.Subtract(DateTime.Today).Days;
+            credit.Credit.HowMuchLasts = howMuchDaysLasts;
+        }
 
         return RedirectToAction("Profile", "Client");
     }

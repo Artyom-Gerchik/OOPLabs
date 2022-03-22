@@ -4,7 +4,7 @@ public class BankDeposit
 {
     public int? Id { get; set; }
     public DateTime? DateOfDeal { get; set; }
-    public DateTime? DateOfMoneyBack { get; set; }
+    public DateTime DateOfMoneyBack { get; set; }
     public int? HowMuchLasts { get; set; }
     public int? ClientId { get; set; }
     public int? BankId { get; set; }
