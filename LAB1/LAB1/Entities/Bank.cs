@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace LAB1.Entities;
 
+[Table("Banks")]
 public class Bank : Company
 {
     public int? AmountOfClients { get; set; }

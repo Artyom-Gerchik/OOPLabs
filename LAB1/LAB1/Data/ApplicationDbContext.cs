@@ -22,6 +22,8 @@ public sealed class ApplicationDbContext : IdentityDbContext
 
     public DbSet<BankApproves> Approves { get; set; }
 
+    public DbSet<Company> Companies { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         var administratorRole = new Role { Id = 1, Name = "administrator" };
@@ -68,10 +70,22 @@ public sealed class ApplicationDbContext : IdentityDbContext
             OpennedInstallmentPlans = new List<InstallmentPlan>()
         };
 
-
+        var firstCompany = new Company()
+        {
+            Id = 3,
+            Type = "OPG",
+            LegalName = "Vagner Group",
+            PayerAccountNumber = firstBank.PayerAccountNumber,
+            BankIdentificationCode = firstBank.BankIdentificationCode,
+            LegalAddress = "Palmyra",
+            Workers = new List<Client>(),
+            SalaryForWorkers = 10000
+        };
+        
         modelBuilder.Entity<Role>().HasData(administratorRole, userRole, clientRole, foreignClientRole, specialistRole,
             managerRole, operatorRole);
-        modelBuilder.Entity<Bank>().HasData(firstBank, secondBank);
+        modelBuilder.Entity<Bank>().ToTable("Banks").HasData(firstBank, secondBank);
+        modelBuilder.Entity<Company>().ToTable("Companies").HasData(firstCompany);
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<Client>().ToTable("Clients");
         modelBuilder.Entity<Operator>().ToTable("Operators");

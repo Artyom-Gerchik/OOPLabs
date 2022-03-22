@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220322153612_testOne1234567890100099999llkkfgkkkkfddflghffggkhblfkfdgkfdfl")]
+    partial class testOne1234567890100099999llkkfgkkkkfddflghffggkhblfkfdgkfdfl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -116,10 +118,6 @@ namespace LAB1.Migrations
                     b.Property<string>("BankIdentificationCode")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("LegalAddress")
                         .HasColumnType("TEXT");
 
@@ -138,8 +136,6 @@ namespace LAB1.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Company");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Credit", b =>
@@ -576,9 +572,7 @@ namespace LAB1.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Companies");
-
-                    b.HasDiscriminator().HasValue("Bank");
+                    b.ToTable("Banks", (string)null);
 
                     b.HasData(
                         new
@@ -822,6 +816,12 @@ namespace LAB1.Migrations
                     b.HasOne("LAB1.Entities.UserCategories.Client", null)
                         .WithMany("Banks")
                         .HasForeignKey("ClientId");
+
+                    b.HasOne("LAB1.Entities.Company", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.Bank", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>

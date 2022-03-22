@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220322153036_testOne1234567890100099999llkkfgkkkkfddflghffggkhblfkfdgk")]
+    partial class testOne1234567890100099999llkkfgkkkkfddflghffggkhblfkfdgk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -140,6 +142,18 @@ namespace LAB1.Migrations
                     b.ToTable("Companies");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Company");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 3,
+                            BankIdentificationCode = "1234567890",
+                            LegalAddress = "Palmyra",
+                            LegalName = "Vagner Group",
+                            PayerAccountNumber = "123456789",
+                            SalaryForWorkers = 10000.0,
+                            Type = "OPG"
+                        });
                 });
 
             modelBuilder.Entity("LAB1.Entities.Credit", b =>
@@ -575,8 +589,6 @@ namespace LAB1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasIndex("ClientId");
-
-                    b.ToTable("Companies");
 
                     b.HasDiscriminator().HasValue("Bank");
 
