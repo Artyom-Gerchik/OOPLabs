@@ -17,4 +17,5 @@ public class Client : User
     public List<InstallmentPlanApproves>? InstallmentPlansAndApproves { get; set; }
     public List<CreditsAndApproves>? CreditsAndApproves { get; set; }
     public Company? Work { get; set; }
+    public bool? AtSalaryProject { get; set; }
 }

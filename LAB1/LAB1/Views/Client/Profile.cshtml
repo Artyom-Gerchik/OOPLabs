@@ -11,34 +11,40 @@
     }
 }
 
-<div class="container">
-    <div class="col">
-        <div>
-            <form asp-action="AddMoneyForClient" asp-controller="Client" asp-anti-forgery="true" method="get">
-                <input class="btn btn-dark" type="submit" value="Add 10k">
-            </form>
-        </div>
-        <div>
-            <form asp-action="PayDay" asp-controller="Client" asp-anti-forgery="true" method="get">
-                <input class="btn btn-dark" type="submit" value="It's PayDay, fellas!">
-            </form>
-        </div>
-        <div>
-            <form asp-action="RemoveAllMoneyFromClient" asp-controller="Client" asp-anti-forgery="true" method="get">
-                <input class="btn btn-dark" type="submit" value="Remove All Money From Client">
-            </form>
-        </div>
-        <div>
-            <form asp-action="Wipe" asp-controller="Client" asp-anti-forgery="true" method="get">
-                <input class="btn btn-danger" type="submit" value="Wipe Bank Deposits, Installment Plans, Bank Accounts etc.">
-            </form>
-        </div>
-        <div>
-            <form asp-action="UpdateInfo" asp-controller="Client" asp-anti-forgery="true" method="get">
-                <input class="btn btn-success" type="submit" value="Update Info About Deposits / Installment Plans / Credits">
-            </form>
-        </div>
+<div>
+    <div>
+        <form asp-action="AddMoneyForClient" asp-controller="Client" asp-anti-forgery="true" method="get">
+            <input class="btn btn-dark btn-custom" type="submit" value="Add 10k">
+        </form>
     </div>
+    <div>
+        <form asp-action="PayDay" asp-controller="Client" asp-anti-forgery="true" method="get">
+            <input class="btn btn-dark btn-custom" type="submit" value="It's PayDay, fellas!">
+        </form>
+    </div>
+    <div>
+        <form asp-action="RemoveAllMoneyFromClient" asp-controller="Client" asp-anti-forgery="true" method="get">
+            <input class="btn btn-dark btn-custom" type="submit" value="Remove All Money From Client">
+        </form>
+    </div>
+    <div>
+        <form asp-action="Wipe" asp-controller="Client" asp-anti-forgery="true" method="get">
+            <input class="btn btn-danger btn-custom" type="submit" value="Wipe Bank Deposits, Installment Plans, Bank Accounts etc.">
+        </form>
+    </div>
+    <div>
+        <form asp-action="UpdateInfo" asp-controller="Client" asp-anti-forgery="true" method="get">
+            <input class="btn btn-success btn-custom" type="submit" value="Update Info About Deposits / Installment Plans / Credits">
+        </form>
+    </div>
+    @if (!(bool)Model.Client.AtSalaryProject)
+    {
+        <div>
+            <form asp-action="GetTheSalaryProject" asp-controller="Client" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success btn-custom" type="submit" value="Get The Salary Project">
+            </form>
+        </div>
+    }
 </div>
 
 

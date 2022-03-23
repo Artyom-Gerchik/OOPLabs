@@ -1,0 +1,18 @@
+@model LAB1.Models.Client.GetTheSalaryProjectForClientModel
+
+<form asp-action="GetTheSalaryProject" asp-controller="Client" asp-anti-forgery="true" method="post">
+
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfSelectedBankAccount">
+            <option selected>Choose...</option>
+            @foreach (var bankAccount in Model.ClientBankAccounts)
+            {
+                <option value="@bankAccount.Id">@bankAccount.Name</option>
+            }
+
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn"/>
+        </div>
+    </div>
+</form>

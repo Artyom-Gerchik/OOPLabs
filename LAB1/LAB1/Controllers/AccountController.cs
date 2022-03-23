@@ -63,7 +63,10 @@ public class AccountController : Controller
 
                 break;
             case 7: // operator
-                //return RedirectToAction("Profile", "Operator");
+                if (bankOperator != null)
+                    return RedirectToAction("Profile", "Operator");
+                else
+                    return RedirectToAction("GetAdditionalInfo", "Operator");
 
                 break;
         }

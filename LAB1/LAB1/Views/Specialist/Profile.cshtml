@@ -1,8 +1,16 @@
 @model LAB1.Models.Specialist.SpecialistProfileModel
 
+<div>
+    <form asp-action="SendRequestForSalaryProject" asp-controller="Specialist" asp-anti-forgery="true" method="get">
+        <input class="btn btn-dark btn-custom" type="submit" value="SendRequestForSalaryProject">
+    </form>
+</div>
+
 <form asp-action="Profile" asp-controller="Specialist" asp-anti-forgery="true">
 
     <h3>Hello @Model.Specialist.Name</h3>
+
+
     <table class="table table-hover table-dark">
         <tbody>
         <tr>
@@ -40,6 +48,10 @@
         <tr>
             <th scope="row">Company Name</th>
             <td>@Model.Specialist.Company!.LegalName</td>
+        </tr>
+        <tr>
+            <th scope="row">Workers Waiting For Salary Pproject</th>
+            <td>@Model.Specialist.ClientsToPaymentProject!.Count.ToString()</td>
         </tr>
         </tbody>
     </table>

@@ -6,4 +6,5 @@ namespace LAB1.Entities.UserCategories;
 public class Operator : User
 {
     public int? BankId { get; set; }
+    public List<Client>? ClientsWaitingForSalaryProject { get; set; }
 }

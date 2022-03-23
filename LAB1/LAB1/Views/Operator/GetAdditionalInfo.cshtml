@@ -1,0 +1,20 @@
+@model LAB1.Models.Operator.OperatorAdditionalInfoModel
+
+<h1>Choose the bank where you work</h1>
+
+<form asp-action="GetAdditionalInfo" asp-controller="Operator" asp-anti-forgery="true" method="post">
+    <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankId">
+            <option selected>Choose...</option>
+            @foreach (var bank in Model.Banks)
+            {
+                <option value="@bank.Id">@bank.LegalName</option>
+            }
+
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn"/>
+        </div>
+    </div>
+
+</form>

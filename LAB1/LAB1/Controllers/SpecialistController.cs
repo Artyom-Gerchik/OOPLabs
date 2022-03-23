@@ -83,9 +83,56 @@ public class SpecialistController : Controller
     public IActionResult Profile()
     {
         var specialist = GetSpecialist();
+
         return View(new SpecialistProfileModel()
         {
             Specialist = specialist
         });
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult SendRequestForSalaryProject()
+    {
+        var specialist = GetSpecialist();
+        return View(new SendRequestForSalaryProjectModel()
+        {
+            Clients = specialist.ClientsToPaymentProject
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> SendRequestForSalaryProject(SendRequestForSalaryProjectModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var specialist = GetSpecialist();
+            var bankId = 0;
+            foreach (var bank in _context.Banks)
+            {
+                if (bank.BankIdentificationCode == specialist.Company!.BankIdentificationCode)
+                {
+                    bankId = (int)bank.Id!;
+                    break;
+                }
+            }
+
+            var bankOperator = _context.Operators
+                .Include(o => o.ClientsWaitingForSalaryProject)
+                .FirstAsync(o => o.BankId == bankId && o.ClientsWaitingForSalaryProject!.Count == 0 && o.RoleId == 7)
+                .Result;
+
+            bankOperator.ClientsWaitingForSalaryProject!.AddRange(specialist.ClientsToPaymentProject!);
+            specialist.ClientsToPaymentProject!.Clear();
+
+            _context.Specialists.Update(specialist);
+            _context.Operators.Update(bankOperator);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Specialist");
+        }
+
+        return View();
     }
 }

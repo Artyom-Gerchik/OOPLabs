@@ -1,0 +1,56 @@
+@model LAB1.Models.Operator.OperatorProfileModel
+
+@{
+    if (Model.Operator.ClientsWaitingForSalaryProject.Count != 0)
+    {
+        Layout = "~/Views/Shared/_LayoutOperatorWithApproves.cshtml";
+    }
+}
+
+<form asp-action="Profile" asp-controller="Operator" asp-anti-forgery="true">
+
+    <h3>Hello @Model.Operator.Name</h3>
+
+    @* <div> *@
+    @*     <form asp-action="SendRequestForSalaryProject" asp-controller="Specialist" asp-anti-forgery="true" method="get"> *@
+    @*         <input class="btn btn-dark btn-custom" type="submit" value="Add 10k"> *@
+    @*     </form> *@
+    @* </div> *@
+
+    <table class="table table-hover table-dark">
+        <tbody>
+        <tr>
+            <th scope="row">Id</th>
+            <td>@Model.Operator.Id.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Name</th>
+            <td>@Model.Operator.Name</td>
+        </tr>
+        <tr>
+            <th scope="row">Surname</th>
+            <td>@Model.Operator.Surname</td>
+        </tr>
+        <tr>
+            <th scope="row">Patronymic</th>
+            <td>@Model.Operator.Patronymic</td>
+        </tr>
+        <tr>
+            <th scope="row">Email</th>
+            <td>@Model.Operator.Email</td>
+        </tr>
+        <tr>
+            <th scope="row">Phone Number</th>
+            <td>@Model.Operator.PhoneNumber</td>
+        </tr>
+        <tr>
+            <th scope="row">Role Id</th>
+            <td>@Model.Operator.RoleId.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Bank Id</th>
+            <td>@Model.Operator.BankId.ToString()</td>
+        </tr>
+        </tbody>
+    </table>
+</form>

@@ -15,19 +15,19 @@
         </div>
     </div>
     <div class="input-group mb-3">
-            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfSelectedCompany">
-                <option selected>Choose...</option>
-                @foreach (var company in Model.Companies)
+        <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfSelectedCompany">
+            <option selected>Choose...</option>
+            @foreach (var company in Model.Companies)
+            {
+                if ((bool)!company.IsItBank)
                 {
-                    if ((bool)!company.IsItBank)
-                    {
-                        <option value="@company.Id">@company.LegalName</option>
-                    }
+                    <option value="@company.Id">@company.LegalName</option>
                 }
-    
-            </select>
-            <div class="form-group">
-                <input type="submit" value="Submit" class="btn"/>
-            </div>
+            }
+
+        </select>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn"/>
         </div>
+    </div>
 </form>
