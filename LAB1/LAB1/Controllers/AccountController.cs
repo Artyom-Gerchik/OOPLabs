@@ -28,10 +28,20 @@ public class AccountController : Controller
         var bankOperator = _context.Operators.FirstOrDefaultAsync(o => o.Email.Equals(User.Identity.Name)).Result;
         var manager = _context.Managers.FirstOrDefaultAsync(m => m.Email.Equals(User.Identity.Name)).Result;
         var specialist = _context.Specialists.FirstOrDefaultAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+        var administrator = _context.Administrators.FirstOrDefaultAsync(a => a.Email.Equals(User.Identity.Name)).Result;
 
         switch (user.RoleId)
         {
             case 1: // administrator
+                if (administrator != null)
+                {
+                    return RedirectToAction("Profile", "Administrator");
+                }
+                else
+                {
+                    return RedirectToAction("GetAdditionalInfo", "Administrator");
+                }
+
                 break;
             case 2: // user
                 return View(new RoleModel
@@ -43,11 +53,13 @@ public class AccountController : Controller
             case 3:
                 if (client != null)
                 {
-                    Directory.CreateDirectory($"ClientLogs/{client.Id}");
                     return RedirectToAction("Profile", "Client");
                 }
                 else
+                {
+                    //Directory.CreateDirectory($"ClientLogs/{client.Id}");
                     return RedirectToAction("GetAdditionalInfo", "Client");
+                }
 
                 break;
             case 4: // foreignClient

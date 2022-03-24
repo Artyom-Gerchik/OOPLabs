@@ -18,7 +18,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
     public DbSet<Client> Clients { get; set; }
     public DbSet<Operator> Operators { get; set; }
     public DbSet<Manager> Managers { get; set; }
-
+    public DbSet<Administrator> Administrators { get; set; }
     public DbSet<Specialist> Specialists { get; set; }
     public DbSet<Bank> Banks { get; set; }
 
@@ -53,7 +53,6 @@ public sealed class ApplicationDbContext : IdentityDbContext
             OpennedBankAccounts = new List<BankAccount>(),
             OpennedBankDeposits = new List<BankDeposit>(),
             OpennedInstallmentPlans = new List<InstallmentPlan>()
-            //Specialist = new Specialist()
         };
 
         var secondBank = new Bank
@@ -92,7 +91,6 @@ public sealed class ApplicationDbContext : IdentityDbContext
             OpennedBankAccounts = new List<BankAccount>(),
             OpennedBankDeposits = new List<BankDeposit>(),
             OpennedInstallmentPlans = new List<InstallmentPlan>()
-            //Specialist = new Specialist()
         };
 
         var firstCompany = new Company
@@ -235,22 +233,6 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        // var managerFirstBank = new Manager
-        // {
-        //     Id = 1,
-        //     Email = "managerFirstBank@gmail.com",
-        //     Password = "123456",
-        //     Name = "managerFirstBankName",
-        //     Surname = "managerFirstBankSurname",
-        //     Patronymic = "managerFirstBankPatronymic",
-        //     PhoneNumber = "+375446756787",
-        //     RoleId = managerRole.Id,
-        //     Role = managerRole,
-        //     BankId = firstBank.Id,
-        //     WaitingForRegistrationApprove = new List<Client>(),
-        //     WaitingForInstallmentPlanApprove = new List<Client>()
-        // };
-
         var banks = new List<Bank>();
         banks.Add(firstBank);
         banks.Add(secondBank);
@@ -278,6 +260,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
         modelBuilder.Entity<Operator>().ToTable("Operators");
         modelBuilder.Entity<Manager>().ToTable("Managers");
         modelBuilder.Entity<Specialist>().ToTable("Specialists");
+        modelBuilder.Entity<Administrator>().ToTable("Administrators");
         base.OnModelCreating(modelBuilder);
     }
 }

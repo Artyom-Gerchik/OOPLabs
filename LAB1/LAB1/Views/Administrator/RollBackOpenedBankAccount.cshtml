@@ -1,0 +1,41 @@
+@model LAB1.Models.Administrator.AdministratorRollBackOpenedBankAccountModel
+
+<form asp-action="RollBackOpenedBankAccount" asp-controller="Administrator" asp-anti-forgery="true" method="post">
+
+    <table class="table table-hover table-dark">
+        <tbody>
+        @foreach (var opennedBankAccount in Model.Administrator.OpennedBankAccounts)
+        {
+            <tr>
+                <th scope="row">Client Name</th>
+                <td>@opennedBankAccount.Client!.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Bank Account Name</th>
+                <td>@opennedBankAccount.BankAccount!.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">------------------------</th>
+                <td>------------------------</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+
+    @if (Model.Administrator.OpennedBankAccounts.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankAccountId">
+                <option selected>Choose Bank Account</option>
+                @foreach (var opennedBankAccount in Model.Administrator.OpennedBankAccounts)
+                {
+                    <option value="@opennedBankAccount.BankAccount!.Id">@opennedBankAccount.Client!.Name - @opennedBankAccount.BankAccount!.Name</option>
+                }
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn"/>
+            </div>
+        </div>
+    }
+</form>

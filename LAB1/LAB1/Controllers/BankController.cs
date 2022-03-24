@@ -47,28 +47,39 @@ public class BankController : Controller
         return bank;
     }
 
-    public void Log(string funcName, Client client, Bank bank, TextWriter w, int bankAccountId)
+    public Administrator GetAdministrator(Client client)
     {
-        if (funcName.Equals("OpenBankAccountForClient"))
-        {
-            w.WriteLine($"\r\nLog {funcName}");
-            w.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
-            w.WriteLine("--------------------------------------------------------------");
-            w.WriteLine($"ClientId: {client.Id}");
-            w.WriteLine($"BankId: {bank.Id}");
-            w.WriteLine($"BankAccountId: {bankAccountId}");
-            w.WriteLine("--------------------------------------------------------------");
-        }
-        else
-        {
-            w.WriteLine($"\r\nLog {funcName}");
-            w.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
-            w.WriteLine("--------------------------------------------------------------");
-            w.WriteLine($"ClientId: {client.Id}");
-            w.WriteLine($"BankId: {bank.Id}");
-            w.WriteLine("--------------------------------------------------------------");
-        }
+        var administrator = _context.Administrators
+            .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.BankAccount)
+            .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.BankAccount)
+            .FirstOrDefaultAsync(a => a.BankId == client.CurrentBankId).Result;
+        return administrator!;
     }
+
+    // public void Log(string funcName, Client client, Bank bank, TextWriter w, int bankAccountId)
+    // {
+    //     if (funcName.Equals("OpenBankAccountForClient"))
+    //     {
+    //         w.WriteLine($"\r\nLog {funcName}");
+    //         w.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
+    //         w.WriteLine("--------------------------------------------------------------");
+    //         w.WriteLine($"ClientId: {client.Id}");
+    //         w.WriteLine($"BankId: {bank.Id}");
+    //         w.WriteLine($"BankAccountId: {bankAccountId}");
+    //         w.WriteLine("--------------------------------------------------------------");
+    //     }
+    //     else
+    //     {
+    //         w.WriteLine($"\r\nLog {funcName}");
+    //         w.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
+    //         w.WriteLine("--------------------------------------------------------------");
+    //         w.WriteLine($"ClientId: {client.Id}");
+    //         w.WriteLine($"BankId: {bank.Id}");
+    //         w.WriteLine("--------------------------------------------------------------");
+    //     }
+    // }
 
 
     [HttpGet]
@@ -100,6 +111,7 @@ public class BankController : Controller
         {
             var client = GetClient();
             var bank = GetBank(client);
+            var admin = GetAdministrator(client);
 
             var bankAccount = new BankAccount
             {
@@ -111,16 +123,17 @@ public class BankController : Controller
 
             client.OpennedBankAccounts!.Add(bankAccount);
             bank.OpennedBankAccounts!.Add(bankAccount);
-
+            admin.OpennedBankAccounts!.Add(new OpennedBankAccount(client, bankAccount));
+            
             _context.Clients.Update(client);
             _context.Banks.Update(bank);
             await _context.SaveChangesAsync();
 
-            await using (StreamWriter w = System.IO.File.AppendText($"ClientLogs/{client.Id}/log.txt"))
-            {
-                Log("OpenBankAccountForClient", client, bank, w, (int)bankAccount.Id);
-            }
-            
+            // await using (StreamWriter w = System.IO.File.AppendText($"ClientLogs/{client.Id}/log.txt"))
+            // {
+            //     Log("OpenBankAccountForClient", client, bank, w, (int)bankAccount.Id);
+            // }
+
             return RedirectToAction("Profile", "Client");
         }
 

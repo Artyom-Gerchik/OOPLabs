@@ -1,0 +1,47 @@
+@model LAB1.Models.Administrator.AdministratorProfileModel
+
+<form asp-action="Profile" asp-controller="Administrator" asp-anti-forgery="true">
+
+    <h3>Hello @Model.Administrator.Name</h3>
+
+    <table class="table table-hover table-dark">
+        <tbody>
+        <tr>
+            <th scope="row">Id</th>
+            <td>@Model.Administrator.Id.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Name</th>
+            <td>@Model.Administrator.Name</td>
+        </tr>
+        <tr>
+            <th scope="row">Surname</th>
+            <td>@Model.Administrator.Surname</td>
+        </tr>
+        <tr>
+            <th scope="row">Patronymic</th>
+            <td>@Model.Administrator.Patronymic</td>
+        </tr>
+        <tr>
+            <th scope="row">Email</th>
+            <td>@Model.Administrator.Email</td>
+        </tr>
+        <tr>
+            <th scope="row">Phone Number</th>
+            <td>@Model.Administrator.PhoneNumber</td>
+        </tr>
+        <tr>
+            <th scope="row">Role Id</th>
+            <td>@Model.Administrator.RoleId.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Bank Id</th>
+            <td>@Model.Administrator.BankId.ToString()</td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+<form asp-action="RollBackOpenedBankAccount" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+    <input class="btn btn-dark btn-custom" type="submit" value="RollBack Opened Bank Accounts">
+</form>
