@@ -1,23 +1,23 @@
-@model LAB1.Models.Administrator.AdministratorRollBackOpenedBankAccountModel
+@model LAB1.Models.Administrator.AdministratorRollBackDeletedBankAccountModel
 
-<form asp-action="RollBackOpenedBankAccount" asp-controller="Administrator" asp-anti-forgery="true" method="post">
+<form asp-action="RollBackDeletedBankAccount" asp-controller="Administrator" asp-anti-forgery="true" method="post">
 
     <br>
     <hr class="style1">
     <br>
     <br>
 
-    @foreach (var opennedBankAccount in Model.Administrator.OpennedBankAccounts)
+    @foreach (var deletedBankAccount in Model.Administrator.DeletedBankAccounts)
     {
         <table class="table table-hover table-dark">
             <tbody>
             <tr>
                 <th scope="row">Client Name</th>
-                <td>@opennedBankAccount.Client!.Name</td>
+                <td>@deletedBankAccount.Client!.Name</td>
             </tr>
             <tr>
                 <th scope="row">Bank Account Name</th>
-                <td>@opennedBankAccount.BankAccount!.Name</td>
+                <td>@deletedBankAccount.BankAccount!.Name</td>
             </tr>
 
             </tbody>
@@ -30,14 +30,14 @@
     <br>
 
 
-    @if (Model.Administrator.OpennedBankAccounts.Count != 0)
+    @if (Model.Administrator.DeletedBankAccounts!.Count != 0)
     {
         <div class="input-group mb-3">
             <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedBankAccountId">
                 <option selected>Choose Bank Account</option>
-                @foreach (var opennedBankAccount in Model.Administrator.OpennedBankAccounts)
+                @foreach (var deletedBankAccount in Model.Administrator.DeletedBankAccounts)
                 {
-                    <option value="@opennedBankAccount.BankAccount!.Id">@opennedBankAccount.Client!.Name - @opennedBankAccount.BankAccount!.Name</option>
+                    <option value="@deletedBankAccount.BankAccount!.Id">@deletedBankAccount.Client!.Name - @deletedBankAccount.BankAccount!.Name</option>
                 }
             </select>
             <div class="form-group">

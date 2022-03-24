@@ -1,30 +1,35 @@
 @model LAB1.Models.Bank.MoveMoneyBetweenBankAccountModel
-
+<br>
+<hr class="style1">
+<br>
 @foreach (var i in Model.Client.OpennedBankAccounts)
 {
     if (i.BankId == Model.Bank.Id)
     {
-        <table class="table table-hover table-dark">
-            <tbody>
-            <tr>
-                <th scope="row">Id Of Oppened bank account</th>
-                <td>@i.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Name Of Oppened bank account</th>
-                <td>@i.Name</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney Of Oppened bank account</th>
-                <td>@i.AmountOfMoney.ToString()</td>
-            </tr>
-            </tbody>
-        </table>
-        <br>
-        <hr class="style1">
-        <br>
+        if (!(bool)i.Hidden!)
+        {
+            <table class="table table-hover table-dark">
+                <tbody>
+                <tr>
+                    <th scope="row">Id Of Oppened bank account</th>
+                    <td>@i.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name Of Oppened bank account</th>
+                    <td>@i.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                    <td>@i.AmountOfMoney.ToString()</td>
+                </tr>
+                </tbody>
+            </table>
+        }
     }
 }
+<br>
+<hr class="style1">
+<br>
 
 <form asp-action="MoveMoneyBetweenBankAccount" asp-controller="Bank" asp-anti-forgery="true" method="post">
     @if (Model.Client.OpennedBankAccounts.Count != 0)

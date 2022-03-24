@@ -81,6 +81,11 @@ public class BankController : Controller
     //     }
     // }
 
+    // await using (StreamWriter w = System.IO.File.AppendText($"ClientLogs/{client.Id}/log.txt"))
+    // {
+    //     Log("OpenBankAccountForClient", client, bank, w, (int)bankAccount.Id);
+    // }
+
 
     [HttpGet]
     [Authorize]
@@ -88,6 +93,18 @@ public class BankController : Controller
     {
         var client = GetClient();
         var bank = GetBank(client);
+        // var admin = GetAdministrator(client);
+        //
+        // bank.OpennedBankAccounts!.Clear();
+        // client.OpennedBankAccounts!.Clear();
+        // admin.OpennedBankAccounts!.Clear();
+        // admin.DeletedBankAccounts!.Clear();
+        //
+        // _context.Banks.Update(bank);
+        // _context.Clients.Update(client);
+        // _context.Administrators.Update(admin);
+        // _context.SaveChangesAsync();
+
 
         return View(new BankProfileModel
         {
@@ -118,21 +135,17 @@ public class BankController : Controller
                 ClientId = client.Id,
                 BankId = bank.Id,
                 AmountOfMoney = model.InitiallAmountOfMoney,
-                Name = model.Name
+                Name = model.Name,
+                Hidden = false
             };
 
             client.OpennedBankAccounts!.Add(bankAccount);
             bank.OpennedBankAccounts!.Add(bankAccount);
             admin.OpennedBankAccounts!.Add(new OpennedBankAccount(client, bankAccount));
-            
+
             _context.Clients.Update(client);
             _context.Banks.Update(bank);
             await _context.SaveChangesAsync();
-
-            // await using (StreamWriter w = System.IO.File.AppendText($"ClientLogs/{client.Id}/log.txt"))
-            // {
-            //     Log("OpenBankAccountForClient", client, bank, w, (int)bankAccount.Id);
-            // }
 
             return RedirectToAction("Profile", "Client");
         }
@@ -163,20 +176,38 @@ public class BankController : Controller
         {
             var client = GetClient();
             var bank = GetBank(client);
+            var admin = GetAdministrator(client);
 
             var bankAccountToRemove = new BankAccount();
-            foreach (var bankAccount in client.OpennedBankAccounts)
+            foreach (var bankAccount in client.OpennedBankAccounts!)
+            {
                 if (bankAccount.Id == model.IdOfBankAccountToClose)
                 {
                     bankAccountToRemove = bankAccount;
                     break;
                 }
+            }
 
-            client.OpennedBankAccounts.Remove(bankAccountToRemove);
-            bank.OpennedBankAccounts?.Remove(bankAccountToRemove);
+
+            foreach (var opennedBankAccount in admin.OpennedBankAccounts!)
+            {
+                if (opennedBankAccount.BankAccount!.Equals(bankAccountToRemove))
+                {
+                    admin.OpennedBankAccounts.Remove(opennedBankAccount);
+                    bankAccountToRemove.Hidden = true;
+                    break;
+                }
+            }
+
+            admin.DeletedBankAccounts!.Add(new DeletedBankAccount(client, bankAccountToRemove));
+
+
+            //client.OpennedBankAccounts.Remove(bankAccountToRemove);
+            //bank.OpennedBankAccounts?.Remove(bankAccountToRemove);
 
             _context.Clients.Update(client);
             _context.Banks.Update(bank);
+            _context.Administrators.Update(admin);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Client");

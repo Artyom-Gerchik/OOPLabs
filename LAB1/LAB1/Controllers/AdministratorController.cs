@@ -130,7 +130,7 @@ public class AdministratorController : Controller
         var accountToRemoveFromAdmin = new OpennedBankAccount();
         if (ModelState.IsValid)
         {
-            foreach (var bankAccount in admin.OpennedBankAccounts)
+            foreach (var bankAccount in admin.OpennedBankAccounts!)
             {
                 if (bankAccount.BankAccount!.Id == model.SelectedBankAccountId)
                 {
@@ -159,44 +159,46 @@ public class AdministratorController : Controller
     [Authorize]
     public IActionResult RollBackDeletedBankAccount()
     {
-        // var admin = GetAdministrator();
-        // return View(new AdministratorRollBackOpenedBankAccountModel()
-        // {
-        //     Administrator = admin
-        // });
+        var admin = GetAdministrator();
+        return View(new AdministratorRollBackDeletedBankAccountModel()
+        {
+            Administrator = admin
+        });
     }
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> RollBackDeletedBankAccount(AdministratorRollBackOpenedBankAccountModel model)
+    public async Task<IActionResult> RollBackDeletedBankAccount(AdministratorRollBackDeletedBankAccountModel model)
     {
-        // var admin = GetAdministrator();
-        // var accountToRemoveFromClient = new BankAccount();
-        // var accountToRemoveFromAdmin = new OpennedBankAccount();
-        // if (ModelState.IsValid)
-        // {
-        //     foreach (var bankAccount in admin.OpennedBankAccounts)
-        //     {
-        //         if (bankAccount.BankAccount!.Id == model.SelectedBankAccountId)
-        //         {
-        //             accountToRemoveFromAdmin = bankAccount;
-        //             accountToRemoveFromClient = bankAccount.BankAccount;
-        //             break;
-        //         }
-        //     }
-        //
-        //     var client = GetClient(accountToRemoveFromClient.ClientId);
-        //
-        //     client.OpennedBankAccounts!.Remove(accountToRemoveFromClient);
-        //     admin.OpennedBankAccounts.Remove(accountToRemoveFromAdmin);
-        //
-        //     _context.Clients.Update(client);
-        //     _context.Administrators.Update(admin);
-        //     await _context.SaveChangesAsync();
-        //
-        //     return RedirectToAction("Profile", "Administrator");
-        // }
-        //
-        // return View(model);
+        var admin = GetAdministrator();
+        var accountToReturnToClient = new BankAccount();
+        var accountToRemoveFromAdmin = new DeletedBankAccount();
+        if (ModelState.IsValid)
+        {
+            foreach (var bankAccount in admin.DeletedBankAccounts!)
+            {
+                if (bankAccount.BankAccount!.Id == model.SelectedBankAccountId)
+                {
+                    accountToRemoveFromAdmin = bankAccount;
+                    accountToReturnToClient = bankAccount.BankAccount;
+                    break;
+                }
+            }
+
+            var client = GetClient(accountToReturnToClient.ClientId);
+
+            accountToReturnToClient.Hidden = false;
+
+            admin.DeletedBankAccounts!.Remove(accountToRemoveFromAdmin);
+            admin.OpennedBankAccounts!.Add(new OpennedBankAccount(client, accountToReturnToClient));
+
+            _context.Clients.Update(client);
+            _context.Administrators.Update(admin);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Administrator");
+        }
+
+        return View(model);
     }
 }

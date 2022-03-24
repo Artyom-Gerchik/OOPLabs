@@ -1,30 +1,36 @@
 @model LAB1.Models.Bank.GetMoneyFromBankAccountForClientModel
 
+<br>
+<hr class="style1">
+<br>
 @foreach (var OpennedBankAccount in Model.Client.OpennedBankAccounts)
 {
     if (OpennedBankAccount.BankId == Model.Bank.Id)
     {
-        <table class="table table-hover table-dark">
-            <tbody>
-            <tr>
-                <th scope="row">Id Of Oppened bank account</th>
-                <td>@OpennedBankAccount.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Name Of Oppened bank account</th>
-                <td>@OpennedBankAccount.Name</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney Of Oppened bank account</th>
-                <td>@OpennedBankAccount.AmountOfMoney.ToString()</td>
-            </tr>
-            </tbody>
-        </table>
-        <br>
-        <hr class="style1">
-        <br>
+        if (!(bool)OpennedBankAccount.Hidden!)
+        {
+            <table class="table table-hover table-dark">
+                <tbody>
+                <tr>
+                    <th scope="row">Id Of Oppened bank account</th>
+                    <td>@OpennedBankAccount.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name Of Oppened bank account</th>
+                    <td>@OpennedBankAccount.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                    <td>@OpennedBankAccount.AmountOfMoney.ToString()</td>
+                </tr>
+                </tbody>
+            </table>
+        }
     }
 }
+<br>
+<hr class="style1">
+<br>
 
 <form asp-action="GetMoneyFromBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="post">
 
@@ -35,7 +41,10 @@
                 <option selected>Choose...</option>
                 @foreach (var OpennedBankAccount in Model.Client.OpennedBankAccounts)
                 {
-                    <option value="@OpennedBankAccount.Id">@OpennedBankAccount.Name</option>
+                    if (!(bool)OpennedBankAccount.Hidden!)
+                    {
+                        <option value="@OpennedBankAccount.Id">@OpennedBankAccount.Name</option>
+                    }
                 }
             </select>
             <div>
