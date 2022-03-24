@@ -8,5 +8,4 @@ public class Manager : Operator
     public List<Client>? WaitingForRegistrationApprove { get; set; }
     public List<Client>? WaitingForInstallmentPlanApprove { get; set; }
     public List<Client>? WaitingForCreditApprove { get; set; }
-
 }

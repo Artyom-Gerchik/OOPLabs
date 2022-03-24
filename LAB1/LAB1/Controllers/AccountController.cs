@@ -158,12 +158,6 @@ public class AccountController : Controller
 
             if (user != null)
             {
-                if (user.RoleId == 3)
-                {
-                    await Authenticate(user);
-                    return RedirectToAction("Profile", "Client");
-                }
-
                 await Authenticate(user);
                 return RedirectToAction("Profile", "Account");
             }

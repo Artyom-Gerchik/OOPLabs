@@ -17,5 +17,4 @@ public class Company
     public double? SalaryForWorkers { get; set; }
     public bool? IsItBank { get; set; }
     public List<Specialist>? Specialists { get; set; }
-
 }

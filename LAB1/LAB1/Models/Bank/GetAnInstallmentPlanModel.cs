@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace LAB1.Models.Bank;
 
 public class GetAnInstallmentPlanModel

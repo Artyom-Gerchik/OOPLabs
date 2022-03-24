@@ -30,7 +30,7 @@ public class OperatorController : Controller
     public IActionResult Profile()
     {
         var bankOperator = GetOperator();
-        return View(new OperatorProfileModel()
+        return View(new OperatorProfileModel
         {
             Operator = bankOperator
         });
@@ -95,7 +95,7 @@ public class OperatorController : Controller
     public IActionResult Approve()
     {
         var bankOperator = GetOperator();
-        return View(new OperatorApproveModel()
+        return View(new OperatorApproveModel
         {
             Clients = bankOperator.ClientsWaitingForSalaryProject
         });

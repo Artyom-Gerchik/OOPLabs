@@ -52,7 +52,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             AmountOfMoney = 100500,
             OpennedBankAccounts = new List<BankAccount>(),
             OpennedBankDeposits = new List<BankDeposit>(),
-            OpennedInstallmentPlans = new List<InstallmentPlan>(),
+            OpennedInstallmentPlans = new List<InstallmentPlan>()
             //Specialist = new Specialist()
         };
 
@@ -72,7 +72,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             AmountOfMoney = 1005005,
             OpennedBankAccounts = new List<BankAccount>(),
             OpennedBankDeposits = new List<BankDeposit>(),
-            OpennedInstallmentPlans = new List<InstallmentPlan>(),
+            OpennedInstallmentPlans = new List<InstallmentPlan>()
         };
 
         var thirdBank = new Bank
@@ -91,11 +91,11 @@ public sealed class ApplicationDbContext : IdentityDbContext
             AmountOfMoney = 1005005,
             OpennedBankAccounts = new List<BankAccount>(),
             OpennedBankDeposits = new List<BankDeposit>(),
-            OpennedInstallmentPlans = new List<InstallmentPlan>(),
+            OpennedInstallmentPlans = new List<InstallmentPlan>()
             //Specialist = new Specialist()
         };
 
-        var firstCompany = new Company()
+        var firstCompany = new Company
         {
             Id = 4,
             Type = "OPG",
@@ -106,10 +106,10 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Workers = new List<Client>(),
             SalaryForWorkers = 100000,
             IsItBank = false,
-            Specialists  = new List<Specialist>()
+            Specialists = new List<Specialist>()
         };
 
-        var secondCompany = new Company()
+        var secondCompany = new Company
         {
             Id = 5,
             Type = "OPG",
@@ -123,7 +123,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        var thirdCompany = new Company()
+        var thirdCompany = new Company
         {
             Id = 6,
             Type = "OPG",
@@ -137,7 +137,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        var fourthCompany = new Company()
+        var fourthCompany = new Company
         {
             Id = 7,
             Type = "OPG",
@@ -151,7 +151,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        var fifthCompany = new Company()
+        var fifthCompany = new Company
         {
             Id = 8,
             Type = "OPG",
@@ -165,7 +165,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        var sixthCompany = new Company()
+        var sixthCompany = new Company
         {
             Id = 9,
             Type = "OPG",
@@ -179,7 +179,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        var seventhCompany = new Company()
+        var seventhCompany = new Company
         {
             Id = 10,
             Type = "OPG",
@@ -193,7 +193,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        var eighthCompany = new Company()
+        var eighthCompany = new Company
         {
             Id = 11,
             Type = "OPG",
@@ -207,7 +207,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        var ninthCompany = new Company()
+        var ninthCompany = new Company
         {
             Id = 12,
             Type = "OPG",
@@ -221,7 +221,7 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        var tenthCompany = new Company()
+        var tenthCompany = new Company
         {
             Id = 13,
             Type = "OPG",
@@ -235,12 +235,12 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
-        List<Bank> banks = new List<Bank>();
+        var banks = new List<Bank>();
         banks.Add(firstBank);
         banks.Add(secondBank);
         banks.Add(thirdBank);
 
-        List<Company> companies = new List<Company>();
+        var companies = new List<Company>();
         companies.Add(firstCompany);
         companies.Add(secondCompany);
         companies.Add(thirdCompany);

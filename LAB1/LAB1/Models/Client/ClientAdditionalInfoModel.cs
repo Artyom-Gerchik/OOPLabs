@@ -10,6 +10,7 @@ public class ClientAdditionalInfoModel : IValidatableObject
 
     [Display(Name = "Identification Number")]
     public string IdentificationNumber { get; set; }
+
     public int? IdOfSelectedCompany { get; set; }
     public List<Company>? Companies { get; set; }
 

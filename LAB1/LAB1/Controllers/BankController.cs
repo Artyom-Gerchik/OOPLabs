@@ -255,7 +255,7 @@ public class BankController : Controller
             bankDeposit.DateOfMoneyBack = model.DateOfMoneyBack;
 
             var HowMuchLasts = new TimeSpan();
-            HowMuchLasts = DateTime.Today.Subtract((DateTime)model.DateOfMoneyBack);
+            HowMuchLasts = DateTime.Today.Subtract(model.DateOfMoneyBack);
             bankDeposit.HowMuchLasts = Math.Abs(HowMuchLasts.Days);
             bankDeposit.Percent = model.Percent / 100;
 
@@ -403,17 +403,13 @@ public class BankController : Controller
 
         var managers = new List<Manager>();
         foreach (var manager in _context.Managers)
-        {
             if (manager.BankId == client.CurrentBankId)
-            {
                 managers.Add(manager);
-            }
-        }
 
-        var months = new List<int>(new int[] { 3, 6, 9, 12, 24 });
+        var months = new List<int>(new[] { 3, 6, 9, 12, 24 });
 
 
-        return View(new GetAnInstallmentPlanModel()
+        return View(new GetAnInstallmentPlanModel
         {
             Client = client,
             Managers = managers,
@@ -449,14 +445,12 @@ public class BankController : Controller
             bank.OpennedInstallmentPlans!.Add(installmentPlan);
 
             if (model.IdOfSelectedManager != null)
-            {
                 if (!manager.WaitingForInstallmentPlanApprove.Contains(client))
                 {
                     manager.WaitingForInstallmentPlanApprove.Add(client);
                     _context.Managers.Update(manager);
                     await _context.SaveChangesAsync();
                 }
-            }
 
             _context.Managers.Update(manager);
             _context.Clients.Update(client);
@@ -477,17 +471,13 @@ public class BankController : Controller
 
         var managers = new List<Manager>();
         foreach (var manager in _context.Managers)
-        {
             if (manager.BankId == client.CurrentBankId)
-            {
                 managers.Add(manager);
-            }
-        }
 
-        var months = new List<int>(new int[] { 3, 6, 9, 12, 24 });
+        var months = new List<int>(new[] { 3, 6, 9, 12, 24 });
 
 
-        return View(new GetCreditModel()
+        return View(new GetCreditModel
         {
             Managers = managers,
             AmountOfMonths = months
@@ -524,14 +514,12 @@ public class BankController : Controller
             bank.OpennedCredits!.Add(credit);
 
             if (model.IdOfSelectedManager != null)
-            {
                 if (!manager.WaitingForCreditApprove!.Contains(client))
                 {
                     manager.WaitingForCreditApprove.Add(client);
                     _context.Managers.Update(manager);
                     await _context.SaveChangesAsync();
                 }
-            }
 
             _context.Managers.Update(manager);
             _context.Clients.Update(client);
@@ -683,8 +671,8 @@ public class BankController : Controller
 
             var credit = client.CreditsAndApproves.Find(b => b.Id == model.IdOfCreditToPay);
 
-            client.BankBalance -= (credit.Credit.AmountOfMoney +
-                                   (credit.Credit.AmountOfMoney * (credit.Credit.Percent / 100)));
+            client.BankBalance -= credit.Credit.AmountOfMoney +
+                                  credit.Credit.AmountOfMoney * (credit.Credit.Percent / 100);
 
             client.CreditsAndApproves.Remove(credit);
             bank.OpennedCredits!.Remove(credit.Credit);

@@ -101,7 +101,7 @@ public class ClientController : Controller
                 InstallmentPlansAndApproves = new List<InstallmentPlanApproves>(),
                 Work = selectedCompany,
                 AtSalaryProject = false,
-                Salary = selectedCompany!.SalaryForWorkers,
+                Salary = selectedCompany!.SalaryForWorkers
             };
 
             selectedCompany.Workers.Add(client);
@@ -205,15 +205,11 @@ public class ClientController : Controller
     {
         var client = GetClient();
 
-        List<Bank> banksToPass = new List<Bank>();
+        var banksToPass = new List<Bank>();
 
         foreach (var bank in client.BanksAndApproves)
-        {
             if (bank.Approved == false)
-            {
                 banksToPass.Add(bank.Bank!);
-            }
-        }
 
 
         var managers = new List<Manager>();
@@ -308,19 +304,11 @@ public class ClientController : Controller
     {
         var client = GetClient();
         if (!(bool)client.AtSalaryProject)
-        {
             client.BankBalance += client.Salary;
-        }
         else
-        {
             foreach (var bankAccount in client.OpennedBankAccounts!)
-            {
                 if ((bool)bankAccount.IsASalaryProjectAccount!)
-                {
                     bankAccount.AmountOfMoney += client.Salary;
-                }
-            }
-        }
 
         _context.Update(client);
         _context.SaveChangesAsync();
@@ -359,34 +347,28 @@ public class ClientController : Controller
         var bank = GetBank(client);
 
         if (client.OpennedBankDeposits!.Count != 0)
-        {
             foreach (var deposit in client.OpennedBankDeposits!)
             {
-                DateTime dateOfMoneyBack = deposit.DateOfMoneyBack;
-                int howMuchDaysLasts = dateOfMoneyBack.Subtract(DateTime.Today).Days;
+                var dateOfMoneyBack = deposit.DateOfMoneyBack;
+                var howMuchDaysLasts = dateOfMoneyBack.Subtract(DateTime.Today).Days;
                 deposit.HowMuchLasts = howMuchDaysLasts;
             }
-        }
 
         if (client.InstallmentPlansAndApproves!.Count != 0)
-        {
             foreach (var installmentPlan in client.InstallmentPlansAndApproves!)
             {
-                DateTime dateToPay = installmentPlan.InstallmentPlan!.DateToPay;
-                int howMuchDaysLasts = dateToPay.Subtract(DateTime.Today).Days;
+                var dateToPay = installmentPlan.InstallmentPlan!.DateToPay;
+                var howMuchDaysLasts = dateToPay.Subtract(DateTime.Today).Days;
                 installmentPlan.InstallmentPlan.HowMuchLasts = howMuchDaysLasts;
             }
-        }
 
         if (client.CreditsAndApproves!.Count != 0)
-        {
             foreach (var credit in client.CreditsAndApproves!)
             {
-                DateTime dateToPay = credit.Credit!.DateToPay;
-                int howMuchDaysLasts = dateToPay.Subtract(DateTime.Today).Days;
+                var dateToPay = credit.Credit!.DateToPay;
+                var howMuchDaysLasts = dateToPay.Subtract(DateTime.Today).Days;
                 credit.Credit.HowMuchLasts = howMuchDaysLasts;
             }
-        }
 
         return RedirectToAction("Profile", "Client");
     }

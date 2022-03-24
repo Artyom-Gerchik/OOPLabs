@@ -1,12 +1,9 @@
 using LAB1.Data;
-using LAB1.Entities;
 using LAB1.Entities.UserCategories;
-using LAB1.Models.Client;
 using LAB1.Models.Specialist;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace LAB1.Controllers;
 
@@ -33,7 +30,7 @@ public class SpecialistController : Controller
     [Authorize]
     public IActionResult GetAdditionalInfo()
     {
-        return View(new SpecialistGetAdditionalInfoModel()
+        return View(new SpecialistGetAdditionalInfoModel
         {
             Companies = _context.Companies.ToList()
         });
@@ -49,7 +46,7 @@ public class SpecialistController : Controller
             var role = (await _context.Roles.FirstOrDefaultAsync(r => r.Name == "specialist"))!;
             var selectedCompany = _context.Companies.FirstOrDefaultAsync(c => c.Id == model.IdOfSelectedCompany).Result;
 
-            var specialist = new Specialist()
+            var specialist = new Specialist
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -84,7 +81,7 @@ public class SpecialistController : Controller
     {
         var specialist = GetSpecialist();
 
-        return View(new SpecialistProfileModel()
+        return View(new SpecialistProfileModel
         {
             Specialist = specialist
         });
@@ -95,7 +92,7 @@ public class SpecialistController : Controller
     public IActionResult SendRequestForSalaryProject()
     {
         var specialist = GetSpecialist();
-        return View(new SendRequestForSalaryProjectModel()
+        return View(new SendRequestForSalaryProjectModel
         {
             Clients = specialist.ClientsToPaymentProject
         });
@@ -110,13 +107,11 @@ public class SpecialistController : Controller
             var specialist = GetSpecialist();
             var bankId = 0;
             foreach (var bank in _context.Banks)
-            {
                 if (bank.BankIdentificationCode == specialist.Company!.BankIdentificationCode)
                 {
                     bankId = (int)bank.Id!;
                     break;
                 }
-            }
 
             var bankOperator = _context.Operators
                 .Include(o => o.ClientsWaitingForSalaryProject)

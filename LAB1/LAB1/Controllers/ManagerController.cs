@@ -129,12 +129,8 @@ public class ManagerController : Controller
                 if (clientToApproveRegistration != null)
                 {
                     foreach (var banks in clientToApproveRegistration.BanksAndApproves)
-                    {
                         if (banks.Bank!.Id == manager.BankId)
-                        {
                             banks.Approved = true;
-                        }
-                    }
 
                     manager.WaitingForRegistrationApprove.Remove(clientToApproveRegistration);
                     _context.Clients.Update(clientToApproveRegistration);
@@ -152,14 +148,12 @@ public class ManagerController : Controller
                 if (clientToApproveInstallmentPlan != null)
                 {
                     foreach (var installmentPlans in clientToApproveInstallmentPlan.InstallmentPlansAndApproves!)
-                    {
                         if (installmentPlans.InstallmentPlan!.BankId == manager.BankId)
                         {
                             installmentPlans.Approved = true;
                             clientToApproveInstallmentPlan.BankBalance +=
                                 installmentPlans.InstallmentPlan!.AmountOfMoney;
                         }
-                    }
 
                     manager.WaitingForInstallmentPlanApprove.Remove(clientToApproveInstallmentPlan);
                     _context.Clients.Update(clientToApproveInstallmentPlan);
@@ -177,14 +171,12 @@ public class ManagerController : Controller
                 if (clientToApproveCredit != null)
                 {
                     foreach (var credit in clientToApproveCredit.CreditsAndApproves!)
-                    {
                         if (credit.Credit!.BankId == manager.BankId)
                         {
                             credit.Approved = true;
                             clientToApproveCredit.BankBalance +=
                                 credit.Credit!.AmountOfMoney;
                         }
-                    }
 
                     manager.WaitingForCreditApprove!.Remove(clientToApproveCredit);
                     _context.Clients.Update(clientToApproveCredit);
