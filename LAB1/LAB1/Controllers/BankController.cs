@@ -47,6 +47,29 @@ public class BankController : Controller
         return bank;
     }
 
+    public void Log(string funcName, Client client, Bank bank, TextWriter w, int bankAccountId)
+    {
+        if (funcName.Equals("OpenBankAccountForClient"))
+        {
+            w.WriteLine($"\r\nLog {funcName}");
+            w.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
+            w.WriteLine("--------------------------------------------------------------");
+            w.WriteLine($"ClientId: {client.Id}");
+            w.WriteLine($"BankId: {bank.Id}");
+            w.WriteLine($"BankAccountId: {bankAccountId}");
+            w.WriteLine("--------------------------------------------------------------");
+        }
+        else
+        {
+            w.WriteLine($"\r\nLog {funcName}");
+            w.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
+            w.WriteLine("--------------------------------------------------------------");
+            w.WriteLine($"ClientId: {client.Id}");
+            w.WriteLine($"BankId: {bank.Id}");
+            w.WriteLine("--------------------------------------------------------------");
+        }
+    }
+
 
     [HttpGet]
     [Authorize]
@@ -93,6 +116,11 @@ public class BankController : Controller
             _context.Banks.Update(bank);
             await _context.SaveChangesAsync();
 
+            await using (StreamWriter w = System.IO.File.AppendText($"ClientLogs/{client.Id}/log.txt"))
+            {
+                Log("OpenBankAccountForClient", client, bank, w, (int)bankAccount.Id);
+            }
+            
             return RedirectToAction("Profile", "Client");
         }
 

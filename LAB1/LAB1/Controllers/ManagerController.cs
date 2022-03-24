@@ -1,4 +1,5 @@
 using LAB1.Data;
+using LAB1.Entities;
 using LAB1.Entities.UserCategories;
 using LAB1.Models.Manager;
 using Microsoft.AspNetCore.Authorization;
@@ -75,12 +76,14 @@ public class ManagerController : Controller
                 var bank = await _context.Banks.FirstOrDefaultAsync(b =>
                     b.Id.ToString().Equals(model.SelectedBankId.ToString()));
                 bank.AmountOfManagers++;
+                _context.Banks.Update(bank);
             }
 
             if (manager != null)
             {
                 _context.Users.Remove(user);
                 _context.Managers.Add(manager);
+
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction("Profile", "Manager");
@@ -191,7 +194,7 @@ public class ManagerController : Controller
 
 
     [HttpGet]
-    [Authorize(Roles = "manager")]
+    [Authorize]
     public IActionResult Profile()
     {
         var manager = _context.Managers

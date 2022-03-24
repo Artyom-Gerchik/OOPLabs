@@ -235,6 +235,22 @@ public sealed class ApplicationDbContext : IdentityDbContext
             Specialists = new List<Specialist>()
         };
 
+        // var managerFirstBank = new Manager
+        // {
+        //     Id = 1,
+        //     Email = "managerFirstBank@gmail.com",
+        //     Password = "123456",
+        //     Name = "managerFirstBankName",
+        //     Surname = "managerFirstBankSurname",
+        //     Patronymic = "managerFirstBankPatronymic",
+        //     PhoneNumber = "+375446756787",
+        //     RoleId = managerRole.Id,
+        //     Role = managerRole,
+        //     BankId = firstBank.Id,
+        //     WaitingForRegistrationApprove = new List<Client>(),
+        //     WaitingForInstallmentPlanApprove = new List<Client>()
+        // };
+
         var banks = new List<Bank>();
         banks.Add(firstBank);
         banks.Add(secondBank);

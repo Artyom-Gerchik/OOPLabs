@@ -42,7 +42,10 @@ public class AccountController : Controller
                 break;
             case 3:
                 if (client != null)
+                {
+                    Directory.CreateDirectory($"ClientLogs/{client.Id}");
                     return RedirectToAction("Profile", "Client");
+                }
                 else
                     return RedirectToAction("GetAdditionalInfo", "Client");
 

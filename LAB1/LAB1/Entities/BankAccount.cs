@@ -8,4 +8,5 @@ public class BankAccount
     public double? AmountOfMoney { get; set; }
     public string? Name { get; set; }
     public bool? IsASalaryProjectAccount { get; set; }
+    public bool? Hidden { get; set; }
 }
