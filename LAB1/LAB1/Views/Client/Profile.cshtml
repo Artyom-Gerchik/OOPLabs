@@ -184,38 +184,41 @@
 
 @foreach (var i in Model.Client.OpennedBankDeposits)
 {
-    <table class="table table-hover table-dark">
-        <tbody>
-        <tr>
-            <th scope="row">Id Of Bank, where bank deposit was opened</th>
-            <td>@i.BankId.ToString()</td>
-        </tr>
-        <tr>
-            <th scope="row">Id Of Oppened bank Deposit</th>
-            <td>@i.Id.ToString()</td>
-        </tr>
-        <tr>
-            <th scope="row">Name Of Oppened bank Deposit</th>
-            <td>@i.Name</td>
-        </tr>
-        <tr>
-            <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
-            <td>@i.AmountOfMoney.ToString()</td>
-        </tr>
-        <tr>
-            <th scope="row">Opened</th>
-            <td>@i.DateOfDeal.ToString()</td>
-        </tr>
-        <tr>
-            <th scope="row">Will close</th>
-            <td>@i.DateOfMoneyBack.ToString()</td>
-        </tr>
-        <tr>
-            <th scope="row">Days remaining</th>
-            <td>(@i.HowMuchLasts.ToString())</td>
-        </tr>
-        </tbody>
-    </table>
+    if (!(bool)i.Hidden!)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Id Of Bank, where bank deposit was opened</th>
+                <td>@i.BankId.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Id Of Oppened bank Deposit</th>
+                <td>@i.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Name Of Oppened bank Deposit</th>
+                <td>@i.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
+                <td>@i.AmountOfMoney.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Opened</th>
+                <td>@i.DateOfDeal.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Will close</th>
+                <td>@i.DateOfMoneyBack.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Days remaining</th>
+                <td>(@i.HowMuchLasts.ToString())</td>
+            </tr>
+            </tbody>
+        </table>
+    }
 }
 <br>
 <hr class="style1">

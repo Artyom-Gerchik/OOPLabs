@@ -8,7 +8,7 @@
     <br>
     <br>
 
-    @foreach (var transfer in Model.Administrator.Transfers)
+    @foreach (var transfer in Model.Administrator.TransfersBetweenBankAccounts)
     {
         <table class="table table-hover table-dark">
             <tbody>
@@ -30,12 +30,12 @@
     <br>
 
 
-    @if (Model.Administrator.Transfers!.Count != 0)
+    @if (Model.Administrator.TransfersBetweenBankAccounts!.Count != 0)
     {
         <div class="input-group mb-3">
             <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedTransferId">
                 <option selected>Choose Bank Account</option>
-                @foreach (var transfer in Model.Administrator.Transfers)
+                @foreach (var transfer in Model.Administrator.TransfersBetweenBankAccounts)
                 {
                     <option value="@transfer.Transfer!.Id">@transfer.BankAccountWhereWithdrawed!.Name to @transfer.BankAccountToDeposited!.Name</option>
                 }

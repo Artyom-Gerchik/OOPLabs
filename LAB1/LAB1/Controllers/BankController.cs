@@ -13,7 +13,7 @@ public class BankController : Controller
 {
     private readonly ApplicationDbContext _context;
 
-    private int idForTransfer = 0;
+    private int _idForTransfer = 0;
 
     public BankController(ApplicationDbContext context)
     {
@@ -57,11 +57,18 @@ public class BankController : Controller
             .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.BankAccount)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.Client)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.BankAccount)
-            .Include(a => a.Transfers)!.ThenInclude(c => c.Transfer)
-            .Include(a => a.Transfers)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
-            .Include(a => a.Transfers)!.ThenInclude(c => c.BankAccountToDeposited)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountToDeposited)
             .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.BankDeposit)
             .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.Client)
+            .Include(a => a.ClosedDepositsToRollBack)!.ThenInclude(c => c.BankDeposit)
+            .Include(a => a.ClosedDepositsToRollBack)!.ThenInclude(c => c.Client)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositToDeposited)
+            .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
             .FirstOrDefaultAsync(a => a.BankId == client.CurrentBankId).Result;
         return administrator!;
     }
@@ -304,12 +311,12 @@ public class BankController : Controller
 
             Transfer transfer = new Transfer();
             transfer.AmountOfMoney = model.AmountOfMoney;
-            transfer.Id = ++idForTransfer;
+            transfer.Id = ++_idForTransfer;
             bankAccountToWithDraw.AmountOfMoney -= transfer.AmountOfMoney;
             bankAccountToDeposit.AmountOfMoney += transfer.AmountOfMoney;
             //_context.Transfers.Add(transfer);
 
-            admin.Transfers!.Add(
+            admin.TransfersBetweenBankAccounts!.Add(
                 new RollBackTransferBetweenBankAccounts(bankAccountToWithDraw, bankAccountToDeposit, transfer));
 
             await _context.SaveChangesAsync();
@@ -343,6 +350,7 @@ public class BankController : Controller
             bankDeposit.AmountOfMoney = model.AmountOfMoney;
             bankDeposit.DateOfDeal = DateTime.Today;
             bankDeposit.DateOfMoneyBack = model.DateOfMoneyBack;
+            bankDeposit.Hidden = false;
 
             var HowMuchLasts = new TimeSpan();
             HowMuchLasts = DateTime.Today.Subtract(model.DateOfMoneyBack);
@@ -389,16 +397,26 @@ public class BankController : Controller
         {
             var client = GetClient();
             var bank = GetBank(client);
+            var admin = GetAdministrator(client);
 
-            var bankDeposit = client.OpennedBankDeposits.Find(b => b.Id == model.IdOfDepositToWithdraw);
+            var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToWithdraw);
+            client.BankBalance += bankDeposit!.AmountOfMoney + bankDeposit.AmountOfMoney * (bankDeposit.Percent / 100);
 
-            client.BankBalance += bankDeposit.AmountOfMoney + bankDeposit.AmountOfMoney * (bankDeposit.Percent / 100);
+            foreach (var opennedDeposit in admin.OpennedDepositsToRollBack!)
+            {
+                if (opennedDeposit.BankDeposit!.Equals(bankDeposit))
+                {
+                    admin.OpennedDepositsToRollBack.Remove(opennedDeposit);
+                    opennedDeposit.BankDeposit.Hidden = true;
+                    break;
+                }
+            }
 
-            client.OpennedBankDeposits.Remove(bankDeposit);
-            bank.OpennedBankDeposits!.Remove(bankDeposit);
+            admin.ClosedDepositsToRollBack!.Add(new RollBackClosedDeposit(client, bankDeposit));
 
             _context.Clients.Update(client);
             _context.Banks.Update(bank);
+            _context.Administrators.Update(admin);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Client");
@@ -432,7 +450,7 @@ public class BankController : Controller
             var client = GetClient();
             var bank = GetBank(client);
 
-            var bankDeposit = client.OpennedBankDeposits.Find(b => b.Id == model.IdOfDepositToSpeedRun);
+            var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToSpeedRun);
 
             bankDeposit!.HowMuchLasts = 0;
             await _context.SaveChangesAsync();
@@ -466,21 +484,46 @@ public class BankController : Controller
         {
             var client = GetClient();
             var bank = GetBank(client);
+            var admin = GetAdministrator(client);
 
             var bankDepositToWithdraw = new BankDeposit();
             var bankDepositToDeposit = new BankDeposit();
-            foreach (var bankDeposit in client.OpennedBankDeposits)
+            foreach (var bankDeposit in client.OpennedBankDeposits!)
             {
                 if (bankDeposit.Id == model.IdOfBankDepositToWithdraw) bankDepositToWithdraw = bankDeposit;
 
                 if (bankDeposit.Id == model.IdOfBankDepositToDeposit) bankDepositToDeposit = bankDeposit;
             }
 
-            bankDepositToDeposit.AmountOfMoney += bankDepositToWithdraw.AmountOfMoney +
-                                                  bankDepositToWithdraw.AmountOfMoney * bankDepositToWithdraw.Percent;
+            Transfer transfer = new Transfer();
 
-            client.OpennedBankDeposits.Remove(bankDepositToWithdraw);
-            bank.OpennedBankDeposits!.Remove(bankDepositToWithdraw);
+            transfer.Id = ++_idForTransfer;
+
+            foreach (var transferDb in _context.Transfers.ToList())
+            {
+                if (transfer.Id == transferDb.Id)
+                {
+                    transfer.Id = ++_idForTransfer;
+                }
+            }
+
+            transfer.AmountOfMoney = bankDepositToWithdraw.AmountOfMoney +
+                                     bankDepositToWithdraw.AmountOfMoney * (bankDepositToWithdraw.Percent / 100);
+
+            bankDepositToDeposit.AmountOfMoney += transfer.AmountOfMoney;
+            bankDepositToWithdraw.AmountOfMoney -= transfer.AmountOfMoney;
+            bankDepositToWithdraw.Hidden = true;
+
+            var tmp = admin.OpennedDepositsToRollBack!.FirstOrDefault(b =>
+                b.BankDeposit!.Equals(bankDepositToWithdraw));
+
+            admin.OpennedDepositsToRollBack!.Remove(tmp);
+            admin.TransfersBetweenBankDeposits!.Add(
+                new RollBackTransferBetweenBankDeposits(bankDepositToWithdraw, bankDepositToDeposit, transfer));
+
+            //client.OpennedBankDeposits.Remove(bankDepositToWithdraw);
+            //bank.OpennedBankDeposits!.Remove(bankDepositToWithdraw);
+            _context.Administrators.Update(admin);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Client");
@@ -519,6 +562,7 @@ public class BankController : Controller
         {
             var client = GetClient();
             var bank = GetBank(client);
+            var admin = GetAdministrator(client);
             var manager = _context.Managers
                 .Include(m => m.WaitingForRegistrationApprove)
                 .Include(m => m.WaitingForInstallmentPlanApprove)
@@ -537,6 +581,7 @@ public class BankController : Controller
 
             client.InstallmentPlansAndApproves!.Add(new InstallmentPlanApproves(installmentPlan!, false));
             bank.OpennedInstallmentPlans!.Add(installmentPlan);
+            
 
             if (model.IdOfSelectedManager != null)
                 if (!manager.WaitingForInstallmentPlanApprove.Contains(client))

@@ -11,4 +11,6 @@ public class BankDeposit
     public double? AmountOfMoney { get; set; }
     public string? Name { get; set; }
     public double? Percent { get; set; }
+
+    public bool? Hidden { get; set; }
 }

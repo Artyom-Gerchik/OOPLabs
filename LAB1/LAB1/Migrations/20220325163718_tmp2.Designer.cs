@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220325163718_tmp2")]
+    partial class tmp2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -121,32 +123,6 @@ namespace LAB1.Migrations
                     b.ToTable("RollBackOpenedDeposit");
                 });
 
-            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackOpennedInstallmentPlan", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("AdministratorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("InstallmentPlanId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdministratorId");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("InstallmentPlanId");
-
-                    b.ToTable("RollBackOpennedInstallmentPlan");
-                });
-
             modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackTransferBetweenBankAccounts", b =>
                 {
                     b.Property<int?>("Id")
@@ -176,37 +152,6 @@ namespace LAB1.Migrations
                     b.HasIndex("TransferId");
 
                     b.ToTable("RollBackTransferBetweenBankAccounts");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackTransferBetweenBankDeposits", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("AdministratorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("BankDepositToDepositedId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("BankDepositWhereWithdrawedId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("TransferId")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdministratorId");
-
-                    b.HasIndex("BankDepositToDepositedId");
-
-                    b.HasIndex("BankDepositWhereWithdrawedId");
-
-                    b.HasIndex("TransferId");
-
-                    b.ToTable("RollBackTransferBetweenBankDeposits");
                 });
 
             modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
@@ -1128,29 +1073,10 @@ namespace LAB1.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackOpennedInstallmentPlan", b =>
-                {
-                    b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
-                        .WithMany("OpennedInstallmentPlans")
-                        .HasForeignKey("AdministratorId");
-
-                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-
-                    b.HasOne("LAB1.Entities.InstallmentPlan", "InstallmentPlan")
-                        .WithMany()
-                        .HasForeignKey("InstallmentPlanId");
-
-                    b.Navigation("Client");
-
-                    b.Navigation("InstallmentPlan");
-                });
-
             modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackTransferBetweenBankAccounts", b =>
                 {
                     b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
-                        .WithMany("TransfersBetweenBankAccounts")
+                        .WithMany("Transfers")
                         .HasForeignKey("AdministratorId");
 
                     b.HasOne("LAB1.Entities.BankAccount", "BankAccountToDeposited")
@@ -1168,31 +1094,6 @@ namespace LAB1.Migrations
                     b.Navigation("BankAccountToDeposited");
 
                     b.Navigation("BankAccountWhereWithdrawed");
-
-                    b.Navigation("Transfer");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackTransferBetweenBankDeposits", b =>
-                {
-                    b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
-                        .WithMany("TransfersBetweenBankDeposits")
-                        .HasForeignKey("AdministratorId");
-
-                    b.HasOne("LAB1.Entities.BankDeposit", "BankDepositToDeposited")
-                        .WithMany()
-                        .HasForeignKey("BankDepositToDepositedId");
-
-                    b.HasOne("LAB1.Entities.BankDeposit", "BankDepositWhereWithdrawed")
-                        .WithMany()
-                        .HasForeignKey("BankDepositWhereWithdrawedId");
-
-                    b.HasOne("LAB1.Entities.Transfer", "Transfer")
-                        .WithMany()
-                        .HasForeignKey("TransferId");
-
-                    b.Navigation("BankDepositToDeposited");
-
-                    b.Navigation("BankDepositWhereWithdrawed");
 
                     b.Navigation("Transfer");
                 });
@@ -1467,11 +1368,7 @@ namespace LAB1.Migrations
 
                     b.Navigation("OpennedDepositsToRollBack");
 
-                    b.Navigation("OpennedInstallmentPlans");
-
-                    b.Navigation("TransfersBetweenBankAccounts");
-
-                    b.Navigation("TransfersBetweenBankDeposits");
+                    b.Navigation("Transfers");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>

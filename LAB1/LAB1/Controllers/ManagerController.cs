@@ -1,5 +1,6 @@
 using LAB1.Data;
 using LAB1.Entities;
+using LAB1.Entities.AdminRollBack;
 using LAB1.Entities.UserCategories;
 using LAB1.Models.Manager;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,29 @@ public class ManagerController : Controller
             .ThenInclude(c => c.Credit)
             .FirstAsync(u => u.Id == id).Result;
         return client;
+    }
+
+    public Administrator GetAdministrator(Client client)
+    {
+        var administrator = _context.Administrators
+            .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.BankAccount)
+            .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.BankAccount)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountToDeposited)
+            .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.BankDeposit)
+            .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.Client)
+            .Include(a => a.ClosedDepositsToRollBack)!.ThenInclude(c => c.BankDeposit)
+            .Include(a => a.ClosedDepositsToRollBack)!.ThenInclude(c => c.Client)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositToDeposited)
+            .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
+            .FirstOrDefaultAsync(a => a.BankId == client.CurrentBankId).Result;
+        return administrator!;
     }
 
     [HttpGet]
@@ -148,19 +172,25 @@ public class ManagerController : Controller
                 var manager = _context.Managers
                     .Include(m => m.WaitingForInstallmentPlanApprove)
                     .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+                var admin = GetAdministrator(clientToApproveInstallmentPlan);
+                var tmp = new InstallmentPlan();
                 if (clientToApproveInstallmentPlan != null)
                 {
                     foreach (var installmentPlans in clientToApproveInstallmentPlan.InstallmentPlansAndApproves!)
                         if (installmentPlans.InstallmentPlan!.BankId == manager.BankId)
                         {
+                            tmp = installmentPlans.InstallmentPlan;
                             installmentPlans.Approved = true;
                             clientToApproveInstallmentPlan.BankBalance +=
                                 installmentPlans.InstallmentPlan!.AmountOfMoney;
                         }
 
-                    manager.WaitingForInstallmentPlanApprove.Remove(clientToApproveInstallmentPlan);
+                    admin.OpennedInstallmentPlans!.Add(
+                        new RollBackOpennedInstallmentPlan(clientToApproveInstallmentPlan, tmp));
+                    manager.WaitingForInstallmentPlanApprove!.Remove(clientToApproveInstallmentPlan);
                     _context.Clients.Update(clientToApproveInstallmentPlan);
                     _context.Managers.Update(manager);
+                    _context.Administrators.Update(admin);
                     await _context.SaveChangesAsync();
                 }
             }

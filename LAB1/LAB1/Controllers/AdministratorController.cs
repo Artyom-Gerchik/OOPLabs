@@ -25,11 +25,18 @@ public class AdministratorController : Controller
             .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.BankAccount)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.Client)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.BankAccount)
-            .Include(a => a.Transfers)!.ThenInclude(c => c.Transfer)
-            .Include(a => a.Transfers)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
-            .Include(a => a.Transfers)!.ThenInclude(c => c.BankAccountToDeposited)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountToDeposited)
             .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.BankDeposit)
             .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.Client)
+            .Include(a => a.ClosedDepositsToRollBack)!.ThenInclude(c => c.BankDeposit)
+            .Include(a => a.ClosedDepositsToRollBack)!.ThenInclude(c => c.Client)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositToDeposited)
+            .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
             .FirstOrDefaultAsync(a => a.Email.Equals(User.Identity.Name)).Result;
         return administrator!;
     }
@@ -37,18 +44,13 @@ public class AdministratorController : Controller
     public Client GetClient(int? id)
     {
         var client = _context.Clients
-            .Include(c => c.Banks)!
-            .ThenInclude(c => c.OpennedBankAccounts)
+            .Include(c => c.Banks)!.ThenInclude(c => c.OpennedBankAccounts)
             .Include(c => c.OpennedBankAccounts)
-            .Include(c => c.BanksAndApproves)!
-            .ThenInclude(c => c.Bank)
+            .Include(c => c.BanksAndApproves)!.ThenInclude(c => c.Bank)
             .Include(c => c.OpennedBankDeposits)
-            .Include(c => c.InstallmentPlansAndApproves)!
-            .ThenInclude(c => c.Bank)
-            .Include(c => c.InstallmentPlansAndApproves)!
-            .ThenInclude(c => c.InstallmentPlan)
-            .Include(c => c.CreditsAndApproves)!
-            .ThenInclude(c => c.Credit)
+            .Include(c => c.InstallmentPlansAndApproves)!.ThenInclude(c => c.Bank)
+            .Include(c => c.InstallmentPlansAndApproves)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(c => c.CreditsAndApproves)!.ThenInclude(c => c.Credit)
             .FirstAsync(u => u.Id == id).Result;
         return client;
     }
@@ -228,7 +230,7 @@ public class AdministratorController : Controller
             var transferToRollBack = new Transfer();
             var rollbackTransfer = new RollBackTransferBetweenBankAccounts();
 
-            foreach (var transfer in admin.Transfers!)
+            foreach (var transfer in admin.TransfersBetweenBankAccounts!)
             {
                 if (transfer.Transfer.Id == model.SelectedTransferId)
                 {
@@ -237,7 +239,7 @@ public class AdministratorController : Controller
                 }
             }
 
-            foreach (var transfer in admin.Transfers!)
+            foreach (var transfer in admin.TransfersBetweenBankAccounts!)
             {
                 if (transfer.Transfer.Equals(transferToRollBack))
                 {
@@ -252,7 +254,7 @@ public class AdministratorController : Controller
             accountWereWithdrawed!.AmountOfMoney += rollbackTransfer.Transfer!.AmountOfMoney;
             accountWereDeposited!.AmountOfMoney -= rollbackTransfer.Transfer!.AmountOfMoney;
 
-            admin.Transfers.Remove(rollbackTransfer);
+            admin.TransfersBetweenBankAccounts.Remove(rollbackTransfer);
 
             _context.Administrators.Update(admin);
             await _context.SaveChangesAsync();
@@ -268,7 +270,7 @@ public class AdministratorController : Controller
     public IActionResult RollBackBankDepositOpening()
     {
         var admin = GetAdministrator();
-        return View(new AdministratorRollBackBankDepositOpening()
+        return View(new AdministratorRollBackBankDepositOpeningModel()
         {
             Administrator = admin
         });
@@ -276,7 +278,7 @@ public class AdministratorController : Controller
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> RollBackBankDepositOpening(AdministratorRollBackBankDepositOpening model)
+    public async Task<IActionResult> RollBackBankDepositOpening(AdministratorRollBackBankDepositOpeningModel model)
     {
         if (ModelState.IsValid)
         {
@@ -307,5 +309,165 @@ public class AdministratorController : Controller
         }
 
         return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RollBackBankDepositClosing()
+    {
+        var admin = GetAdministrator();
+        return View(new AdministratorRollBackBankDepositClosingModel()
+        {
+            Administrator = admin
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RollBackBankDepositClosing(AdministratorRollBackBankDepositClosingModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var admin = GetAdministrator();
+            var depositToRollBack = new RollBackClosedDeposit();
+
+            foreach (var bankDeposit in admin.ClosedDepositsToRollBack!)
+            {
+                if (bankDeposit.BankDeposit!.Id == model.SelectedDepositId)
+                {
+                    depositToRollBack = bankDeposit;
+                    break;
+                }
+            }
+
+            var client = GetClient(depositToRollBack.Client!.Id);
+            client.BankBalance -= depositToRollBack.BankDeposit!.AmountOfMoney +
+                                  depositToRollBack.BankDeposit!.AmountOfMoney *
+                                  (depositToRollBack.BankDeposit!.Percent / 100);
+            depositToRollBack.BankDeposit.Hidden = false;
+
+            admin.ClosedDepositsToRollBack!.Remove(depositToRollBack);
+            admin.OpennedDepositsToRollBack!.Add(new RollBackOpenedDeposit(client, depositToRollBack.BankDeposit));
+
+            _context.Clients.Update(client);
+            _context.Administrators.Update(admin);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Administrator");
+        }
+
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RollBackTransferBetweenBankDeposits()
+    {
+        var admin = GetAdministrator();
+        return View(new RollBackTransferBetweenBankDepositsModel()
+        {
+            Administrator = admin
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RollBackTransferBetweenBankDeposits(RollBackTransferBetweenBankDepositsModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var admin = GetAdministrator();
+            var transferToRollBack = new Transfer();
+            var rollbackTransfer = new RollBackTransferBetweenBankDeposits();
+
+            foreach (var transfer in admin.TransfersBetweenBankDeposits!)
+            {
+                if (transfer.Transfer!.Id == model.SelectedTransferId)
+                {
+                    transferToRollBack = transfer.Transfer;
+                    break;
+                }
+            }
+
+            foreach (var transfer in admin.TransfersBetweenBankDeposits!)
+            {
+                if (transfer.Transfer!.Equals(transferToRollBack))
+                {
+                    rollbackTransfer = transfer;
+                    break;
+                }
+            }
+
+            var depositWereWithdrawed = rollbackTransfer.BankDepositWhereWithdrawed;
+            var depositWereDeposited = rollbackTransfer.BankDepositToDeposited;
+
+            depositWereWithdrawed!.AmountOfMoney += rollbackTransfer.Transfer!.AmountOfMoney;
+            depositWereDeposited!.AmountOfMoney -= rollbackTransfer.Transfer!.AmountOfMoney;
+            depositWereWithdrawed.Hidden = false;
+
+            admin.TransfersBetweenBankDeposits.Remove(rollbackTransfer);
+            admin.OpennedDepositsToRollBack!.Add(new RollBackOpenedDeposit(
+                _context.Clients.FirstOrDefaultAsync(c => c.Id == depositWereWithdrawed.ClientId).Result!,
+                depositWereWithdrawed));
+
+            _context.Administrators.Update(admin);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Profile", "Administrator");
+        }
+
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RollBackOpenedInstallmentPlan()
+    {
+        var admin = GetAdministrator();
+        return View(new AdministratorRollBackOpenedInstallmentPlanModel()
+        {
+            Administrator = admin
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RollBackOpenedInstallmentPlan(
+        AdministratorRollBackOpenedInstallmentPlanModel model)
+    {
+        var admin = GetAdministrator();
+        var installmentPlanToRollBack = new RollBackOpennedInstallmentPlan();
+
+        if (ModelState.IsValid)
+        {
+            foreach (var installmentPlan in admin.OpennedInstallmentPlans!)
+            {
+                if (installmentPlan.InstallmentPlan!.Id == model.SelectedInstallmentPlanId)
+                {
+                    installmentPlanToRollBack = installmentPlan;
+                    break;
+                }
+            }
+
+
+            var client = GetClient(installmentPlanToRollBack.InstallmentPlan!.ClientId);
+
+            foreach (var instalmentPlan in client.InstallmentPlansAndApproves!)
+            {
+                if (instalmentPlan.InstallmentPlan!.Equals(installmentPlanToRollBack.InstallmentPlan))
+                {
+                    client.InstallmentPlansAndApproves!.Remove(instalmentPlan);
+                    break;
+                }
+            }
+
+            admin.OpennedInstallmentPlans.Remove(installmentPlanToRollBack);
+            _context.Clients.Update(client);
+            _context.Administrators.Update(admin);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Administrator");
+        }
+
+        return View(model);
     }
 }

@@ -42,15 +42,56 @@
     </table>
 </form>
 
-<form asp-action="RollBackOpenedBankAccount" asp-controller="Administrator" asp-anti-forgery="true" method="get">
-    <input class="btn btn-dark btn-custom" type="submit" value="RollBack Opened Bank Accounts">
-</form>
-<form asp-action="RollBackDeletedBankAccount" asp-controller="Administrator" asp-anti-forgery="true" method="get">
-    <input class="btn btn-outline-dark btn-custom" type="submit" value="RollBack Deleted Bank Accounts">
-</form>
-<form asp-action="RollBackTransferBetweenBankAccounts" asp-controller="Administrator" asp-anti-forgery="true" method="get">
-    <input class="btn btn-dark btn-custom" type="submit" value="RollBack Transfers">
-</form>
-<form asp-action="RollBackBankDepositOpening" asp-controller="Administrator" asp-anti-forgery="true" method="get">
-    <input class="btn btn-outline-dark btn-custom" type="submit" value="RollBack Opened Deposits">
-</form>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">Bank Account</th>
+        <th scope="col">Bank Deposit</th>
+        <th scope="col">Installment Plan</th>
+        <th scope="col">Credit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row">
+            <form asp-action="RollBackOpenedBankAccount" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-dark" type="submit" value="RollBack Opened Bank Accounts">
+            </form>
+        </th>
+        <td>
+            <form asp-action="RollBackBankDepositOpening" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-dark" type="submit" value="RollBack Opened Deposits">
+            </form>
+        </td>
+        <td>
+            <form asp-action="RollBackOpenedInstallmentPlan" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-dark" type="submit" value="RollBack Opened Installment Plan">
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+            <form asp-action="RollBackDeletedBankAccount" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-dark" type="submit" value="RollBack Deleted Bank Accounts">
+            </form>
+        </th>
+        <td>
+            <form asp-action="RollBackBankDepositClosing" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-dark" type="submit" value="RollBack Closed Deposits">
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+            <form asp-action="RollBackTransferBetweenBankAccounts" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-dark" type="submit" value="RollBack Transfers Between Bank Accounts">
+            </form>
+        </th>
+        <td>
+            <form asp-action="RollBackTransferBetweenBankDeposits" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-dark" type="submit" value="RollBack Transfer Between Bank Deposits">
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>

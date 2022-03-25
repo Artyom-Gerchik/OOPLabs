@@ -1,27 +1,27 @@
-@model LAB1.Models.Administrator.AdministratorRollBackBankDepositOpeningModel
+@model LAB1.Models.Administrator.AdministratorRollBackBankDepositClosingModel
 
-<form asp-action="RollBackBankDepositOpening" asp-controller="Administrator" asp-anti-forgery="true" method="post">
+<form asp-action="RollBackBankDepositClosing" asp-controller="Administrator" asp-anti-forgery="true" method="post">
 
     <br>
     <hr class="style1">
     <br>
     <br>
 
-    @foreach (var opennedDeposit in Model.Administrator.OpennedDepositsToRollBack)
+    @foreach (var closedDeposit in Model.Administrator.ClosedDepositsToRollBack)
     {
         <table class="table table-hover table-dark">
             <tbody>
             <tr>
                 <th scope="row">Client Name</th>
-                <td>@opennedDeposit.Client!.Name</td>
+                <td>@closedDeposit.Client!.Name</td>
             </tr>
             <tr>
                 <th scope="row">Bank Deposit Name</th>
-                <td>@opennedDeposit.BankDeposit!.Name</td>
+                <td>@closedDeposit.BankDeposit!.Name</td>
             </tr>
             <tr>
                 <th scope="row">Amount Of Money</th>
-                <td>@opennedDeposit.BankDeposit!.AmountOfMoney.ToString()</td>
+                <td>@closedDeposit.BankDeposit!.AmountOfMoney.ToString()</td>
             </tr>
             </tbody>
         </table>
@@ -33,14 +33,14 @@
     <br>
 
 
-    @if (Model.Administrator.OpennedDepositsToRollBack!.Count != 0)
+    @if (Model.Administrator.ClosedDepositsToRollBack!.Count != 0)
     {
         <div class="input-group mb-3">
             <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedDepositId">
                 <option selected>Choose Bank Deposit</option>
-                @foreach (var opennedDeposit in Model.Administrator.OpennedDepositsToRollBack)
+                @foreach (var closedDeposit in Model.Administrator!.ClosedDepositsToRollBack)
                 {
-                    <option value="@opennedDeposit.BankDeposit!.Id">@opennedDeposit.Client!.Name - @opennedDeposit.BankDeposit!.Name</option>
+                    <option value="@closedDeposit.BankDeposit!.Id">@closedDeposit.Client!.Name - @closedDeposit.BankDeposit!.Name</option>
                 }
             </select>
             <div class="form-group">

@@ -1,0 +1,48 @@
+@model LAB1.Models.Administrator.AdministratorRollBackOpenedInstallmentPlanModel
+
+<form asp-action="RollBackOpenedInstallmentPlan" asp-controller="Administrator" asp-anti-forgery="true" method="post">
+
+    <br>
+    <hr class="style1">
+    <br>
+    <br>
+
+    @foreach (var opennedInstallmentPlan in Model.Administrator.OpennedInstallmentPlans)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Client Name</th>
+                <td>@opennedInstallmentPlan.Client!.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Amount Of Money</th>
+                <td>@opennedInstallmentPlan.InstallmentPlan!.AmountOfMoney.ToString()</td>
+            </tr>
+
+            </tbody>
+        </table>
+    }
+
+    <br>
+    <br>
+    <hr class="style1">
+    <br>
+
+
+    @if (Model.Administrator.OpennedInstallmentPlans.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedInstallmentPlanId">
+                <option selected>Choose Installlment Plan</option>
+                @foreach (var opennedInstallmentPlan in Model.Administrator.OpennedInstallmentPlans)
+                {
+                    <option value="@opennedInstallmentPlan.InstallmentPlan!.Id">@opennedInstallmentPlan.Client!.Name - @opennedInstallmentPlan.InstallmentPlan.AmountOfMoney.ToString()</option>
+                }
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn"/>
+            </div>
+        </div>
+    }
+</form>
