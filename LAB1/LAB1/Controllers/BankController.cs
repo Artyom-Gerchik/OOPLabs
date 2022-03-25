@@ -1,5 +1,6 @@
 using LAB1.Data;
 using LAB1.Entities;
+using LAB1.Entities.AdminRollBack;
 using LAB1.Entities.UserCategories;
 using LAB1.Models.Bank;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,8 @@ namespace LAB1.Controllers;
 public class BankController : Controller
 {
     private readonly ApplicationDbContext _context;
+
+    private int idForTransfer = 0;
 
     public BankController(ApplicationDbContext context)
     {
@@ -54,6 +57,11 @@ public class BankController : Controller
             .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.BankAccount)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.Client)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.BankAccount)
+            .Include(a => a.Transfers)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.Transfers)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
+            .Include(a => a.Transfers)!.ThenInclude(c => c.BankAccountToDeposited)
+            .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.BankDeposit)
+            .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.Client)
             .FirstOrDefaultAsync(a => a.BankId == client.CurrentBankId).Result;
         return administrator!;
     }
@@ -281,6 +289,7 @@ public class BankController : Controller
         if (ModelState.IsValid)
         {
             var client = GetClient();
+            var admin = GetAdministrator(client);
 
             var bankAccountToWithDraw = new BankAccount();
             var bankAccountToDeposit = new BankAccount();
@@ -293,8 +302,16 @@ public class BankController : Controller
                 if (bankAccount.Id == model.IdOfBankAccountToDeposit) bankAccountToDeposit = bankAccount;
             }
 
-            bankAccountToWithDraw.AmountOfMoney -= model.AmountOfMoney;
-            bankAccountToDeposit.AmountOfMoney += model.AmountOfMoney;
+            Transfer transfer = new Transfer();
+            transfer.AmountOfMoney = model.AmountOfMoney;
+            transfer.Id = ++idForTransfer;
+            bankAccountToWithDraw.AmountOfMoney -= transfer.AmountOfMoney;
+            bankAccountToDeposit.AmountOfMoney += transfer.AmountOfMoney;
+            //_context.Transfers.Add(transfer);
+
+            admin.Transfers!.Add(
+                new RollBackTransferBetweenBankAccounts(bankAccountToWithDraw, bankAccountToDeposit, transfer));
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Client");
@@ -318,6 +335,7 @@ public class BankController : Controller
         {
             var client = GetClient();
             var bank = GetBank(client);
+            var admin = GetAdministrator(client);
 
             var bankDeposit = new BankDeposit();
 
@@ -329,13 +347,17 @@ public class BankController : Controller
             var HowMuchLasts = new TimeSpan();
             HowMuchLasts = DateTime.Today.Subtract(model.DateOfMoneyBack);
             bankDeposit.HowMuchLasts = Math.Abs(HowMuchLasts.Days);
-            bankDeposit.Percent = model.Percent / 100;
+            bankDeposit.Percent = model.Percent;
+            client.BankBalance -= model.AmountOfMoney;
 
             client.OpennedBankDeposits!.Add(bankDeposit);
             bank.OpennedBankDeposits!.Add(bankDeposit);
 
+            admin.OpennedDepositsToRollBack!.Add(new RollBackOpenedDeposit(client, bankDeposit));
+
             _context.Clients.Update(client);
             _context.Banks.Update(bank);
+            _context.Administrators.Update(admin);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Client");
@@ -370,7 +392,7 @@ public class BankController : Controller
 
             var bankDeposit = client.OpennedBankDeposits.Find(b => b.Id == model.IdOfDepositToWithdraw);
 
-            client.BankBalance += bankDeposit.AmountOfMoney + bankDeposit.AmountOfMoney * bankDeposit.Percent;
+            client.BankBalance += bankDeposit.AmountOfMoney + bankDeposit.AmountOfMoney * (bankDeposit.Percent / 100);
 
             client.OpennedBankDeposits.Remove(bankDeposit);
             bank.OpennedBankDeposits!.Remove(bankDeposit);

@@ -46,5 +46,11 @@
     <input class="btn btn-dark btn-custom" type="submit" value="RollBack Opened Bank Accounts">
 </form>
 <form asp-action="RollBackDeletedBankAccount" asp-controller="Administrator" asp-anti-forgery="true" method="get">
-    <input class="btn btn-dark btn-custom" type="submit" value="RollBack Deleted Bank Accounts">
+    <input class="btn btn-outline-dark btn-custom" type="submit" value="RollBack Deleted Bank Accounts">
+</form>
+<form asp-action="RollBackTransferBetweenBankAccounts" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+    <input class="btn btn-dark btn-custom" type="submit" value="RollBack Transfers">
+</form>
+<form asp-action="RollBackBankDepositOpening" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+    <input class="btn btn-outline-dark btn-custom" type="submit" value="RollBack Opened Deposits">
 </form>

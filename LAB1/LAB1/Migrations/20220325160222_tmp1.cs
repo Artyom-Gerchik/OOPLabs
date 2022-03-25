@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LAB1.Migrations
 {
-    public partial class CompaniesUpdated : Migration
+    public partial class tmp1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -78,6 +78,18 @@ namespace LAB1.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Transfers",
+                columns: table => new
+                {
+                    Id = table.Column<double>(type: "REAL", nullable: false),
+                    AmountOfMoney = table.Column<double>(type: "REAL", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transfers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -211,6 +223,25 @@ namespace LAB1.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Administrators",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BankId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Administrators", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Administrators_Users_Id",
+                        column: x => x.Id,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Operators",
                 columns: table => new
                 {
@@ -282,17 +313,20 @@ namespace LAB1.Migrations
                     CurrentBankId = table.Column<int>(type: "INTEGER", nullable: true),
                     BankBalance = table.Column<double>(type: "REAL", nullable: true),
                     Salary = table.Column<double>(type: "REAL", nullable: true),
-                    CompanyId = table.Column<int>(type: "INTEGER", nullable: true),
+                    WorkId = table.Column<int>(type: "INTEGER", nullable: true),
+                    AtSalaryProject = table.Column<bool>(type: "INTEGER", nullable: true),
                     ManagerId = table.Column<int>(type: "INTEGER", nullable: true),
                     ManagerId1 = table.Column<int>(type: "INTEGER", nullable: true),
-                    ManagerId2 = table.Column<int>(type: "INTEGER", nullable: true)
+                    ManagerId2 = table.Column<int>(type: "INTEGER", nullable: true),
+                    OperatorId = table.Column<int>(type: "INTEGER", nullable: true),
+                    SpecialistId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Clients_Companies_CompanyId",
-                        column: x => x.CompanyId,
+                        name: "FK_Clients_Companies_WorkId",
+                        column: x => x.WorkId,
                         principalTable: "Companies",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -309,6 +343,16 @@ namespace LAB1.Migrations
                         name: "FK_Clients_Managers_ManagerId2",
                         column: x => x.ManagerId2,
                         principalTable: "Managers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Clients_Operators_OperatorId",
+                        column: x => x.OperatorId,
+                        principalTable: "Operators",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Clients_Specialists_SpecialistId",
+                        column: x => x.SpecialistId,
+                        principalTable: "Specialists",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Clients_Users_Id",
@@ -381,7 +425,9 @@ namespace LAB1.Migrations
                     ClientId = table.Column<int>(type: "INTEGER", nullable: true),
                     BankId = table.Column<int>(type: "INTEGER", nullable: true),
                     AmountOfMoney = table.Column<double>(type: "REAL", nullable: true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    IsASalaryProjectAccount = table.Column<bool>(type: "INTEGER", nullable: true),
+                    Hidden = table.Column<bool>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -465,7 +511,10 @@ namespace LAB1.Migrations
                     AmountOfMoney = table.Column<double>(type: "REAL", nullable: true),
                     DateOfDeal = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DateToPay = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    HowMuchLasts = table.Column<int>(type: "INTEGER", nullable: true)
+                    HowMuchLasts = table.Column<int>(type: "INTEGER", nullable: true),
+                    Blocked = table.Column<bool>(type: "INTEGER", nullable: true),
+                    Frozen = table.Column<bool>(type: "INTEGER", nullable: true),
+                    Hidden = table.Column<bool>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -474,6 +523,132 @@ namespace LAB1.Migrations
                         name: "FK_InstallmentPlan_Banks_BankId",
                         column: x => x.BankId,
                         principalTable: "Banks",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeletedBankAccount",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ClientId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BankAccountId = table.Column<int>(type: "INTEGER", nullable: true),
+                    AdministratorId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeletedBankAccount", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DeletedBankAccount_Administrators_AdministratorId",
+                        column: x => x.AdministratorId,
+                        principalTable: "Administrators",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DeletedBankAccount_BankAccount_BankAccountId",
+                        column: x => x.BankAccountId,
+                        principalTable: "BankAccount",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DeletedBankAccount_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OpennedBankAccount",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ClientId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BankAccountId = table.Column<int>(type: "INTEGER", nullable: true),
+                    AdministratorId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OpennedBankAccount", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OpennedBankAccount_Administrators_AdministratorId",
+                        column: x => x.AdministratorId,
+                        principalTable: "Administrators",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OpennedBankAccount_BankAccount_BankAccountId",
+                        column: x => x.BankAccountId,
+                        principalTable: "BankAccount",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OpennedBankAccount_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RollBackTransferBetweenBankAccounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BankAccountWhereWithdrawedId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BankAccountToDepositedId = table.Column<int>(type: "INTEGER", nullable: true),
+                    TransferId = table.Column<double>(type: "REAL", nullable: true),
+                    AdministratorId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RollBackTransferBetweenBankAccounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RollBackTransferBetweenBankAccounts_Administrators_AdministratorId",
+                        column: x => x.AdministratorId,
+                        principalTable: "Administrators",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RollBackTransferBetweenBankAccounts_BankAccount_BankAccountToDepositedId",
+                        column: x => x.BankAccountToDepositedId,
+                        principalTable: "BankAccount",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RollBackTransferBetweenBankAccounts_BankAccount_BankAccountWhereWithdrawedId",
+                        column: x => x.BankAccountWhereWithdrawedId,
+                        principalTable: "BankAccount",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RollBackTransferBetweenBankAccounts_Transfers_TransferId",
+                        column: x => x.TransferId,
+                        principalTable: "Transfers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RollBackOpenedDeposit",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ClientId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BankDepositId = table.Column<int>(type: "INTEGER", nullable: true),
+                    AdministratorId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RollBackOpenedDeposit", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RollBackOpenedDeposit_Administrators_AdministratorId",
+                        column: x => x.AdministratorId,
+                        principalTable: "Administrators",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RollBackOpenedDeposit_BankDeposit_BankDepositId",
+                        column: x => x.BankDepositId,
+                        principalTable: "BankDeposit",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RollBackOpenedDeposit_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
                         principalColumn: "Id");
                 });
 
@@ -727,11 +902,6 @@ namespace LAB1.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_CompanyId",
-                table: "Clients",
-                column: "CompanyId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Clients_ManagerId",
                 table: "Clients",
                 column: "ManagerId");
@@ -745,6 +915,21 @@ namespace LAB1.Migrations
                 name: "IX_Clients_ManagerId2",
                 table: "Clients",
                 column: "ManagerId2");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_OperatorId",
+                table: "Clients",
+                column: "OperatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_SpecialistId",
+                table: "Clients",
+                column: "SpecialistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_WorkId",
+                table: "Clients",
+                column: "WorkId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Credit_BankId",
@@ -767,6 +952,21 @@ namespace LAB1.Migrations
                 column: "CreditId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DeletedBankAccount_AdministratorId",
+                table: "DeletedBankAccount",
+                column: "AdministratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeletedBankAccount_BankAccountId",
+                table: "DeletedBankAccount",
+                column: "BankAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeletedBankAccount_ClientId",
+                table: "DeletedBankAccount",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InstallmentPlan_BankId",
                 table: "InstallmentPlan",
                 column: "BankId");
@@ -785,6 +985,56 @@ namespace LAB1.Migrations
                 name: "IX_InstallmentPlanApproves_InstallmentPlanId",
                 table: "InstallmentPlanApproves",
                 column: "InstallmentPlanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OpennedBankAccount_AdministratorId",
+                table: "OpennedBankAccount",
+                column: "AdministratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OpennedBankAccount_BankAccountId",
+                table: "OpennedBankAccount",
+                column: "BankAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OpennedBankAccount_ClientId",
+                table: "OpennedBankAccount",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RollBackOpenedDeposit_AdministratorId",
+                table: "RollBackOpenedDeposit",
+                column: "AdministratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RollBackOpenedDeposit_BankDepositId",
+                table: "RollBackOpenedDeposit",
+                column: "BankDepositId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RollBackOpenedDeposit_ClientId",
+                table: "RollBackOpenedDeposit",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RollBackTransferBetweenBankAccounts_AdministratorId",
+                table: "RollBackTransferBetweenBankAccounts",
+                column: "AdministratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RollBackTransferBetweenBankAccounts_BankAccountToDepositedId",
+                table: "RollBackTransferBetweenBankAccounts",
+                column: "BankAccountToDepositedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RollBackTransferBetweenBankAccounts_BankAccountWhereWithdrawedId",
+                table: "RollBackTransferBetweenBankAccounts",
+                column: "BankAccountWhereWithdrawedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RollBackTransferBetweenBankAccounts_TransferId",
+                table: "RollBackTransferBetweenBankAccounts",
+                column: "TransferId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Specialists_CompanyId",
@@ -818,19 +1068,22 @@ namespace LAB1.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BankAccount");
-
-            migrationBuilder.DropTable(
-                name: "BankDeposit");
-
-            migrationBuilder.DropTable(
                 name: "CreditsAndApproves");
+
+            migrationBuilder.DropTable(
+                name: "DeletedBankAccount");
 
             migrationBuilder.DropTable(
                 name: "InstallmentPlanApproves");
 
             migrationBuilder.DropTable(
-                name: "Specialists");
+                name: "OpennedBankAccount");
+
+            migrationBuilder.DropTable(
+                name: "RollBackOpenedDeposit");
+
+            migrationBuilder.DropTable(
+                name: "RollBackTransferBetweenBankAccounts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -845,19 +1098,34 @@ namespace LAB1.Migrations
                 name: "InstallmentPlan");
 
             migrationBuilder.DropTable(
+                name: "BankDeposit");
+
+            migrationBuilder.DropTable(
+                name: "Administrators");
+
+            migrationBuilder.DropTable(
+                name: "BankAccount");
+
+            migrationBuilder.DropTable(
+                name: "Transfers");
+
+            migrationBuilder.DropTable(
                 name: "Banks");
 
             migrationBuilder.DropTable(
                 name: "Clients");
 
             migrationBuilder.DropTable(
-                name: "Companies");
-
-            migrationBuilder.DropTable(
                 name: "Managers");
 
             migrationBuilder.DropTable(
+                name: "Specialists");
+
+            migrationBuilder.DropTable(
                 name: "Operators");
+
+            migrationBuilder.DropTable(
+                name: "Companies");
 
             migrationBuilder.DropTable(
                 name: "Users");

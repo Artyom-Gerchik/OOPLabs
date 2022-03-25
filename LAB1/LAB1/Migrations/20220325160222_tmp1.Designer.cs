@@ -11,13 +11,122 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220323154448_ClientUpdatedAgain")]
-    partial class ClientUpdatedAgain
+    [Migration("20220325160222_tmp1")]
+    partial class tmp1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.DeletedBankAccount", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AdministratorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BankAccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdministratorId");
+
+                    b.HasIndex("BankAccountId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("DeletedBankAccount");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.OpennedBankAccount", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AdministratorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BankAccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdministratorId");
+
+                    b.HasIndex("BankAccountId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("OpennedBankAccount");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackOpenedDeposit", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AdministratorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BankDepositId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdministratorId");
+
+                    b.HasIndex("BankDepositId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("RollBackOpenedDeposit");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackTransferBetweenBankAccounts", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AdministratorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BankAccountToDepositedId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BankAccountWhereWithdrawedId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("TransferId")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdministratorId");
+
+                    b.HasIndex("BankAccountToDepositedId");
+
+                    b.HasIndex("BankAccountWhereWithdrawedId");
+
+                    b.HasIndex("TransferId");
+
+                    b.ToTable("RollBackTransferBetweenBankAccounts");
+                });
 
             modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
                 {
@@ -32,6 +141,12 @@ namespace LAB1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("Hidden")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("IsASalaryProjectAccount")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -331,6 +446,9 @@ namespace LAB1.Migrations
                     b.Property<int?>("BankId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool?>("Blocked")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("ClientId")
                         .HasColumnType("INTEGER");
 
@@ -341,6 +459,12 @@ namespace LAB1.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("DurationInMonths")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("Frozen")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("Hidden")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("HowMuchLasts")
@@ -431,6 +555,19 @@ namespace LAB1.Migrations
                             Id = 7,
                             Name = "operator"
                         });
+                });
+
+            modelBuilder.Entity("LAB1.Entities.Transfer", b =>
+                {
+                    b.Property<double?>("Id")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("AmountOfMoney")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Transfers");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.User", b =>
@@ -737,6 +874,16 @@ namespace LAB1.Migrations
                         });
                 });
 
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Administrator", b =>
+                {
+                    b.HasBaseType("LAB1.Entities.UserCategories.User");
+
+                    b.Property<int?>("BankId")
+                        .HasColumnType("INTEGER");
+
+                    b.ToTable("Administrators", (string)null);
+                });
+
             modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
                 {
                     b.HasBaseType("LAB1.Entities.UserCategories.User");
@@ -762,6 +909,9 @@ namespace LAB1.Migrations
                     b.Property<int?>("ManagerId2")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("OperatorId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("PassportNumberAndSeries")
                         .HasColumnType("TEXT");
 
@@ -779,6 +929,8 @@ namespace LAB1.Migrations
                     b.HasIndex("ManagerId1");
 
                     b.HasIndex("ManagerId2");
+
+                    b.HasIndex("OperatorId");
 
                     b.HasIndex("SpecialistId");
 
@@ -814,6 +966,88 @@ namespace LAB1.Migrations
                     b.HasBaseType("LAB1.Entities.UserCategories.Operator");
 
                     b.ToTable("Managers", (string)null);
+                });
+
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.DeletedBankAccount", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
+                        .WithMany("DeletedBankAccounts")
+                        .HasForeignKey("AdministratorId");
+
+                    b.HasOne("LAB1.Entities.BankAccount", "BankAccount")
+                        .WithMany()
+                        .HasForeignKey("BankAccountId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.Navigation("BankAccount");
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.OpennedBankAccount", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
+                        .WithMany("OpennedBankAccounts")
+                        .HasForeignKey("AdministratorId");
+
+                    b.HasOne("LAB1.Entities.BankAccount", "BankAccount")
+                        .WithMany()
+                        .HasForeignKey("BankAccountId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.Navigation("BankAccount");
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackOpenedDeposit", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
+                        .WithMany("OpennedDepositsToRollBack")
+                        .HasForeignKey("AdministratorId");
+
+                    b.HasOne("LAB1.Entities.BankDeposit", "BankDeposit")
+                        .WithMany()
+                        .HasForeignKey("BankDepositId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.Navigation("BankDeposit");
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackTransferBetweenBankAccounts", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
+                        .WithMany("Transfers")
+                        .HasForeignKey("AdministratorId");
+
+                    b.HasOne("LAB1.Entities.BankAccount", "BankAccountToDeposited")
+                        .WithMany()
+                        .HasForeignKey("BankAccountToDepositedId");
+
+                    b.HasOne("LAB1.Entities.BankAccount", "BankAccountWhereWithdrawed")
+                        .WithMany()
+                        .HasForeignKey("BankAccountWhereWithdrawedId");
+
+                    b.HasOne("LAB1.Entities.Transfer", "Transfer")
+                        .WithMany()
+                        .HasForeignKey("TransferId");
+
+                    b.Navigation("BankAccountToDeposited");
+
+                    b.Navigation("BankAccountWhereWithdrawed");
+
+                    b.Navigation("Transfer");
                 });
 
             modelBuilder.Entity("LAB1.Entities.BankAccount", b =>
@@ -976,6 +1210,15 @@ namespace LAB1.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Administrator", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.User", null)
+                        .WithOne()
+                        .HasForeignKey("LAB1.Entities.UserCategories.Administrator", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
                 {
                     b.HasOne("LAB1.Entities.UserCategories.User", null)
@@ -995,6 +1238,10 @@ namespace LAB1.Migrations
                     b.HasOne("LAB1.Entities.UserCategories.Manager", null)
                         .WithMany("WaitingForRegistrationApprove")
                         .HasForeignKey("ManagerId2");
+
+                    b.HasOne("LAB1.Entities.UserCategories.Operator", null)
+                        .WithMany("ClientsWaitingForSalaryProject")
+                        .HasForeignKey("OperatorId");
 
                     b.HasOne("LAB1.Entities.UserCategories.Specialist", null)
                         .WithMany("ClientsToPaymentProject")
@@ -1063,6 +1310,17 @@ namespace LAB1.Migrations
                     b.Navigation("OpennedInstallmentPlans");
                 });
 
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Administrator", b =>
+                {
+                    b.Navigation("DeletedBankAccounts");
+
+                    b.Navigation("OpennedBankAccounts");
+
+                    b.Navigation("OpennedDepositsToRollBack");
+
+                    b.Navigation("Transfers");
+                });
+
             modelBuilder.Entity("LAB1.Entities.UserCategories.Client", b =>
                 {
                     b.Navigation("Banks");
@@ -1076,6 +1334,11 @@ namespace LAB1.Migrations
                     b.Navigation("OpennedBankAccounts");
 
                     b.Navigation("OpennedBankDeposits");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
+                {
+                    b.Navigation("ClientsWaitingForSalaryProject");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Specialist", b =>

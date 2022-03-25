@@ -1,0 +1,48 @@
+@model LAB1.Models.Administrator.AdministratorRollBackTransferModel
+
+
+<form asp-action="RollBackTransferBetweenBankAccounts" asp-controller="Administrator" asp-anti-forgery="true" method="post">
+
+    <br>
+    <hr class="style1">
+    <br>
+    <br>
+
+    @foreach (var transfer in Model.Administrator.Transfers)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Withdrawed Account Name</th>
+                <td>@transfer.BankAccountWhereWithdrawed!.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Deposited Account Name</th>
+                <td>@transfer.BankAccountToDeposited!.Name</td>
+            </tr>
+            </tbody>
+        </table>
+    }
+
+    <br>
+    <br>
+    <hr class="style1">
+    <br>
+
+
+    @if (Model.Administrator.Transfers!.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedTransferId">
+                <option selected>Choose Bank Account</option>
+                @foreach (var transfer in Model.Administrator.Transfers)
+                {
+                    <option value="@transfer.Transfer!.Id">@transfer.BankAccountWhereWithdrawed!.Name to @transfer.BankAccountToDeposited!.Name</option>
+                }
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn"/>
+            </div>
+        </div>
+    }
+</form>

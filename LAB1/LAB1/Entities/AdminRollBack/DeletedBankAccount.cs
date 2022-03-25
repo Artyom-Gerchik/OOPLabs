@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using LAB1.Entities.UserCategories;
 
-namespace LAB1.Entities;
+namespace LAB1.Entities.AdminRollBack;
 
 public class DeletedBankAccount
 {
