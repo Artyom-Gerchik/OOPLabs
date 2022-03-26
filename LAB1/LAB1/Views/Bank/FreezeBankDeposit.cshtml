@@ -1,8 +1,5 @@
-@model LAB1.Models.Bank.SpeedRunDepositModel
+@model LAB1.Models.Bank.FreezeBankDepositModel
 
-<br>
-<hr class="style1">
-<br>
 @foreach (var OpennedDeposits in Model.Client.OpennedBankDeposits)
 {
     if (OpennedDeposits.BankId == Model.Bank.Id && !(bool)OpennedDeposits.Frozen! && !(bool)OpennedDeposits.Blocked!)
@@ -10,31 +7,31 @@
         <table class="table table-hover table-dark">
             <tbody>
             <tr>
-                <th scope="row">Id Of Oppened bank account</th>
+                <th scope="row">Id Of Oppened bank Deposit</th>
                 <td>@OpennedDeposits.Id.ToString()</td>
             </tr>
             <tr>
-                <th scope="row">Name Of Oppened bank account</th>
+                <th scope="row">Name Of Oppened bank Deposit</th>
                 <td>@OpennedDeposits.Name</td>
             </tr>
             <tr>
-                <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
                 <td>@OpennedDeposits.AmountOfMoney.ToString()</td>
             </tr>
             </tbody>
         </table>
+        <br>
+        <hr class="style1">
+        <br>
     }
 }
-<br>
-<hr class="style1">
-<br>
 
-<form asp-action="SpeedRunDeposit" asp-controller="Bank" asp-anti-forgery="true" method="post">
+<form asp-action="FreezeBankDeposit" asp-controller="Bank" asp-anti-forgery="true" method="post">
 
     @if (Model.Client.OpennedBankDeposits.Count != 0)
     {
         <div class="input-group mb-3">
-            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfDepositToSpeedRun">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfDepositToFreeze">
                 <option selected>Choose...</option>
                 @foreach (var opennedBankDeposit in Model.Client.OpennedBankDeposits)
                 {

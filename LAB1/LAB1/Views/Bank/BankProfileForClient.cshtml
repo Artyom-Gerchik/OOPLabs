@@ -111,8 +111,8 @@
         <th scope="row">
         </th>
         <td>
-            <form>
-                <input class="btn btn-danger" type="submit" value="Block An Bank Deposit">
+            <form asp-action="BlockBankDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Block An Bank Deposit">
             </form>
         </td>
     </tr>
@@ -120,8 +120,8 @@
         <th scope="row">
         </th>
         <td>
-            <form>
-                <input class="btn btn-danger" type="submit" value="Freeze An Bank Deposit">
+            <form asp-action="FreezeBankDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Freeze An Bank Deposit">
             </form>
         </td>
     </tr>

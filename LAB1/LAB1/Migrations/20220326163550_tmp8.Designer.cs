@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220326163550_tmp8")]
+    partial class tmp8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -250,9 +252,6 @@ namespace LAB1.Migrations
                     b.Property<int?>("BankAccountWhereWithdrawedId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("OperatorId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<double?>("TransferId")
                         .HasColumnType("REAL");
 
@@ -263,8 +262,6 @@ namespace LAB1.Migrations
                     b.HasIndex("BankAccountToDepositedId");
 
                     b.HasIndex("BankAccountWhereWithdrawedId");
-
-                    b.HasIndex("OperatorId");
 
                     b.HasIndex("TransferId");
 
@@ -1326,10 +1323,6 @@ namespace LAB1.Migrations
                         .WithMany()
                         .HasForeignKey("BankAccountWhereWithdrawedId");
 
-                    b.HasOne("LAB1.Entities.UserCategories.Operator", null)
-                        .WithMany("TransfersBetweenBankAccounts")
-                        .HasForeignKey("OperatorId");
-
                     b.HasOne("LAB1.Entities.Transfer", "Transfer")
                         .WithMany()
                         .HasForeignKey("TransferId");
@@ -1667,8 +1660,6 @@ namespace LAB1.Migrations
             modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
                 {
                     b.Navigation("ClientsWaitingForSalaryProject");
-
-                    b.Navigation("TransfersBetweenBankAccounts");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Specialist", b =>

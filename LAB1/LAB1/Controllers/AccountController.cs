@@ -63,6 +63,7 @@ public class AccountController : Controller
 
                 break;
             case 4: // foreignClient
+                return RedirectToAction("ForeignClient", "Account");
                 break;
             case 5: // specialist
                 if (specialist != null)
@@ -202,5 +203,11 @@ public class AccountController : Controller
         var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
             ClaimsIdentity.DefaultRoleClaimType);
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+    }
+
+    [HttpGet]
+    public IActionResult ForeignClient()
+    {
+        return View();
     }
 }

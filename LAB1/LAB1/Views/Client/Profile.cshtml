@@ -184,7 +184,7 @@
 
 @foreach (var i in Model.Client.OpennedBankDeposits)
 {
-    if (!(bool)i.Hidden!)
+    if (!(bool)i.Hidden! && !(bool)i.Blocked!)
     {
         <table class="table table-hover table-dark">
             <tbody>
@@ -215,6 +215,10 @@
             <tr>
                 <th scope="row">Days remaining</th>
                 <td>(@i.HowMuchLasts.ToString())</td>
+            </tr>
+            <tr>
+                <th scope="row">Frozen?</th>
+                <td>(@i.Frozen.ToString())</td>
             </tr>
             </tbody>
         </table>

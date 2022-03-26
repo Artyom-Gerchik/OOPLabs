@@ -48,7 +48,7 @@ public class BankController : Controller
     public Administrator GetAdministrator(Client client)
     {
         var administrator = _context.Administrators
-             .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.Client)
             .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.BankAccount)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.Client)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.BankAccount)
@@ -74,6 +74,16 @@ public class BankController : Controller
             .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Transfer)
             .FirstOrDefaultAsync(a => a.BankId == client.CurrentBankId).Result;
         return administrator!;
+    }
+
+    public Operator GetOperator(Client client)
+    {
+        var bankOperator = _context.Operators.Include(o => o.ClientsWaitingForSalaryProject)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountToDeposited)
+            .FirstOrDefaultAsync(a => a.BankId == client.CurrentBankId && a.RoleId == 7).Result;
+        return bankOperator!;
     }
 
     // public void Log(string funcName, Client client, Bank bank, TextWriter w, int bankAccountId)
@@ -300,6 +310,7 @@ public class BankController : Controller
         {
             var client = GetClient();
             var admin = GetAdministrator(client);
+            var bankOperator = GetOperator(client);
 
             var bankAccountToWithDraw = new BankAccount();
             var bankAccountToDeposit = new BankAccount();
@@ -313,15 +324,29 @@ public class BankController : Controller
             }
 
             Transfer transfer = new Transfer();
-            transfer.AmountOfMoney = model.AmountOfMoney;
+
             transfer.Id = ++_idForTransfer;
+
+            foreach (var transferDb in _context.Transfers.ToList())
+            {
+                if (transfer.Id == transferDb.Id)
+                {
+                    transfer.Id = ++_idForTransfer;
+                }
+            }
+
+            transfer.AmountOfMoney = model.AmountOfMoney;
             bankAccountToWithDraw.AmountOfMoney -= transfer.AmountOfMoney;
             bankAccountToDeposit.AmountOfMoney += transfer.AmountOfMoney;
             //_context.Transfers.Add(transfer);
 
             admin.TransfersBetweenBankAccounts!.Add(
                 new RollBackTransferBetweenBankAccounts(bankAccountToWithDraw, bankAccountToDeposit, transfer));
+            bankOperator.TransfersBetweenBankAccounts!.Add(
+                new RollBackTransferBetweenBankAccounts(bankAccountToWithDraw, bankAccountToDeposit, transfer));
 
+            _context.Administrators.Update(admin);
+            _context.Operators.Update(bankOperator);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Client");
@@ -354,6 +379,8 @@ public class BankController : Controller
             bankDeposit.DateOfDeal = DateTime.Today;
             bankDeposit.DateOfMoneyBack = model.DateOfMoneyBack;
             bankDeposit.Hidden = false;
+            bankDeposit.Blocked = false;
+            bankDeposit.Frozen = false;
 
             var HowMuchLasts = new TimeSpan();
             HowMuchLasts = DateTime.Today.Subtract(model.DateOfMoneyBack);
@@ -435,7 +462,6 @@ public class BankController : Controller
     {
         var client = GetClient();
         var bank = GetBank(client);
-
 
         return View(new SpeedRunDepositModel
         {
@@ -885,5 +911,69 @@ public class BankController : Controller
         }
 
         return View(model);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult BlockBankDeposit()
+    {
+        var client = GetClient();
+        var bank = GetBank(client);
+
+        return View(new BlockBankDepositModel
+        {
+            Client = client,
+            Bank = bank
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> BlockBankDeposit(BlockBankDepositModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var client = GetClient();
+
+            var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToBlock);
+
+            bankDeposit!.Blocked = true;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Profile", "Client");
+        }
+
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult FreezeBankDeposit()
+    {
+        var client = GetClient();
+        var bank = GetBank(client);
+
+        return View(new FreezeBankDepositModel
+        {
+            Client = client,
+            Bank = bank
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> FreezeBankDeposit(FreezeBankDepositModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var client = GetClient();
+
+            var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToFreeze);
+
+            bankDeposit!.Frozen = true;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Profile", "Client");
+        }
+
+        return View();
     }
 }

@@ -63,15 +63,29 @@ public class AdministratorController : Controller
         return client;
     }
 
+    public Operator GetOperator(Administrator administrator)
+    {
+        var bankOperator = _context.Operators.Include(o => o.ClientsWaitingForSalaryProject)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountToDeposited)
+            .FirstOrDefaultAsync(a => a.BankId == administrator.BankId && a.RoleId == 7).Result;
+        return bankOperator!;
+    }
+
 
     [HttpGet]
     [Authorize]
     public IActionResult Profile()
     {
         var admin = GetAdministrator();
-
-        // admin.OpennedInstallmentPlans!.Clear();
+        // var bankOperator = GetOperator(admin);
+        // //
+        // admin.TransfersBetweenBankAccounts = new List<RollBackTransferBetweenBankAccounts>();
+        // bankOperator.TransfersBetweenBankAccounts = new List<RollBackTransferBetweenBankAccounts>();
+        // // bankOperator.TransfersBetweenBankAccounts!.Clear();
         // _context.Administrators.Update(admin);
+        // _context.Operators.Update(bankOperator);
         // _context.SaveChangesAsync();
 
         return View(new AdministratorProfileModel
@@ -113,7 +127,8 @@ public class AdministratorController : Controller
                 Role = role,
                 BankId = selectedBank!.Id,
                 OpennedBankAccounts = new List<OpennedBankAccount>(),
-                DeletedBankAccounts = new List<DeletedBankAccount>()
+                DeletedBankAccounts = new List<DeletedBankAccount>(),
+                TransfersBetweenBankAccounts = new List<RollBackTransferBetweenBankAccounts>(),
             };
             if (admin != null)
             {
@@ -239,6 +254,7 @@ public class AdministratorController : Controller
         if (ModelState.IsValid)
         {
             var admin = GetAdministrator();
+            var bankOperator = GetOperator(admin);
             var transferToRollBack = new Transfer();
             var rollbackTransfer = new RollBackTransferBetweenBankAccounts();
 
@@ -266,9 +282,21 @@ public class AdministratorController : Controller
             accountWereWithdrawed!.AmountOfMoney += rollbackTransfer.Transfer!.AmountOfMoney;
             accountWereDeposited!.AmountOfMoney -= rollbackTransfer.Transfer!.AmountOfMoney;
 
+            foreach (var rollBackTmp in bankOperator.TransfersBetweenBankAccounts!)
+            {
+                if (rollBackTmp.BankAccountWhereWithdrawed!.Equals(rollbackTransfer.BankAccountWhereWithdrawed) &&
+                    rollBackTmp.Transfer!.Equals(rollbackTransfer.Transfer))
+                {
+                    bankOperator.TransfersBetweenBankAccounts!.Remove(rollBackTmp);
+                    break;
+                }
+            }
+
             admin.TransfersBetweenBankAccounts.Remove(rollbackTransfer);
 
+
             _context.Administrators.Update(admin);
+            _context.Operators.Update(bankOperator);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Administrator");

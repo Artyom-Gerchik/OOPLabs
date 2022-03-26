@@ -16,7 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ClientLogs\4" />
+      <Folder Include="ClientLogsForAdmin\4" />
+      <Folder Include="ClientLogsForOperator" />
     </ItemGroup>
 
 </Project>

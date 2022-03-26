@@ -1,4 +1,6 @@
 using LAB1.Data;
+using LAB1.Entities;
+using LAB1.Entities.AdminRollBack;
 using LAB1.Entities.UserCategories;
 using LAB1.Models.Operator;
 using Microsoft.AspNetCore.Authorization;
@@ -20,9 +22,43 @@ public class OperatorController : Controller
     {
         var bankOperator = _context.Operators
             .Include(o => o.ClientsWaitingForSalaryProject)
+            .Include(o => o.TransfersBetweenBankAccounts)!.ThenInclude(c => c.Transfer)
+            .Include(o => o.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
+            .Include(o => o.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountToDeposited)
             .FirstOrDefaultAsync(o => o.Email.Equals(User.Identity.Name)).Result;
 
         return bankOperator!;
+    }
+
+    public Administrator GetAdministrator(Operator bankOperator)
+    {
+        var administrator = _context.Administrators
+            .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.BankAccount)
+            .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.BankAccount)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankAccounts)!.ThenInclude(c => c.BankAccountToDeposited)
+            .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.BankDeposit)
+            .Include(a => a.OpennedDepositsToRollBack)!.ThenInclude(c => c.Client)
+            .Include(a => a.ClosedDepositsToRollBack)!.ThenInclude(c => c.BankDeposit)
+            .Include(a => a.ClosedDepositsToRollBack)!.ThenInclude(c => c.Client)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositWhereWithdrawed)
+            .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositToDeposited)
+            .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.OpennedCredits)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedCredits)!.ThenInclude(c => c.Credit)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Credit)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Transfer)
+            .FirstOrDefaultAsync(a => a.BankId == bankOperator.BankId).Result;
+        return administrator!;
     }
 
     [HttpGet]
@@ -67,7 +103,8 @@ public class OperatorController : Controller
                 RoleId = user.RoleId,
                 Role = operatorRole,
                 BankId = model.SelectedBankId,
-                ClientsWaitingForSalaryProject = new List<Client>()
+                ClientsWaitingForSalaryProject = new List<Client>(),
+                TransfersBetweenBankAccounts = new List<RollBackTransferBetweenBankAccounts>()
             };
 
             if (model.SelectedBankId != null)
@@ -121,5 +158,75 @@ public class OperatorController : Controller
         }
 
         return RedirectToAction("Profile", "Operator");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RollBackTransferBetweenBankAccounts()
+    {
+        var bankOperator = GetOperator();
+        return View(new OperatorRollBackTransferModel()
+        {
+            Operator = bankOperator
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RollBackTransferBetweenBankAccounts(OperatorRollBackTransferModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var bankOperator = GetOperator();
+            var admin = GetAdministrator(bankOperator);
+
+            var transferToRollBack = new Transfer();
+            var rollbackTransfer = new RollBackTransferBetweenBankAccounts();
+
+            foreach (var transfer in bankOperator.TransfersBetweenBankAccounts!)
+            {
+                if (transfer.Transfer.Id == model.SelectedTransferId)
+                {
+                    transferToRollBack = transfer.Transfer;
+                    break;
+                }
+            }
+
+            foreach (var transfer in bankOperator.TransfersBetweenBankAccounts!)
+            {
+                if (transfer.Transfer.Equals(transferToRollBack))
+                {
+                    rollbackTransfer = transfer;
+                    break;
+                }
+            }
+
+            var accountWereWithdrawed = rollbackTransfer.BankAccountWhereWithdrawed;
+            var accountWereDeposited = rollbackTransfer.BankAccountToDeposited;
+
+            accountWereWithdrawed!.AmountOfMoney += rollbackTransfer.Transfer!.AmountOfMoney;
+            accountWereDeposited!.AmountOfMoney -= rollbackTransfer.Transfer!.AmountOfMoney;
+
+            foreach (var rollBackTmp in admin.TransfersBetweenBankAccounts!)
+            {
+                if (rollBackTmp.BankAccountWhereWithdrawed!.Equals(rollbackTransfer.BankAccountWhereWithdrawed) &&
+                    rollBackTmp.Transfer!.Equals(rollbackTransfer.Transfer))
+                {
+                    admin.TransfersBetweenBankAccounts!.Remove(rollBackTmp);
+                    break;
+                }
+            }
+
+
+            bankOperator.TransfersBetweenBankAccounts!.Remove(rollbackTransfer);
+
+            _context.Administrators.Update(admin);
+            _context.Operators.Update(bankOperator);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Operator");
+        }
+
+        return View();
     }
 }
