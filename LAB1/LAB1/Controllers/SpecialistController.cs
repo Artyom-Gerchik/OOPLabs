@@ -1,4 +1,5 @@
 using LAB1.Data;
+using LAB1.Entities.ManagerRollBack;
 using LAB1.Entities.UserCategories;
 using LAB1.Models.Specialist;
 using Microsoft.AspNetCore.Authorization;
@@ -106,6 +107,8 @@ public class SpecialistController : Controller
         {
             var specialist = GetSpecialist();
             var bankId = 0;
+
+
             foreach (var bank in _context.Banks)
                 if (bank.BankIdentificationCode == specialist.Company!.BankIdentificationCode)
                 {
@@ -113,16 +116,31 @@ public class SpecialistController : Controller
                     break;
                 }
 
+            var manager = _context.Managers
+                .Include(m => m.WaitingForRegistrationApprove)
+                .Include(m => m.WaitingForInstallmentPlanApprove)
+                .Include(m => m.WaitingForCreditApprove)
+                .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
+                .FirstAsync(o => o.BankId == bankId && o.RoleId == 6).Result;
+
             var bankOperator = _context.Operators
                 .Include(o => o.ClientsWaitingForSalaryProject)
-                .FirstAsync(o => o.BankId == bankId && o.ClientsWaitingForSalaryProject!.Count == 0 && o.RoleId == 7)
+                .FirstAsync(o => o.BankId == bankId && o.RoleId == 7)
                 .Result;
 
+            bankOperator.ClientsWaitingForSalaryProject!.Clear(); ////////////
+            
+            foreach (var item in specialist.ClientsToPaymentProject!)
+            {
+                manager.SendClientsList!.Add(new SpecialistSendClients(item));
+            }
+            
             bankOperator.ClientsWaitingForSalaryProject!.AddRange(specialist.ClientsToPaymentProject!);
             specialist.ClientsToPaymentProject!.Clear();
 
             _context.Specialists.Update(specialist);
             _context.Operators.Update(bankOperator);
+            _context.Managers.Update(manager);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Specialist");

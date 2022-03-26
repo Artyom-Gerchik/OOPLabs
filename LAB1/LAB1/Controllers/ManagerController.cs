@@ -1,6 +1,7 @@
 using LAB1.Data;
 using LAB1.Entities;
 using LAB1.Entities.AdminRollBack;
+using LAB1.Entities.ManagerRollBack;
 using LAB1.Entities.UserCategories;
 using LAB1.Models.Manager;
 using Microsoft.AspNetCore.Authorization;
@@ -251,5 +252,88 @@ public class ManagerController : Controller
         {
             Manager = manager
         });
+    }
+
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RollBackSpecialistSend()
+    {
+        var manager = _context.Managers
+            .Include(m => m.WaitingForRegistrationApprove)
+            .Include(m => m.WaitingForInstallmentPlanApprove)
+            .Include(m => m.WaitingForCreditApprove)
+            .Include(m => m.SendClientsList)!.ThenInclude(c=>c.Client)
+            .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+
+        return View(new ManagerRollBackSpecialistSendModel
+        {
+            Manager = manager
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RollBackSpecialistSend(ManagerRollBackSpecialistSendModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var manager = _context.Managers
+                .Include(m => m.WaitingForRegistrationApprove)
+                .Include(m => m.WaitingForInstallmentPlanApprove)
+                .Include(m => m.WaitingForCreditApprove)
+                .Include(m => m.SendClientsList)!.ThenInclude(c=>c.Client)
+                .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+
+            var bankOperator = _context.Operators
+                .Include(o => o.ClientsWaitingForSalaryProject)
+                .FirstAsync(o => o.BankId == manager.BankId && o.RoleId == 7)
+                .Result;
+
+            var tmpBank = _context.Banks.FirstOrDefault(b => b.Id == bankOperator.BankId);
+
+            var specialist = _context.Specialists
+                .Include(s => s.ClientsToPaymentProject)
+                .Include(s => s.Company)
+                .FirstOrDefaultAsync(o => o.Company!.BankIdentificationCode == tmpBank!.BankIdentificationCode).Result;
+
+            // manager.SendClientsList!.Clear();
+            // bankOperator.ClientsWaitingForSalaryProject!.Clear();
+            // specialist!.ClientsToPaymentProject!.Clear();
+            // _context.Managers.Update(manager);
+            // _context.Operators.Update(bankOperator);
+            // _context.Specialists.Update(specialist!);
+            //
+            // await _context.SaveChangesAsync();
+            //
+            // return RedirectToAction("Profile", "Manager");
+
+            var listToRollback = new SpecialistSendClients();
+
+            foreach (var list in manager.SendClientsList!)
+            {
+                if (list.Id == model.IdOfSelectedRequest)
+                {
+                    listToRollback = list;
+                    break;
+                }
+            }
+
+           
+                bankOperator.ClientsWaitingForSalaryProject!.Remove(listToRollback.Client);
+                specialist!.ClientsToPaymentProject!.Add(listToRollback.Client);
+
+                manager.SendClientsList.Remove(listToRollback);
+
+            _context.Managers.Update(manager);
+            _context.Operators.Update(bankOperator);
+            _context.Specialists.Update(specialist!);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Manager");
+        }
+
+        return View();
     }
 }

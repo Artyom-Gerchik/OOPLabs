@@ -9,6 +9,10 @@
     }
 }
 
+<form asp-action="RollBackSpecialistSend" asp-controller="Manager" asp-anti-forgery="true" method="get">
+    <input class="btn btn-dark" type="submit" value="RollBack Transfers Between Bank Accounts">
+</form>
+
 <form asp-action="Profile" asp-controller="Manager" asp-anti-forgery="true">
 
     <h3>Hello @Model.Manager.Name</h3>

@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220326194751_tmp0")]
+    partial class tmp0
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -692,15 +694,10 @@ namespace LAB1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("ManagerId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
 
                     b.HasIndex("ManagerId");
 
@@ -1122,6 +1119,9 @@ namespace LAB1.Migrations
                     b.Property<int?>("SpecialistId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("SpecialistSendClientsId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("WorkId")
                         .HasColumnType("INTEGER");
 
@@ -1134,6 +1134,8 @@ namespace LAB1.Migrations
                     b.HasIndex("OperatorId");
 
                     b.HasIndex("SpecialistId");
+
+                    b.HasIndex("SpecialistSendClientsId");
 
                     b.HasIndex("WorkId");
 
@@ -1476,17 +1478,9 @@ namespace LAB1.Migrations
 
             modelBuilder.Entity("LAB1.Entities.ManagerRollBack.SpecialistSendClients", b =>
                 {
-                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("LAB1.Entities.UserCategories.Manager", null)
                         .WithMany("SendClientsList")
                         .HasForeignKey("ManagerId");
-
-                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.User", b =>
@@ -1599,6 +1593,10 @@ namespace LAB1.Migrations
                         .WithMany("ClientsToPaymentProject")
                         .HasForeignKey("SpecialistId");
 
+                    b.HasOne("LAB1.Entities.ManagerRollBack.SpecialistSendClients", null)
+                        .WithMany("Clients")
+                        .HasForeignKey("SpecialistSendClientsId");
+
                     b.HasOne("LAB1.Entities.Company", "Work")
                         .WithMany("Workers")
                         .HasForeignKey("WorkId");
@@ -1644,6 +1642,11 @@ namespace LAB1.Migrations
                     b.Navigation("Specialists");
 
                     b.Navigation("Workers");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.ManagerRollBack.SpecialistSendClients", b =>
+                {
+                    b.Navigation("Clients");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Role", b =>
