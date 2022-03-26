@@ -23,18 +23,13 @@ public class BankController : Controller
     public Client GetClient()
     {
         var client = _context.Clients
-            .Include(c => c.Banks)!
-            .ThenInclude(c => c.OpennedBankAccounts)
+            .Include(c => c.Banks)!.ThenInclude(c => c.OpennedBankAccounts)
             .Include(c => c.OpennedBankAccounts)
-            .Include(c => c.BanksAndApproves)!
-            .ThenInclude(c => c.Bank)
+            .Include(c => c.BanksAndApproves)!.ThenInclude(c => c.Bank)
             .Include(c => c.OpennedBankDeposits)
-            .Include(c => c.InstallmentPlansAndApproves)!
-            .ThenInclude(c => c.Bank)
-            .Include(c => c.InstallmentPlansAndApproves)!
-            .ThenInclude(c => c.InstallmentPlan)
-            .Include(c => c.CreditsAndApproves)!
-            .ThenInclude(c => c.Credit)
+            .Include(c => c.InstallmentPlansAndApproves)!.ThenInclude(c => c.Bank)
+            .Include(c => c.InstallmentPlansAndApproves)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(c => c.CreditsAndApproves)!.ThenInclude(c => c.Credit)
             .FirstAsync(u => u.Email.Equals(User.Identity.Name)).Result;
         return client;
     }
@@ -53,7 +48,7 @@ public class BankController : Controller
     public Administrator GetAdministrator(Client client)
     {
         var administrator = _context.Administrators
-            .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.Client)
+             .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.Client)
             .Include(a => a.OpennedBankAccounts)!.ThenInclude(c => c.BankAccount)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.Client)
             .Include(a => a.DeletedBankAccounts)!.ThenInclude(c => c.BankAccount)
@@ -69,6 +64,14 @@ public class BankController : Controller
             .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositToDeposited)
             .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.Client)
             .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.OpennedCredits)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedCredits)!.ThenInclude(c => c.Credit)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Credit)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Transfer)
             .FirstOrDefaultAsync(a => a.BankId == client.CurrentBankId).Result;
         return administrator!;
     }
@@ -578,10 +581,11 @@ public class BankController : Controller
             installmentPlan.AmountOfMoney = model.AmountOfMoney;
             installmentPlan.BankId = bank.Id;
             installmentPlan.ClientId = client.Id;
+            installmentPlan.Hidden = false;
 
             client.InstallmentPlansAndApproves!.Add(new InstallmentPlanApproves(installmentPlan!, false));
             bank.OpennedInstallmentPlans!.Add(installmentPlan);
-            
+
 
             if (model.IdOfSelectedManager != null)
                 if (!manager.WaitingForInstallmentPlanApprove.Contains(client))
@@ -648,6 +652,7 @@ public class BankController : Controller
             credit.BankId = bank.Id;
             credit.ClientId = client.Id;
             credit.Percent = model.Percent;
+            credit.Hidden = false;
 
             client.CreditsAndApproves!.Add(new CreditsAndApproves(credit!, false));
             bank.OpennedCredits!.Add(credit);
@@ -765,16 +770,44 @@ public class BankController : Controller
         {
             var client = GetClient();
             var bank = GetBank(client);
+            var admin = GetAdministrator(client);
 
-            var installmentPlan = client.InstallmentPlansAndApproves.Find(b => b.Id == model.IdOfInstallmentPlanToPay);
+            var installmentPlan =
+                client.InstallmentPlansAndApproves!.Find(b => b.InstallmentPlan!.Id == model.IdOfInstallmentPlanToPay);
 
-            client.BankBalance -= installmentPlan.InstallmentPlan.AmountOfMoney;
+            Transfer transfer = new Transfer();
 
-            client.InstallmentPlansAndApproves.Remove(installmentPlan);
-            bank.OpennedInstallmentPlans!.Remove(installmentPlan.InstallmentPlan);
+            transfer.Id = ++_idForTransfer;
+
+            foreach (var transferDb in _context.Transfers.ToList())
+            {
+                if (transfer.Id == transferDb.Id)
+                {
+                    transfer.Id = ++_idForTransfer;
+                }
+            }
+
+            transfer.AmountOfMoney = installmentPlan.InstallmentPlan.AmountOfMoney;
+            client.BankBalance -= transfer.AmountOfMoney;
+
+            installmentPlan.InstallmentPlan.Hidden = true;
+
+            foreach (var installmentPlanToRemove in admin.OpennedInstallmentPlans)
+            {
+                if (installmentPlanToRemove.InstallmentPlan!.Equals(installmentPlan.InstallmentPlan))
+                {
+                    admin.OpennedInstallmentPlans!.Remove(installmentPlanToRemove);
+                    break;
+                }
+            }
+
+
+            admin.DeletedInstallmentPlans.Add(
+                new RollBackDeletedInstallmentPlan(client, installmentPlan.InstallmentPlan, transfer));
 
             _context.Clients.Update(client);
             _context.Banks.Update(bank);
+            _context.Administrators.Update(admin);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Client");
@@ -807,17 +840,45 @@ public class BankController : Controller
         {
             var client = GetClient();
             var bank = GetBank(client);
+            var admin = GetAdministrator(client);
 
-            var credit = client.CreditsAndApproves.Find(b => b.Id == model.IdOfCreditToPay);
+            var credit = client.CreditsAndApproves!.Find(b => b.Id == model.IdOfCreditToPay);
 
-            client.BankBalance -= credit.Credit.AmountOfMoney +
-                                  credit.Credit.AmountOfMoney * (credit.Credit.Percent / 100);
 
-            client.CreditsAndApproves.Remove(credit);
-            bank.OpennedCredits!.Remove(credit.Credit);
+            Transfer transfer = new Transfer();
+
+            transfer.Id = ++_idForTransfer;
+
+            foreach (var transferDb in _context.Transfers.ToList())
+            {
+                if (transfer.Id == transferDb.Id)
+                {
+                    transfer.Id = ++_idForTransfer;
+                }
+            }
+
+            transfer.AmountOfMoney = credit.Credit.AmountOfMoney;
+            client.BankBalance -= transfer.AmountOfMoney + (transfer.AmountOfMoney * (credit.Credit.Percent / 100));
+
+            credit.Credit.Hidden = true;
+
+            foreach (var creditsToRemove in admin.OpennedCredits!)
+            {
+                if (creditsToRemove.Credit!.Equals(credit.Credit))
+                {
+                    admin.OpennedCredits!.Remove(creditsToRemove);
+                    break;
+                }
+            }
+
+            admin.DeletedCredits!.Add(new RollBackDeletedCredit(client, credit.Credit, transfer));
+
+            //client.CreditsAndApproves.Remove(credit);
+            //bank.OpennedCredits!.Remove(credit.Credit);
 
             _context.Clients.Update(client);
             _context.Banks.Update(bank);
+            _context.Administrators.Update(admin);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Client");

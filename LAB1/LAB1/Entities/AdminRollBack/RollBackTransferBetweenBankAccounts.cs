@@ -4,8 +4,7 @@ namespace LAB1.Entities.AdminRollBack
 {
     public class RollBackTransferBetweenBankAccounts
     {
-        [Key]
-        public int? Id { get; set; }
+        [Key] public int? Id { get; set; }
         public BankAccount? BankAccountWhereWithdrawed { get; set; }
         public BankAccount? BankAccountToDeposited { get; set; }
         public Transfer? Transfer { get; set; }
@@ -14,7 +13,8 @@ namespace LAB1.Entities.AdminRollBack
         {
         }
 
-        public RollBackTransferBetweenBankAccounts(BankAccount bankAccountWhereWithdrawed, BankAccount bankAccountToDeposited,
+        public RollBackTransferBetweenBankAccounts(BankAccount bankAccountWhereWithdrawed,
+            BankAccount bankAccountToDeposited,
             Transfer transfer)
         {
             BankAccountWhereWithdrawed = bankAccountWhereWithdrawed;

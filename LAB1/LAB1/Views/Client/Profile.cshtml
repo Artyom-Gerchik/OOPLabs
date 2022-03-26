@@ -231,33 +231,36 @@
 
 @if (Model.Client.InstallmentPlansAndApproves.Count != null)
 {
-    <table class="table table-hover table-dark">
-        <tbody>
-        @foreach (var installmentPlan in Model.Client.InstallmentPlansAndApproves)
+    @foreach (var installmentPlan in Model.Client.InstallmentPlansAndApproves)
+    {
+        if (!(bool)installmentPlan.InstallmentPlan!.Hidden!)
         {
-            <tr>
-                <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
-                <td>@installmentPlan.InstallmentPlan.BankId.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Id Of Oppened Installment Plan</th>
-                <td>@installmentPlan.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">How Much Days Lasts</th>
-                <td>@installmentPlan.InstallmentPlan.HowMuchLasts.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney</th>
-                <td>@installmentPlan.InstallmentPlan.AmountOfMoney.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Approved</th>
-                <td>@installmentPlan.Approved.ToString()</td>
-            </tr>
+            <table class="table table-hover table-dark">
+                <tbody>
+                <tr>
+                    <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
+                    <td>@installmentPlan.InstallmentPlan.BankId.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Id Of Oppened Installment Plan</th>
+                    <td>@installmentPlan.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">How Much Days Lasts</th>
+                    <td>@installmentPlan.InstallmentPlan.HowMuchLasts.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney</th>
+                    <td>@installmentPlan.InstallmentPlan.AmountOfMoney.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Approved</th>
+                    <td>@installmentPlan.Approved.ToString()</td>
+                </tr>
+                </tbody>
+            </table>
         }
-        </tbody>
-    </table>
+    }
 }
 <br>
 <hr class="style1">
@@ -270,37 +273,40 @@
 
 @if (Model.Client.CreditsAndApproves!.Count != null)
 {
-    <table class="table table-hover table-dark">
-        <tbody>
-        @foreach (var credit in Model.Client.CreditsAndApproves)
+    @foreach (var credit in Model.Client.CreditsAndApproves)
+    {
+        if (!(bool)credit.Credit!.Hidden!)
         {
-            <tr>
-                <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
-                <td>@credit.Credit.BankId.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Id Of Oppened Installment Plan</th>
-                <td>@credit.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">How Much Days Lasts</th>
-                <td>@credit.Credit.HowMuchLasts.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Percent</th>
-                <td>@credit.Credit.Percent.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney</th>
-                <td>@credit.Credit.AmountOfMoney.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Approved</th>
-                <td>@credit.Approved.ToString()</td>
-            </tr>
+            <table class="table table-hover table-dark">
+                <tbody>
+                <tr>
+                    <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
+                    <td>@credit.Credit.BankId.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Id Of Oppened Installment Plan</th>
+                    <td>@credit.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">How Much Days Lasts</th>
+                    <td>@credit.Credit.HowMuchLasts.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Percent</th>
+                    <td>@credit.Credit.Percent.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney</th>
+                    <td>@credit.Credit.AmountOfMoney.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Approved</th>
+                    <td>@credit.Approved.ToString()</td>
+                </tr>
+                </tbody>
+            </table>
         }
-        </tbody>
-    </table>
+    }
 }
 <br>
 <hr class="style1">

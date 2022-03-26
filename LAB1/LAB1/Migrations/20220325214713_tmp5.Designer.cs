@@ -3,6 +3,7 @@ using System;
 using LAB1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220325214713_tmp5")]
+    partial class tmp5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -95,37 +97,6 @@ namespace LAB1.Migrations
                     b.ToTable("RollBackClosedDeposit");
                 });
 
-            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackDeletedCredit", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("AdministratorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("CreditId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("TransferId")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdministratorId");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("CreditId");
-
-                    b.HasIndex("TransferId");
-
-                    b.ToTable("RollBackDeletedCredit");
-                });
-
             modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackDeletedInstallmentPlan", b =>
                 {
                     b.Property<int?>("Id")
@@ -181,32 +152,6 @@ namespace LAB1.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("RollBackOpenedDeposit");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackOpennedCredit", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("AdministratorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("CreditId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdministratorId");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("CreditId");
-
-                    b.ToTable("RollBackOpennedCredit");
                 });
 
             modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackOpennedInstallmentPlan", b =>
@@ -564,9 +509,6 @@ namespace LAB1.Migrations
                     b.Property<int?>("DurationInMonths")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool?>("Hidden")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("HowMuchLasts")
                         .HasColumnType("INTEGER");
 
@@ -665,6 +607,9 @@ namespace LAB1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("Hidden")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("InstallmentPlanId")
@@ -1200,31 +1145,6 @@ namespace LAB1.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackDeletedCredit", b =>
-                {
-                    b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
-                        .WithMany("DeletedCredits")
-                        .HasForeignKey("AdministratorId");
-
-                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-
-                    b.HasOne("LAB1.Entities.Credit", "Credit")
-                        .WithMany()
-                        .HasForeignKey("CreditId");
-
-                    b.HasOne("LAB1.Entities.Transfer", "Transfer")
-                        .WithMany()
-                        .HasForeignKey("TransferId");
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Credit");
-
-                    b.Navigation("Transfer");
-                });
-
             modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackDeletedInstallmentPlan", b =>
                 {
                     b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
@@ -1267,25 +1187,6 @@ namespace LAB1.Migrations
                     b.Navigation("BankDeposit");
 
                     b.Navigation("Client");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackOpennedCredit", b =>
-                {
-                    b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
-                        .WithMany("OpennedCredits")
-                        .HasForeignKey("AdministratorId");
-
-                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-
-                    b.HasOne("LAB1.Entities.Credit", "Credit")
-                        .WithMany()
-                        .HasForeignKey("CreditId");
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Credit");
                 });
 
             modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackOpennedInstallmentPlan", b =>
@@ -1623,13 +1524,9 @@ namespace LAB1.Migrations
 
                     b.Navigation("DeletedBankAccounts");
 
-                    b.Navigation("DeletedCredits");
-
                     b.Navigation("DeletedInstallmentPlans");
 
                     b.Navigation("OpennedBankAccounts");
-
-                    b.Navigation("OpennedCredits");
 
                     b.Navigation("OpennedDepositsToRollBack");
 

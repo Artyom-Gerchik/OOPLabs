@@ -68,6 +68,11 @@
                 <input class="btn btn-dark" type="submit" value="RollBack Opened Installment Plan">
             </form>
         </td>
+        <td>
+            <form asp-action="RollBackOpenedCredit" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-dark" type="submit" value="RollBack Opened Credit">
+            </form>
+        </td>
     </tr>
     <tr>
         <th scope="row">
@@ -78,6 +83,16 @@
         <td>
             <form asp-action="RollBackBankDepositClosing" asp-controller="Administrator" asp-anti-forgery="true" method="get">
                 <input class="btn btn-dark" type="submit" value="RollBack Closed Deposits">
+            </form>
+        </td>
+        <td>
+            <form asp-action="RollBackClosedInstallmentPlan" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-dark" type="submit" value="RollBack Deleted Installment Plan">
+            </form>
+        </td>
+        <td>
+            <form asp-action="RollBackClosedCredit" asp-controller="Administrator" asp-anti-forgery="true" method="get">
+                <input class="btn btn-dark" type="submit" value="RollBack Closed Credit">
             </form>
         </td>
     </tr>

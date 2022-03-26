@@ -13,4 +13,6 @@ public class Credit
     public DateTime DateOfDeal { get; set; }
     public DateTime DateToPay { get; set; }
     public int? HowMuchLasts { get; set; }
+
+    public bool? Hidden { get; set; }
 }

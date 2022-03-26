@@ -37,6 +37,14 @@ public class AdministratorController : Controller
             .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositToDeposited)
             .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.Client)
             .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.OpennedCredits)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedCredits)!.ThenInclude(c => c.Credit)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Credit)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Transfer)
             .FirstOrDefaultAsync(a => a.Email.Equals(User.Identity.Name)).Result;
         return administrator!;
     }
@@ -61,6 +69,10 @@ public class AdministratorController : Controller
     public IActionResult Profile()
     {
         var admin = GetAdministrator();
+
+        // admin.OpennedInstallmentPlans!.Clear();
+        // _context.Administrators.Update(admin);
+        // _context.SaveChangesAsync();
 
         return View(new AdministratorProfileModel
         {
@@ -460,6 +472,7 @@ public class AdministratorController : Controller
                 }
             }
 
+            client.BankBalance -= installmentPlanToRollBack.InstallmentPlan.AmountOfMoney;
             admin.OpennedInstallmentPlans.Remove(installmentPlanToRollBack);
             _context.Clients.Update(client);
             _context.Administrators.Update(admin);
@@ -469,5 +482,167 @@ public class AdministratorController : Controller
         }
 
         return View(model);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RollBackClosedInstallmentPlan()
+    {
+        var admin = GetAdministrator();
+        return View(new AdministratorRollBackClosedInstallmentPlanModel()
+        {
+            Administrator = admin
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RollBackClosedInstallmentPlan(
+        AdministratorRollBackClosedInstallmentPlanModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var admin = GetAdministrator();
+            var installmentPlanToRollBack = new InstallmentPlan();
+            var rollBackForAdmin = new RollBackDeletedInstallmentPlan();
+            foreach (var installmentPlan in admin.DeletedInstallmentPlans!)
+            {
+                if (installmentPlan.InstallmentPlan!.Id == model.SelectedInstallmentPlanId)
+                {
+                    installmentPlanToRollBack = installmentPlan.InstallmentPlan;
+                    break;
+                }
+            }
+
+            foreach (var installmentPlan in admin.DeletedInstallmentPlans!)
+            {
+                if (installmentPlan.InstallmentPlan!.Equals(installmentPlanToRollBack))
+                {
+                    rollBackForAdmin = installmentPlan;
+                    break;
+                }
+            }
+
+            var client = GetClient(installmentPlanToRollBack.ClientId);
+            client.BankBalance += rollBackForAdmin.Transfer!.AmountOfMoney;
+            installmentPlanToRollBack.Hidden = false;
+            admin.OpennedInstallmentPlans!.Add(new RollBackOpennedInstallmentPlan(client, installmentPlanToRollBack));
+            admin.DeletedInstallmentPlans.Remove(rollBackForAdmin);
+
+            _context.Clients.Update(client);
+            _context.Administrators.Update(admin);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Profile", "Administrator");
+        }
+
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RollBackOpenedCredit()
+    {
+        var admin = GetAdministrator();
+        return View(new AdministratorRollBackOpenedCreditModel()
+        {
+            Administrator = admin
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RollBackOpenedCredit(
+        AdministratorRollBackOpenedCreditModel model)
+    {
+        var admin = GetAdministrator();
+        var creditToRollBack = new RollBackOpennedCredit();
+
+        if (ModelState.IsValid)
+        {
+            foreach (var credit in admin.OpennedCredits!)
+            {
+                if (credit.Credit!.Id == model.SelectedCreditId)
+                {
+                    creditToRollBack = credit;
+                    break;
+                }
+            }
+
+
+            var client = GetClient(creditToRollBack.Credit!.ClientId);
+
+            foreach (var credit in client.CreditsAndApproves!)
+            {
+                if (credit.Credit!.Equals(creditToRollBack.Credit))
+                {
+                    client.CreditsAndApproves!.Remove(credit);
+                    break;
+                }
+            }
+
+            client.BankBalance -= creditToRollBack.Credit.AmountOfMoney;
+            admin.OpennedCredits!.Remove(creditToRollBack);
+            _context.Clients.Update(client);
+            _context.Administrators.Update(admin);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Administrator");
+        }
+
+        return View(model);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RollBackClosedCredit()
+    {
+        var admin = GetAdministrator();
+        return View(new AdministratorRollBackClosedCreditModel()
+        {
+            Administrator = admin
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RollBackClosedCredit(AdministratorRollBackClosedCreditModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var admin = GetAdministrator();
+            var creditToRollBack = new Credit();
+            var rollBackForAdmin = new RollBackDeletedCredit();
+            foreach (var credit in admin.DeletedCredits!)
+            {
+                if (credit.Credit!.Id == model.SelectedCreditId)
+                {
+                    creditToRollBack = credit.Credit;
+                    break;
+                }
+            }
+
+            foreach (var credit in admin.DeletedCredits!)
+            {
+                if (credit.Credit!.Equals(creditToRollBack))
+                {
+                    rollBackForAdmin = credit;
+                    break;
+                }
+            }
+
+            var client = GetClient(creditToRollBack.ClientId);
+            client.BankBalance += rollBackForAdmin.Transfer!.AmountOfMoney +
+                                  rollBackForAdmin.Transfer!.AmountOfMoney * (rollBackForAdmin.Credit!.Percent / 100);
+            creditToRollBack.Hidden = false;
+            admin.OpennedCredits!.Add(new RollBackOpennedCredit(client, creditToRollBack));
+            admin.DeletedCredits.Remove(rollBackForAdmin);
+
+            _context.Clients.Update(client);
+            _context.Administrators.Update(admin);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Profile", "Administrator");
+        }
+
+        return View();
     }
 }

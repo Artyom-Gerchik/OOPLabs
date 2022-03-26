@@ -56,6 +56,14 @@ public class ManagerController : Controller
             .Include(a => a.TransfersBetweenBankDeposits)!.ThenInclude(c => c.BankDepositToDeposited)
             .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.Client)
             .Include(a => a.OpennedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.InstallmentPlan)
+            .Include(a => a.DeletedInstallmentPlans)!.ThenInclude(c => c.Transfer)
+            .Include(a => a.OpennedCredits)!.ThenInclude(c => c.Client)
+            .Include(a => a.OpennedCredits)!.ThenInclude(c => c.Credit)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Client)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Credit)
+            .Include(a => a.DeletedCredits)!.ThenInclude(c => c.Transfer)
             .FirstOrDefaultAsync(a => a.BankId == client.CurrentBankId).Result;
         return administrator!;
     }
@@ -201,16 +209,22 @@ public class ManagerController : Controller
                 var manager = _context.Managers
                     .Include(m => m.WaitingForCreditApprove)
                     .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+                var admin = GetAdministrator(clientToApproveCredit);
+                var tmp = new Credit();
                 if (clientToApproveCredit != null)
                 {
                     foreach (var credit in clientToApproveCredit.CreditsAndApproves!)
-                        if (credit.Credit!.BankId == manager.BankId)
+                        if (credit.Credit!.BankId == manager.BankId && credit.Approved != true &&
+                            credit.Credit.Hidden != true)
                         {
+                            tmp = credit.Credit;
                             credit.Approved = true;
                             clientToApproveCredit.BankBalance +=
                                 credit.Credit!.AmountOfMoney;
                         }
 
+                    admin.OpennedCredits!.Add(
+                        new RollBackOpennedCredit(clientToApproveCredit, tmp));
                     manager.WaitingForCreditApprove!.Remove(clientToApproveCredit);
                     _context.Clients.Update(clientToApproveCredit);
                     _context.Managers.Update(manager);

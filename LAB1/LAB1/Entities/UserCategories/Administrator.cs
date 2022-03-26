@@ -14,4 +14,7 @@ public class Administrator : User
     public List<RollBackClosedDeposit>? ClosedDepositsToRollBack { get; set; }
     public List<RollBackTransferBetweenBankDeposits>? TransfersBetweenBankDeposits { get; set; }
     public List<RollBackOpennedInstallmentPlan>? OpennedInstallmentPlans { get; set; }
+    public List<RollBackDeletedInstallmentPlan>? DeletedInstallmentPlans { get; set; }
+    public List<RollBackOpennedCredit>? OpennedCredits { get; set; }
+    public List<RollBackDeletedCredit>? DeletedCredits { get; set; }
 }

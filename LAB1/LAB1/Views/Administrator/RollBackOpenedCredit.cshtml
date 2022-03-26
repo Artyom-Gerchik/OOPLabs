@@ -1,0 +1,51 @@
+@model LAB1.Models.Administrator.AdministratorRollBackOpenedCreditModel
+
+<form asp-action="RollBackOpenedCredit" asp-controller="Administrator" asp-anti-forgery="true" method="post">
+
+    <br>
+    <hr class="style1">
+    <br>
+    <br>
+
+    @foreach (var opennedCredit in Model.Administrator.OpennedCredits)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Client Name</th>
+                <td>@opennedCredit.Client!.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Amount Of Money</th>
+                <td>@opennedCredit.Credit!.AmountOfMoney.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Percent</th>
+                <td>@opennedCredit.Credit!.Percent.ToString()</td>
+            </tr>
+            </tbody>
+        </table>
+    }
+
+    <br>
+    <br>
+    <hr class="style1">
+    <br>
+
+
+    @if (Model.Administrator.OpennedCredits!.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedCreditId">
+                <option selected>Choose Credit</option>
+                @foreach (var opennedCredit in Model.Administrator.OpennedCredits)
+                {
+                    <option value="@opennedCredit.Credit!.Id">@opennedCredit.Client!.Name - @opennedCredit.Credit.AmountOfMoney.ToString()</option>
+                }
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn"/>
+            </div>
+        </div>
+    }
+</form>

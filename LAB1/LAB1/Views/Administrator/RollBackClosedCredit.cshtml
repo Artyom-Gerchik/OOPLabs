@@ -1,0 +1,51 @@
+@model LAB1.Models.Administrator.AdministratorRollBackClosedCreditModel
+
+<form asp-action="RollBackClosedCredit" asp-controller="Administrator" asp-anti-forgery="true" method="post">
+
+    <br>
+    <hr class="style1">
+    <br>
+    <br>
+
+    @foreach (var deletedCredit in Model.Administrator.DeletedCredits)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Client Name</th>
+                <td>@deletedCredit.Client!.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Credit Amount Of Money</th>
+                <td>@deletedCredit.Credit.AmountOfMoney.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Percent</th>
+                <td>@deletedCredit.Credit.Percent.ToString()</td>
+            </tr>
+            </tbody>
+        </table>
+    }
+
+    <br>
+    <br>
+    <hr class="style1">
+    <br>
+
+
+    @if (Model.Administrator.DeletedCredits.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.SelectedCreditId">
+                <option selected>Choose Credit</option>
+                @foreach (var deletedCredit in Model.Administrator.DeletedCredits)
+                {
+                    <option value="@deletedCredit.Credit!.Id">@deletedCredit.Client!.Name - @deletedCredit.Credit!.AmountOfMoney.ToString()</option>
+                }
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn"/>
+            </div>
+        </div>
+    }
+</form>
