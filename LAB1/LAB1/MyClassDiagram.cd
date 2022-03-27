@@ -1,0 +1,665 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Comment CommentText="USER CATEGORIES">
+    <Position X="0.5" Y="0.5" Height="0.291" Width="1.228" />
+  </Comment>
+  <Comment CommentText="OTHER ENTITIES">
+    <Position X="25.534" Y="1.905" Height="0.333" Width="1.145" />
+  </Comment>
+  <Comment CommentText="MANAGER ROLLBACKS">
+    <Position X="0.567" Y="7.694" Height="0.291" Width="1.584" />
+  </Comment>
+  <Comment CommentText="ADMIN ROLLBACKS">
+    <Position X="0.5" Y="10.529" Height="0.291" Width="1.584" />
+  </Comment>
+  <Comment CommentText="CONTROLLERS">
+    <Position X="25.51" Y="9.29" Height="0.333" Width="1.145" />
+  </Comment>
+  <Comment CommentText="GENERIC MODELS">
+    <Position X="25.508" Y="15.915" Height="0.333" Width="1.355" />
+  </Comment>
+  <Comment CommentText="ADMIN MODELS">
+    <Position X="25.523" Y="19.155" Height="0.333" Width="1.355" />
+  </Comment>
+  <Comment CommentText="BANK MODELS">
+    <Position X="25.446" Y="21.494" Height="0.333" Width="1.355" />
+  </Comment>
+  <Comment CommentText="CLIENT MODELS">
+    <Position X="25.539" Y="24.272" Height="0.333" Width="1.355" />
+  </Comment>
+  <Comment CommentText="MANAGER MODELS">
+    <Position X="25.502" Y="27.42" Height="0.333" Width="1.355" />
+  </Comment>
+  <Comment CommentText="OPERATOR MODELS">
+    <Position X="25.541" Y="30.082" Height="0.333" Width="1.355" />
+  </Comment>
+  <Comment CommentText="SPECIALIST MODELS">
+    <Position X="25.519" Y="32.353" Height="0.333" Width="1.355" />
+  </Comment>
+  <Class Name="LAB1.Entities.UserCategories.Administrator">
+    <Position X="0.5" Y="3.75" Width="5" />
+    <TypeIdentifier>
+      <HashCode>QAGAAAAAAAAAAAAAAAEAAAAAAAAggAAQACAQABAAIAA=</HashCode>
+      <FileName>Entities\UserCategories\Administrator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.UserCategories.Client">
+    <Position X="5.75" Y="3.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>QQ0AACAAAAAAIgAAAAAQAAAAAAACAABAAAAAAAEAgAA=</HashCode>
+      <FileName>Entities\UserCategories\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.UserCategories.ForeignClient">
+    <Position X="10.25" Y="3.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Entities\UserCategories\ForeignClient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.UserCategories.Manager">
+    <Position X="14.25" Y="5.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAkAAAAAAAEAAAAEAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\UserCategories\Manager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.UserCategories.Operator">
+    <Position X="13.75" Y="3.75" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQECAAAAAAAAA=</HashCode>
+      <FileName>Entities\UserCategories\Operator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.UserCategories.Specialist">
+    <Position X="19" Y="3.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAIAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Entities\UserCategories\Specialist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.UserCategories.User">
+    <Position X="5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACACIAACAAAAAAEAAAQAQABAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\UserCategories\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.Bank">
+    <Position X="25.5" Y="5.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>UAAAAAAAAAAAAAAAAAAAAAAABAIAAABABCAAABAAIAA=</HashCode>
+      <FileName>Entities\Bank.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.BankAccount">
+    <Position X="41.75" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAAAgAAAAAQABAAAAAAAACAAAAAEAAA=</HashCode>
+      <FileName>Entities\BankAccount.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.BankApproves">
+    <Position X="39.25" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AQACAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\BankApproves.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.BankDeposit">
+    <Position X="44.5" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAgABAIAQABEAAQAAAACAACAAkAAA=</HashCode>
+      <FileName>Entities\BankDeposit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.Company">
+    <Position X="25.5" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAIAAAAAAAQgAQAAAAAAAAAAgAAAAQAhAAAAIAA=</HashCode>
+      <FileName>Entities\Company.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.Credit">
+    <Position X="31.25" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACCAAAAAAAAAAAgAAAAAAABEAAQIAAACAACAAEAAA=</HashCode>
+      <FileName>Entities\Credit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.CreditsAndApproves">
+    <Position X="33.75" Y="2.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AQACAAACAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\CreditsAndApproves.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.InstallmentPlan">
+    <Position X="36.75" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACCAAAAAAAAAAAgAAAAAAABEAAQIAAACAAAAAEAAA=</HashCode>
+      <FileName>Entities\InstallmentPlan.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.InstallmentPlanApproves">
+    <Position X="28" Y="2.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AQACAAACAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\InstallmentPlanApproves.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.Role">
+    <Position X="49.5" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Role.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.Transfer">
+    <Position X="47" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Transfer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.DeletedBankAccount">
+    <Position X="0.5" Y="11" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAQ=</HashCode>
+      <FileName>Entities\AdminRollBack\DeletedBankAccount.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.OpennedBankAccount">
+    <Position X="3.5" Y="11" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAQ=</HashCode>
+      <FileName>Entities\AdminRollBack\OpennedBankAccount.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.RollBackClosedDeposit">
+    <Position X="6.5" Y="11" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>EAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entities\AdminRollBack\RollBackClosedDeposit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.RollBackDeletedCredit">
+    <Position X="9.5" Y="11" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entities\AdminRollBack\RollBackDeletedCredit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.RollBackDeletedInstallmentPlan">
+    <Position X="0.5" Y="13.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entities\AdminRollBack\RollBackDeletedInstallmentPlan.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.RollBackOpenedDeposit">
+    <Position X="4" Y="13.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>EAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entities\AdminRollBack\RollBackOpenedDeposit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.RollBackOpennedCredit">
+    <Position X="7.25" Y="13.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entities\AdminRollBack\RollBackOpennedCredit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.RollBackOpennedInstallmentPlan">
+    <Position X="10.5" Y="13.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entities\AdminRollBack\RollBackOpennedInstallmentPlan.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.RollBackTransferBetweenBankAccounts">
+    <Position X="0.5" Y="15.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAQAAAAAAAAAAABAAAAAAAAE=</HashCode>
+      <FileName>Entities\AdminRollBack\RollBackTransferBetweenBankAccounts.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.AdminRollBack.RollBackTransferBetweenBankDeposits">
+    <Position X="4.5" Y="15.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAIAAAAQAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\AdminRollBack\RollBackTransferBetweenBankDeposits.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.ManagerRollBack.SpecialistAddedMoney">
+    <Position X="0.5" Y="8.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entities\ManagerRollBack\SpecialistAddedMoney.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Entities.ManagerRollBack.SpecialistSendClients">
+    <Position X="3.5" Y="8.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entities\ManagerRollBack\SpecialistSendClients.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Controllers.AccountController">
+    <Position X="25.5" Y="10" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAABAAAAAAAAAIAAAABAAAAABAQAAAAAAA=</HashCode>
+      <FileName>Controllers\AccountController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Controllers.AdministratorController">
+    <Position X="28.5" Y="10" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAQIAAAEABCABCAAAQAAAAAoQAAAAABAAAIBAAEA=</HashCode>
+      <FileName>Controllers\AdministratorController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Controllers.BankController">
+    <Position X="33.25" Y="10" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAIAJAAARAAQQAEBAAgAAAAQAAAQJCAQAQBAEAA=</HashCode>
+      <FileName>Controllers\BankController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Controllers.ClientController">
+    <Position X="38" Y="10" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAEQABAAAAAQBAAAAAACAAEAAgJAIAMBAAAA=</HashCode>
+      <FileName>Controllers\ClientController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Controllers.HomeController">
+    <Position X="41.75" Y="10" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAIAAAAQAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\HomeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Controllers.ManagerController">
+    <Position X="44.75" Y="10" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAABAABAAAAAAAAAAAAAAQAAAAABAQAIBAAAA=</HashCode>
+      <FileName>Controllers\ManagerController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Controllers.OperatorController">
+    <Position X="49.25" Y="10" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAIAAAAABAAAAAAAAAAAAAgQAAAAABAAAIAAAAA=</HashCode>
+      <FileName>Controllers\OperatorController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Controllers.SpecialistController">
+    <Position X="54" Y="10" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQABAAAAAAAAAAAAAAAAAAAABAAAIABCAA=</HashCode>
+      <FileName>Controllers\SpecialistController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.BanksModel">
+    <Position X="25.5" Y="16.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Models\BanksModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.ErrorViewModel">
+    <Position X="27.75" Y="16.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ErrorViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.LoginModel">
+    <Position X="29.75" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\LoginModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.RoleModel">
+    <Position X="31.5" Y="16.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\RoleModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorGetAdditionalInfoModel">
+    <Position X="25.5" Y="19.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorGetAdditionalInfoModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorProfileModel">
+    <Position X="28.5" Y="19.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorProfileModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorRollBackBankDepositClosingModel">
+    <Position X="31" Y="19.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorRollBackBankDepositClosingModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorRollBackBankDepositOpeningModel">
+    <Position X="34.75" Y="19.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorRollBackBankDepositOpeningModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorRollBackClosedCreditModel">
+    <Position X="38.5" Y="19.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorRollBackClosedCreditModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorRollBackClosedInstallmentPlanModel">
+    <Position X="41.75" Y="19.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorRollBackClosedInstallmentPlanModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorRollBackDeletedBankAccountModel">
+    <Position X="45.5" Y="19.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorRollBackDeletedBankAccountModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorRollBackOpenedBankAccountModel">
+    <Position X="49.25" Y="19.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorRollBackOpenedBankAccountModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorRollBackOpenedCreditModel">
+    <Position X="53" Y="19.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorRollBackOpenedCreditModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorRollBackOpenedInstallmentPlanModel">
+    <Position X="56.25" Y="19.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorRollBackOpenedInstallmentPlanModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.AdministratorRollBackTransferModel">
+    <Position X="60.25" Y="19.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Administrator\AdministratorRollBackTransferModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Administrator.RollBackTransferBetweenBankDepositsModel">
+    <Position X="63.25" Y="19.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Administrator\RollBackTransferBetweenBankDepositsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.BankProfileModel">
+    <Position X="25.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\Bank\BankProfileModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.BlockBankDepositModel">
+    <Position X="27.25" Y="22.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQ=</HashCode>
+      <FileName>Models\Bank\BlockBankDepositModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.CloseBankAccountForClientModel">
+    <Position X="29.5" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\Bank\CloseBankAccountForClientModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.FreezeBankDepositModel">
+    <Position X="32.25" Y="22.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\Bank\FreezeBankDepositModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.GetAnInstallmentPlanModel">
+    <Position X="34.5" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAgAAAABAAAAMAAAAQAAAAAAQQ=</HashCode>
+      <FileName>Models\Bank\GetAnInstallmentPlanModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.GetCreditModel">
+    <Position X="37" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAgAAAABAAAAMAAAAQACAAAAQA=</HashCode>
+      <FileName>Models\Bank\GetCreditModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.GetMoneyFromBankAccountForClientModel">
+    <Position X="38.75" Y="22.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AQEAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\Bank\GetMoneyFromBankAccountForClientModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.GetMoneyFromDepositModel">
+    <Position X="42.25" Y="22.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAQ=</HashCode>
+      <FileName>Models\Bank\GetMoneyFromDepositModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.MoveMoneyBetweenBankAccountModel">
+    <Position X="44.75" Y="22.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AQEAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAACAAAQ=</HashCode>
+      <FileName>Models\Bank\MoveMoneyBetweenBankAccountModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.MoveMoneyBetweenBankDepositsModel">
+    <Position X="48" Y="22.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAQ=</HashCode>
+      <FileName>Models\Bank\MoveMoneyBetweenBankDepositsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.OpenBankAccountForClientModel">
+    <Position X="51.25" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Models\Bank\OpenBankAccountForClientModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.OpenBankDepositForClientModel">
+    <Position X="54" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAQABAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Models\Bank\OpenBankDepositForClientModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.PayForCreditModel">
+    <Position X="56.75" Y="22.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\Bank\PayForCreditModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.PayForInstallmentPlanModel">
+    <Position X="58.75" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\Bank\PayForInstallmentPlanModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.SpeedRunCreditModel">
+    <Position X="61.25" Y="22.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAQ=</HashCode>
+      <FileName>Models\Bank\SpeedRunCreditModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.SpeedRunDepositModel">
+    <Position X="63.25" Y="22.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\Bank\SpeedRunDepositModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Bank.SpeedRunInstallmentPlanModel">
+    <Position X="65.5" Y="22.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>gQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\Bank\SpeedRunInstallmentPlanModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.RegisterModel">
+    <Position X="33.75" Y="16.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAACCAAAAAAAAAQAQABAAAAAACAAAAAAAAIAA=</HashCode>
+      <FileName>Models\RegisterModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LAB1.Models.Client.ClientAdditionalInfoModel" BaseTypeListCollapsed="true">
+    <Position X="25.5" Y="25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAQAAAAAAAgAAAAEAAAAAAAgAA=</HashCode>
+      <FileName>Models\Client\ClientAdditionalInfoModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.213" />
+  </Class>
+  <Class Name="LAB1.Models.Client.ClientGetApproveModel">
+    <Position X="28" Y="25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAgAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Client\ClientGetApproveModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Client.ClientProfileModel">
+    <Position X="30.25" Y="25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAgAAAAAQ=</HashCode>
+      <FileName>Models\Client\ClientProfileModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Client.GetTheSalaryProjectForClientModel">
+    <Position X="32.5" Y="25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Client\GetTheSalaryProjectForClientModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Manager.ManagerAdditionalInfoModel">
+    <Position X="25.5" Y="28" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Models\Manager\ManagerAdditionalInfoModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Manager.ManagerApproveModel">
+    <Position X="28" Y="28" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAACABAAAAAABAAAAAEQA=</HashCode>
+      <FileName>Models\Manager\ManagerApproveModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Manager.ManagerProfileModel">
+    <Position X="30.25" Y="28" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Manager\ManagerProfileModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Manager.ManagerRollBackSpecialistAddedMoneyModel">
+    <Position X="32.25" Y="28" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Manager\ManagerRollBackSpecialistAddedMoneyModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Manager.ManagerRollBackSpecialistSendModel">
+    <Position X="35.75" Y="28" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAACAAAAAA=</HashCode>
+      <FileName>Models\Manager\ManagerRollBackSpecialistSendModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Operator.OperatorAdditionalInfoModel">
+    <Position X="25.5" Y="30.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Models\Operator\OperatorAdditionalInfoModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Operator.OperatorApproveModel">
+    <Position X="28" Y="30.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Operator\OperatorApproveModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Operator.OperatorProfileModel">
+    <Position X="30.25" Y="30.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Models\Operator\OperatorProfileModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Operator.OperatorRollBackTransferModel">
+    <Position X="32.25" Y="30.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Models\Operator\OperatorRollBackTransferModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Specialist.GiveMoneyForWorkerModel">
+    <Position X="25.5" Y="33" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Models\Specialist\GiveMoneyForWorkerModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Specialist.SendRequestForSalaryProjectModel">
+    <Position X="28" Y="33" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Specialist\SendRequestForSalaryProjectModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Specialist.SpecialistGetAdditionalInfoModel">
+    <Position X="31" Y="33" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Models\Specialist\SpecialistGetAdditionalInfoModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LAB1.Models.Specialist.SpecialistProfileModel">
+    <Position X="33.75" Y="33" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Models\Specialist\SpecialistProfileModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
