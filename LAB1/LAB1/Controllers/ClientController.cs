@@ -74,7 +74,6 @@ public class ClientController : Controller
     public async Task<IActionResult> GetAdditionalInfo(ClientAdditionalInfoModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfSelectedCompany != null)
             {
                 var user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
@@ -117,8 +116,8 @@ public class ClientController : Controller
                     return RedirectToAction("Profile", "Client");
                 }
             }
-            //return RedirectToAction("GetAdditionalInfo", "Client");
-        }
+        //return RedirectToAction("GetAdditionalInfo", "Client");
+
         //return RedirectToAction("GetAdditionalInfo", "Client");
         return View(new ClientAdditionalInfoModel
         {
@@ -181,14 +180,12 @@ public class ClientController : Controller
     public async Task<IActionResult> ChooseTheBank(BanksModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.SelectedBankId != null)
             {
                 var client = GetClient();
 
                 if (client != null)
                 {
-
                     var bank = await _context.Banks.FirstOrDefaultAsync(b =>
                         b.Id == model.SelectedBankId);
                     client.BanksAndApproves!.Add(new BankApproves(bank!, false));
@@ -204,7 +201,6 @@ public class ClientController : Controller
 
                 return RedirectToAction("Profile", "Account");
             }
-        }
 
         var client1 = GetClient();
 
@@ -304,7 +300,6 @@ public class ClientController : Controller
             ClientBanks = banksToPass,
             Managers = managers
         });
-
     }
 
     [HttpGet]
@@ -314,7 +309,6 @@ public class ClientController : Controller
         var client = GetClient();
         if (model.SelectedBankId != null)
         {
-
             client!.CurrentBankId = model.SelectedBankId;
 
             _context.Clients.Update(client);
@@ -322,6 +316,7 @@ public class ClientController : Controller
 
             return RedirectToAction("BankProfileForClient", "Bank");
         }
+
         return RedirectToAction("Profile", "Client");
     }
 
@@ -445,12 +440,12 @@ public class ClientController : Controller
     public async Task<IActionResult> GetTheSalaryProject(GetTheSalaryProjectForClientModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfSelectedBankAccount != null)
             {
                 var client = GetClient();
                 var specialist = GetSpecialist((int)client.Work.Id);
-                var bankAccount = client.OpennedBankAccounts!.FirstOrDefault(b => b.Id == model.IdOfSelectedBankAccount);
+                var bankAccount =
+                    client.OpennedBankAccounts!.FirstOrDefault(b => b.Id == model.IdOfSelectedBankAccount);
                 bankAccount!.IsASalaryProjectAccount = true;
 
                 specialist.ClientsToPaymentProject!.Add(client);
@@ -460,7 +455,6 @@ public class ClientController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
 

@@ -13,5 +13,4 @@ public class InstallmentPlan
     public DateTime DateToPay { get; set; }
     public int? HowMuchLasts { get; set; }
     public bool? Hidden { get; set; }
-
 }

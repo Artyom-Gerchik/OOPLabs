@@ -5,14 +5,14 @@
     <h3>Bank @Model.Bank.Type @Model.Bank.LegalName</h3>
     <table class="table table-hover table-dark">
         <tbody>
-            <tr>
-                <th scope="row">Id</th>
-                <td>@Model.Bank.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Address</th>
-                <td>@Model.Bank.LegalAddress</td>
-            </tr>
+        <tr>
+            <th scope="row">Id</th>
+            <td>@Model.Bank.Id.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Address</th>
+            <td>@Model.Bank.LegalAddress</td>
+        </tr>
         </tbody>
     </table>
 
@@ -21,109 +21,109 @@
 
 <table class="table table-bordered table-dark">
     <thead>
-        <tr>
-            <th scope="col">Bank Account</th>
-            <th scope="col">Bank Deposit</th>
-            <th scope="col">Installment Plan</th>
-            <th scope="col">Credit</th>
-        </tr>
+    <tr>
+        <th scope="col">Bank Account</th>
+        <th scope="col">Bank Deposit</th>
+        <th scope="col">Installment Plan</th>
+        <th scope="col">Credit</th>
+    </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">
-                <form asp-action="OpenBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-outline-success" type="submit" value="Open An Bank Account">
-                </form>
-            </th>
-            <td>
-                <form asp-action="OpenBankDepositForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-success" type="submit" value="Open An Bank Deposit">
-                </form>
-            </td>
-            <td>
-                <form asp-action="GetAnInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-outline-success" type="submit" value="Get An Installment Plan">
-                </form>
-            </td>
-            <td>
-                <form asp-action="GetCredit" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-success" type="submit" value="Get Credit">
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-                <form asp-action="CloseBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-success" type="submit" value="Close An Bank Account">
-                </form>
-            </th>
-            <td>
-                <form asp-action="GetMoneyFromDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-outline-success" type="submit" value="Get Money From Deposit">
-                </form>
-            </td>
-            <td>
-                <form asp-action="SpeedRunInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-success" type="submit" value="Speed Run Installment Plan">
-                </form>
-            </td>
-            <td>
-                <form asp-action="SpeedRunCredit" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-outline-success" type="submit" value="Speed Run Credit">
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-                <form asp-action="GetMoneyFromBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-outline-success" type="submit" value="Get Money From An Bank Account">
-                </form>
-            </th>
-            <td>
-                <form asp-action="SpeedRunDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-success" type="submit" value="Speed Run Deposit">
-                </form>
-            </td>
-            <td>
-                <form asp-action="PayForInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-outline-success" type="submit" value="Pay For Installment Plan">
-                </form>
-            </td>
-            <td>
-                <form asp-action="PayForCredit" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-success" type="submit" value="Pay For Credit">
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-                <form asp-action="MoveMoneyBetweenBankAccount" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-success" type="submit" value="Move Money Between Bank Accounts">
-                </form>
-            </th>
-            <td>
-                <form asp-action="MoveMoneyBetweenBankDeposits" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-outline-success" type="submit" value="Move Money between Deposits">
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-            </th>
-            <td>
-                <form asp-action="BlockBankDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-success" type="submit" value="Block An Bank Deposit">
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-            </th>
-            <td>
-                <form asp-action="FreezeBankDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
-                    <input class="btn btn-outline-success" type="submit" value="Freeze An Bank Deposit">
-                </form>
-            </td>
-        </tr>
+    <tr>
+        <th scope="row">
+            <form asp-action="OpenBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Open An Bank Account">
+            </form>
+        </th>
+        <td>
+            <form asp-action="OpenBankDepositForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Open An Bank Deposit">
+            </form>
+        </td>
+        <td>
+            <form asp-action="GetAnInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Get An Installment Plan">
+            </form>
+        </td>
+        <td>
+            <form asp-action="GetCredit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Get Credit">
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+            <form asp-action="CloseBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Close An Bank Account">
+            </form>
+        </th>
+        <td>
+            <form asp-action="GetMoneyFromDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Get Money From Deposit">
+            </form>
+        </td>
+        <td>
+            <form asp-action="SpeedRunInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Speed Run Installment Plan">
+            </form>
+        </td>
+        <td>
+            <form asp-action="SpeedRunCredit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Speed Run Credit">
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+            <form asp-action="GetMoneyFromBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Get Money From An Bank Account">
+            </form>
+        </th>
+        <td>
+            <form asp-action="SpeedRunDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Speed Run Deposit">
+            </form>
+        </td>
+        <td>
+            <form asp-action="PayForInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Pay For Installment Plan">
+            </form>
+        </td>
+        <td>
+            <form asp-action="PayForCredit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Pay For Credit">
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+            <form asp-action="MoveMoneyBetweenBankAccount" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Move Money Between Bank Accounts">
+            </form>
+        </th>
+        <td>
+            <form asp-action="MoveMoneyBetweenBankDeposits" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Move Money between Deposits">
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+        </th>
+        <td>
+            <form asp-action="BlockBankDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-success" type="submit" value="Block An Bank Deposit">
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+        </th>
+        <td>
+            <form asp-action="FreezeBankDeposit" asp-controller="Bank" asp-anti-forgery="true" method="get">
+                <input class="btn btn-outline-success" type="submit" value="Freeze An Bank Deposit">
+            </form>
+        </td>
+    </tr>
     </tbody>
 </table>

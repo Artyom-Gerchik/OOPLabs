@@ -165,7 +165,7 @@ public class OperatorController : Controller
     public IActionResult RollBackTransferBetweenBankAccounts()
     {
         var bankOperator = GetOperator();
-        return View(new OperatorRollBackTransferModel()
+        return View(new OperatorRollBackTransferModel
         {
             Operator = bankOperator
         });
@@ -176,7 +176,6 @@ public class OperatorController : Controller
     public async Task<IActionResult> RollBackTransferBetweenBankAccounts(OperatorRollBackTransferModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.SelectedTransferId != null)
             {
                 var bankOperator = GetOperator();
@@ -186,22 +185,18 @@ public class OperatorController : Controller
                 var rollbackTransfer = new RollBackTransferBetweenBankAccounts();
 
                 foreach (var transfer in bankOperator.TransfersBetweenBankAccounts!)
-                {
                     if (transfer.Transfer.Id == model.SelectedTransferId)
                     {
                         transferToRollBack = transfer.Transfer;
                         break;
                     }
-                }
 
                 foreach (var transfer in bankOperator.TransfersBetweenBankAccounts!)
-                {
                     if (transfer.Transfer.Equals(transferToRollBack))
                     {
                         rollbackTransfer = transfer;
                         break;
                     }
-                }
 
                 var accountWereWithdrawed = rollbackTransfer.BankAccountWhereWithdrawed;
                 var accountWereDeposited = rollbackTransfer.BankAccountToDeposited;
@@ -210,14 +205,12 @@ public class OperatorController : Controller
                 accountWereDeposited!.AmountOfMoney -= rollbackTransfer.Transfer!.AmountOfMoney;
 
                 foreach (var rollBackTmp in admin.TransfersBetweenBankAccounts!)
-                {
                     if (rollBackTmp.BankAccountWhereWithdrawed!.Equals(rollbackTransfer.BankAccountWhereWithdrawed) &&
                         rollBackTmp.Transfer!.Equals(rollbackTransfer.Transfer))
                     {
                         admin.TransfersBetweenBankAccounts!.Remove(rollBackTmp);
                         break;
                     }
-                }
 
 
                 bankOperator.TransfersBetweenBankAccounts!.Remove(rollbackTransfer);
@@ -228,10 +221,9 @@ public class OperatorController : Controller
 
                 return RedirectToAction("Profile", "Operator");
             }
-        }
 
         var bankOperator1 = GetOperator();
-        return View(new OperatorRollBackTransferModel()
+        return View(new OperatorRollBackTransferModel
         {
             Operator = bankOperator1
         });

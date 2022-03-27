@@ -4,22 +4,22 @@
 
 <table class="table table-hover table-dark">
     <tbody>
-        <tr>
-            <th scope="row">Client Salary</th>
-            <td>@Model.Client.Salary.ToString()</td>
-        </tr>
+    <tr>
+        <th scope="row">Client Salary</th>
+        <td>@Model.Client.Salary.ToString()</td>
+    </tr>
     </tbody>
 </table>
 
 <form asp-action="GetCredit" asp-controller="Bank" asp-anti-forgery="true" method="post">
     <div>
         <div>
-            <label asp-for="Percent">Percent (1 - 100)</label><br />
-            <input type="text" asp-for="Percent" />
+            <label asp-for="Percent">Percent (1 - 100)</label><br/>
+            <input type="text" asp-for="Percent"/>
         </div>
         <div>
-            <label asp-for="AmountOfMoney">AmountOfMoney</label><br />
-            <input type="text" asp-for="AmountOfMoney" />
+            <label asp-for="AmountOfMoney">AmountOfMoney</label><br/>
+            <input type="text" asp-for="AmountOfMoney"/>
         </div>
     </div>
     <div class="input-group mb-3">
@@ -38,7 +38,7 @@
             }
         </select>
         <div class="form-group">
-            <input type="submit" value="Submit" class="btn" />
+            <input type="submit" value="Submit" class="btn"/>
         </div>
     </div>
 </form>

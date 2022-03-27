@@ -5,12 +5,6 @@ namespace LAB1.Entities.AdminRollBack;
 
 public class RollBackDeletedInstallmentPlan
 {
-    [Key] public int? Id { get; set; }
-    public Client? Client { get; set; }
-    public InstallmentPlan? InstallmentPlan { get; set; }
-
-    public Transfer? Transfer { get; set; }
-
     public RollBackDeletedInstallmentPlan()
     {
     }
@@ -21,4 +15,10 @@ public class RollBackDeletedInstallmentPlan
         InstallmentPlan = installmentPlan;
         Transfer = transfer;
     }
+
+    [Key] public int? Id { get; set; }
+    public Client? Client { get; set; }
+    public InstallmentPlan? InstallmentPlan { get; set; }
+
+    public Transfer? Transfer { get; set; }
 }

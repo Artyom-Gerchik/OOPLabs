@@ -13,18 +13,18 @@
     {
         <table class="table table-hover table-dark">
             <tbody>
-                <tr>
-                    <th scope="row">Client Id</th>
-                    <td>@transfer.BankAccountWhereWithdrawed!.ClientId.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">Withdrawed Account Name</th>
-                    <td>@transfer.BankAccountWhereWithdrawed!.Name</td>
-                </tr>
-                <tr>
-                    <th scope="row">Deposited Account Name</th>
-                    <td>@transfer.BankAccountToDeposited!.Name</td>
-                </tr>
+            <tr>
+                <th scope="row">Client Id</th>
+                <td>@transfer.BankAccountWhereWithdrawed!.ClientId.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Withdrawed Account Name</th>
+                <td>@transfer.BankAccountWhereWithdrawed!.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Deposited Account Name</th>
+                <td>@transfer.BankAccountToDeposited!.Name</td>
+            </tr>
             </tbody>
         </table>
     }
@@ -46,7 +46,7 @@
                 }
             </select>
             <div class="form-group">
-                <input type="submit" value="Submit" class="btn" />
+                <input type="submit" value="Submit" class="btn"/>
             </div>
         </div>
     }

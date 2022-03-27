@@ -34,13 +34,9 @@ public class AccountController : Controller
         {
             case 1: // administrator
                 if (administrator != null)
-                {
                     return RedirectToAction("Profile", "Administrator");
-                }
                 else
-                {
                     return RedirectToAction("GetAdditionalInfo", "Administrator");
-                }
 
                 break;
             case 2: // user
@@ -52,14 +48,10 @@ public class AccountController : Controller
                 break;
             case 3:
                 if (client != null)
-                {
                     return RedirectToAction("Profile", "Client");
-                }
                 else
-                {
                     //Directory.CreateDirectory($"ClientLogs/{client.Id}");
                     return RedirectToAction("GetAdditionalInfo", "Client");
-                }
 
                 break;
             case 4: // foreignClient
@@ -128,7 +120,6 @@ public class AccountController : Controller
             var user = (await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email))!;
             if (user == null)
             {
-
                 user = new User
                 {
                     Email = model.Email,

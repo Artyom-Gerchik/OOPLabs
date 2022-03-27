@@ -295,7 +295,6 @@ public class ManagerController : Controller
     public async Task<IActionResult> RollBackSpecialistSend(ManagerRollBackSpecialistSendModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfSelectedRequest != null)
             {
                 var manager = _context.Managers
@@ -315,18 +314,17 @@ public class ManagerController : Controller
                 var specialist = _context.Specialists
                     .Include(s => s.ClientsToPaymentProject)
                     .Include(s => s.Company)
-                    .FirstOrDefaultAsync(o => o.Company!.BankIdentificationCode == tmpBank!.BankIdentificationCode).Result;
+                    .FirstOrDefaultAsync(o => o.Company!.BankIdentificationCode == tmpBank!.BankIdentificationCode)
+                    .Result;
 
                 var listToRollback = new SpecialistSendClients();
 
                 foreach (var list in manager.SendClientsList!)
-                {
                     if (list.Id == model.IdOfSelectedRequest)
                     {
                         listToRollback = list;
                         break;
                     }
-                }
 
 
                 bankOperator.ClientsWaitingForSalaryProject!.Remove(listToRollback.Client);
@@ -342,14 +340,13 @@ public class ManagerController : Controller
 
                 return RedirectToAction("Profile", "Manager");
             }
-        }
 
         var manager1 = _context.Managers
-             .Include(m => m.WaitingForRegistrationApprove)
-             .Include(m => m.WaitingForInstallmentPlanApprove)
-             .Include(m => m.WaitingForCreditApprove)
-             .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
-             .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+            .Include(m => m.WaitingForRegistrationApprove)
+            .Include(m => m.WaitingForInstallmentPlanApprove)
+            .Include(m => m.WaitingForCreditApprove)
+            .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
+            .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
 
         return View(new ManagerRollBackSpecialistSendModel
         {
@@ -380,7 +377,6 @@ public class ManagerController : Controller
     public async Task<IActionResult> RollBackSpecialistAddedMoney(ManagerRollBackSpecialistAddedMoneyModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfClientRequest != 0)
             {
                 var manager = _context.Managers
@@ -395,13 +391,11 @@ public class ManagerController : Controller
                 var listToRollback = new SpecialistAddedMoney();
 
                 foreach (var list in manager.SpecialistAddedMonies!)
-                {
                     if (list.Id == model.IdOfClientRequest)
                     {
                         listToRollback = list;
                         break;
                     }
-                }
 
                 var client = _context.Clients.FirstOrDefaultAsync(c => c.Id == listToRollback.Client.Id).Result;
                 client!.BankBalance -= 10000;
@@ -413,14 +407,13 @@ public class ManagerController : Controller
                 return RedirectToAction("Profile", "Manager");
             }
 
-        }
         var manager1 = _context.Managers
-             .Include(m => m.WaitingForRegistrationApprove)
-             .Include(m => m.WaitingForInstallmentPlanApprove)
-             .Include(m => m.WaitingForCreditApprove)
-             .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
-             .Include(m => m.SpecialistAddedMonies)!.ThenInclude(c => c.Client)
-             .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+            .Include(m => m.WaitingForRegistrationApprove)
+            .Include(m => m.WaitingForInstallmentPlanApprove)
+            .Include(m => m.WaitingForCreditApprove)
+            .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
+            .Include(m => m.SpecialistAddedMonies)!.ThenInclude(c => c.Client)
+            .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
 
         return View(new ManagerRollBackSpecialistAddedMoneyModel
         {

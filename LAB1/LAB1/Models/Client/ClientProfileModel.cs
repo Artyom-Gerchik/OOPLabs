@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 namespace LAB1.Models.Client;
 
 public class ClientProfileModel : IValidatableObject

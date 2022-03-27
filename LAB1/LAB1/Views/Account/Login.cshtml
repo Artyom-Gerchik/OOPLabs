@@ -1,4 +1,4 @@
-@model LAB1.Models.LoginModel
+@model LoginModel
 
 
 <h2>Log In</h2>
@@ -10,17 +10,17 @@
 
     <div>
         <div>
-            <label asp-for="Email">Email</label><br />
-            <input asp-for="Email" />
+            <label asp-for="Email">Email</label><br/>
+            <input asp-for="Email"/>
             <span asp-validation-for="Email"></span>
         </div>
         <div>
-            <label asp-for="Password">Password</label><br />
-            <input asp-for="Password" />
+            <label asp-for="Password">Password</label><br/>
+            <input asp-for="Password"/>
             <span asp-validation-for="Password"></span>
         </div>
         <div>
-            <input type="submit" value="Log In" />
+            <input type="submit" value="Log In"/>
         </div>
     </div>
 </form>

@@ -5,10 +5,6 @@ namespace LAB1.Entities.AdminRollBack;
 
 public class RollBackOpennedCredit
 {
-    [Key] public int? Id { get; set; }
-    public Client? Client { get; set; }
-    public Credit? Credit { get; set; }
-
     public RollBackOpennedCredit()
     {
     }
@@ -18,4 +14,8 @@ public class RollBackOpennedCredit
         Client = client;
         Credit = credit;
     }
+
+    [Key] public int? Id { get; set; }
+    public Client? Client { get; set; }
+    public Credit? Credit { get; set; }
 }

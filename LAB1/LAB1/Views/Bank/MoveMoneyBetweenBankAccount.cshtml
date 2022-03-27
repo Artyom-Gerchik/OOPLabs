@@ -13,18 +13,18 @@
         {
             <table class="table table-hover table-dark">
                 <tbody>
-                    <tr>
-                        <th scope="row">Id Of Oppened bank account</th>
-                        <td>@i.Id.ToString()</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Name Of Oppened bank account</th>
-                        <td>@i.Name</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">AmountOfMoney Of Oppened bank account</th>
-                        <td>@i.AmountOfMoney.ToString()</td>
-                    </tr>
+                <tr>
+                    <th scope="row">Id Of Oppened bank account</th>
+                    <td>@i.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name Of Oppened bank account</th>
+                    <td>@i.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                    <td>@i.AmountOfMoney.ToString()</td>
+                </tr>
                 </tbody>
             </table>
         }
@@ -47,7 +47,6 @@
                     {
                         <option value="@OpennedBankAccount.Id">@OpennedBankAccount.Name</option>
                     }
-
                 }
             </select>
         </div>
@@ -61,17 +60,16 @@
                     {
                         <option value="@OpennedBankAccount.Id">@OpennedBankAccount.Name</option>
                     }
-
                 }
             </select>
         </div>
         <div>
             <div>
-                <label asp-for="AmountOfMoney">Amount Of Monney</label><br />
-                <input type="double" asp-for="AmountOfMoney" />
+                <label asp-for="AmountOfMoney">Amount Of Monney</label><br/>
+                <input type="double" asp-for="AmountOfMoney"/>
             </div>
             <div>
-                <input type="submit" value="Move" />
+                <input type="submit" value="Move"/>
             </div>
         </div>
     }

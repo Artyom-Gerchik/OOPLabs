@@ -5,10 +5,6 @@ namespace LAB1.Entities.ManagerRollBack;
 
 public class SpecialistSendClients
 {
-    [Key] public int? Id { get; set; }
-
-    public Client Client { get; set; }
-
     public SpecialistSendClients()
     {
     }
@@ -17,4 +13,8 @@ public class SpecialistSendClients
     {
         Client = client;
     }
+
+    [Key] public int? Id { get; set; }
+
+    public Client Client { get; set; }
 }

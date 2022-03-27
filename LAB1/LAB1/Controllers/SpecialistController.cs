@@ -131,9 +131,7 @@ public class SpecialistController : Controller
             bankOperator.ClientsWaitingForSalaryProject!.Clear(); ////////////
 
             foreach (var item in specialist.ClientsToPaymentProject!)
-            {
                 manager.SendClientsList!.Add(new SpecialistSendClients(item));
-            }
 
             bankOperator.ClientsWaitingForSalaryProject!.AddRange(specialist.ClientsToPaymentProject!);
             specialist.ClientsToPaymentProject!.Clear();
@@ -154,7 +152,7 @@ public class SpecialistController : Controller
     public IActionResult GiveMoneyForWorker()
     {
         var spec = GetSpecialist();
-        return View(new GiveMoneyForWorkerModel()
+        return View(new GiveMoneyForWorkerModel
         {
             Specialist = spec
         });
@@ -165,7 +163,6 @@ public class SpecialistController : Controller
     public async Task<IActionResult> GiveMoneyForWorker(GiveMoneyForWorkerModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfWorkerToGiveMoney != null)
             {
                 var specialist = GetSpecialist();
@@ -197,10 +194,9 @@ public class SpecialistController : Controller
 
                 return RedirectToAction("Profile", "Specialist");
             }
-        }
 
         var spec1 = GetSpecialist();
-        return View(new GiveMoneyForWorkerModel()
+        return View(new GiveMoneyForWorkerModel
         {
             Specialist = spec1
         });

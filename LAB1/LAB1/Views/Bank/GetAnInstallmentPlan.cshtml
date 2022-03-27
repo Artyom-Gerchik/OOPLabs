@@ -4,10 +4,10 @@
 
 <table class="table table-hover table-dark">
     <tbody>
-        <tr>
-            <th scope="row">Client Salary</th>
-            <td>@Model.Client.Salary.ToString()</td>
-        </tr>
+    <tr>
+        <th scope="row">Client Salary</th>
+        <td>@Model.Client.Salary.ToString()</td>
+    </tr>
     </tbody>
 </table>
 
@@ -16,8 +16,8 @@
     <div class="validation" asp-validation-summary="All"></div>
     <div>
         <div>
-            <label asp-for="AmountOfMoney">AmountOfMoney</label><br />
-            <input type="text" asp-for="AmountOfMoney" />
+            <label asp-for="AmountOfMoney">AmountOfMoney</label><br/>
+            <input type="text" asp-for="AmountOfMoney"/>
         </div>
     </div>
     <div class="input-group mb-3">
@@ -36,7 +36,7 @@
             }
         </select>
         <div class="form-group">
-            <input type="submit" value="Submit" />
+            <input type="submit" value="Submit"/>
         </div>
     </div>
 </form>

@@ -5,10 +5,6 @@ namespace LAB1.Entities.AdminRollBack;
 
 public class DeletedBankAccount
 {
-    [Key] public int? Id { get; set; }
-    public Client? Client { get; set; }
-    public BankAccount? BankAccount { get; set; }
-
     public DeletedBankAccount()
     {
     }
@@ -18,4 +14,8 @@ public class DeletedBankAccount
         Client = client;
         BankAccount = bankAccount;
     }
+
+    [Key] public int? Id { get; set; }
+    public Client? Client { get; set; }
+    public BankAccount? BankAccount { get; set; }
 }

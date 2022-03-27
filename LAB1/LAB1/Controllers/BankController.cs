@@ -13,7 +13,7 @@ public class BankController : Controller
 {
     private readonly ApplicationDbContext _context;
 
-    private int _idForTransfer = 0;
+    private int _idForTransfer;
 
     public BankController(ApplicationDbContext context)
     {
@@ -201,7 +201,6 @@ public class BankController : Controller
     public async Task<IActionResult> CloseBankAccountForClient(CloseBankAccountForClientModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfBankAccountToClose != null)
             {
                 var client = GetClient();
@@ -210,24 +209,20 @@ public class BankController : Controller
 
                 var bankAccountToRemove = new BankAccount();
                 foreach (var bankAccount in client.OpennedBankAccounts!)
-                {
                     if (bankAccount.Id == model.IdOfBankAccountToClose)
                     {
                         bankAccountToRemove = bankAccount;
                         break;
                     }
-                }
 
 
                 foreach (var opennedBankAccount in admin.OpennedBankAccounts!)
-                {
                     if (opennedBankAccount.BankAccount!.Equals(bankAccountToRemove))
                     {
                         admin.OpennedBankAccounts.Remove(opennedBankAccount);
                         bankAccountToRemove.Hidden = true;
                         break;
                     }
-                }
 
                 admin.DeletedBankAccounts!.Add(new DeletedBankAccount(client, bankAccountToRemove));
 
@@ -238,7 +233,6 @@ public class BankController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -271,11 +265,8 @@ public class BankController : Controller
     public async Task<IActionResult> GetMoneyFromBankAccountForClient(GetMoneyFromBankAccountForClientModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfBankAccountToWithdraw != null)
             {
-
-
                 var client = GetClient();
 
                 var bankAccountToWithDraw = new BankAccount();
@@ -307,7 +298,6 @@ public class BankController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -341,7 +331,6 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-
             var client = GetClient();
             var admin = GetAdministrator(client);
             var bankOperator = GetOperator(client);
@@ -367,17 +356,13 @@ public class BankController : Controller
                 });
             }
 
-            Transfer transfer = new Transfer();
+            var transfer = new Transfer();
 
             transfer.Id = ++_idForTransfer;
 
             foreach (var transferDb in _context.Transfers.ToList())
-            {
                 if (transfer.Id == transferDb.Id)
-                {
                     transfer.Id = ++_idForTransfer;
-                }
-            }
 
             transfer.AmountOfMoney = model.AmountOfMoney;
             bankAccountToWithDraw.AmountOfMoney -= transfer.AmountOfMoney;
@@ -456,6 +441,7 @@ public class BankController : Controller
                 return RedirectToAction("Profile", "Client");
             }
         }
+
         return View(model);
     }
 
@@ -479,7 +465,6 @@ public class BankController : Controller
     public async Task<IActionResult> GetMoneyFromDeposit(GetMoneyFromDepositModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfDepositToWithdraw != null)
             {
                 var client = GetClient();
@@ -487,17 +472,16 @@ public class BankController : Controller
                 var admin = GetAdministrator(client);
 
                 var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToWithdraw);
-                client.BankBalance += bankDeposit!.AmountOfMoney + bankDeposit.AmountOfMoney * (bankDeposit.Percent / 100);
+                client.BankBalance +=
+                    bankDeposit!.AmountOfMoney + bankDeposit.AmountOfMoney * (bankDeposit.Percent / 100);
 
                 foreach (var opennedDeposit in admin.OpennedDepositsToRollBack!)
-                {
                     if (opennedDeposit.BankDeposit!.Equals(bankDeposit))
                     {
                         admin.OpennedDepositsToRollBack.Remove(opennedDeposit);
                         opennedDeposit.BankDeposit.Hidden = true;
                         break;
                     }
-                }
 
                 admin.ClosedDepositsToRollBack!.Add(new RollBackClosedDeposit(client, bankDeposit));
 
@@ -508,7 +492,6 @@ public class BankController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -541,7 +524,6 @@ public class BankController : Controller
     public async Task<IActionResult> SpeedRunDeposit(SpeedRunDepositModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfDepositToSpeedRun != null)
             {
                 var client = GetClient();
@@ -554,7 +536,6 @@ public class BankController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -586,7 +567,6 @@ public class BankController : Controller
     public async Task<IActionResult> MoveMoneyBetweenBankDeposits(MoveMoneyBetweenBankDepositsModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfBankDepositToWithdraw != null && model.IdOfBankDepositToDeposit != null)
             {
                 var client = GetClient();
@@ -602,17 +582,13 @@ public class BankController : Controller
                     if (bankDeposit.Id == model.IdOfBankDepositToDeposit) bankDepositToDeposit = bankDeposit;
                 }
 
-                Transfer transfer = new Transfer();
+                var transfer = new Transfer();
 
                 transfer.Id = ++_idForTransfer;
 
                 foreach (var transferDb in _context.Transfers.ToList())
-                {
                     if (transfer.Id == transferDb.Id)
-                    {
                         transfer.Id = ++_idForTransfer;
-                    }
-                }
 
                 transfer.AmountOfMoney = bankDepositToWithdraw.AmountOfMoney +
                                          bankDepositToWithdraw.AmountOfMoney * (bankDepositToWithdraw.Percent / 100);
@@ -635,7 +611,6 @@ public class BankController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -675,11 +650,10 @@ public class BankController : Controller
     public async Task<IActionResult> GetAnInstallmentPlan(GetAnInstallmentPlanModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfSelectedManager != null && model.SelectedAmountOfMonth != null)
             {
                 var client = GetClient();
-                if ((client.Salary / 2) > model.AmountOfMoney)
+                if (client.Salary / 2 > model.AmountOfMoney)
                 {
                     var bank = GetBank(client);
                     var admin = GetAdministrator(client);
@@ -720,7 +694,6 @@ public class BankController : Controller
                     return RedirectToAction("Profile", "Client");
                 }
             }
-        }
 
         var client1 = GetClient();
 
@@ -767,11 +740,11 @@ public class BankController : Controller
     public async Task<IActionResult> GetCredit(GetCreditModel model)
     {
         if (ModelState.IsValid)
-        {
-            if (model.IdOfSelectedManager != null && model.SelectedAmountOfMonth != null && model.Percent > 0 && model.Percent < 100)
+            if (model.IdOfSelectedManager != null && model.SelectedAmountOfMonth != null && model.Percent > 0 &&
+                model.Percent < 100)
             {
                 var client = GetClient();
-                if ((client.Salary / 2) > model.AmountOfMoney + (model.AmountOfMoney * (model.Percent / 100)))
+                if (client.Salary / 2 > model.AmountOfMoney + model.AmountOfMoney * (model.Percent / 100))
                 {
                     var bank = GetBank(client);
                     var manager = _context.Managers
@@ -812,7 +785,6 @@ public class BankController : Controller
                     return RedirectToAction("Profile", "Client");
                 }
             }
-        }
 
 
         var client1 = GetClient();
@@ -853,7 +825,6 @@ public class BankController : Controller
     public async Task<IActionResult> SpeedRunInstallmentPlan(SpeedRunInstallmentPlanModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfInstallmentPlanToSpeedRun != null)
             {
                 var client = GetClient();
@@ -866,7 +837,6 @@ public class BankController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -900,11 +870,8 @@ public class BankController : Controller
     public async Task<IActionResult> SpeedRunCredit(SpeedRunCreditModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfCreditToSpeedRun != null)
             {
-
-
                 var client = GetClient();
 
                 var credit =
@@ -915,7 +882,6 @@ public class BankController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -948,7 +914,6 @@ public class BankController : Controller
     public async Task<IActionResult> PayForInstallmentPlan(PayForInstallmentPlanModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfInstallmentPlanToPay != null)
             {
                 var client = GetClient();
@@ -956,19 +921,16 @@ public class BankController : Controller
                 var admin = GetAdministrator(client);
 
                 var installmentPlan =
-                    client.InstallmentPlansAndApproves!.Find(b => b.InstallmentPlan!.Id == model.IdOfInstallmentPlanToPay);
+                    client.InstallmentPlansAndApproves!.Find(b =>
+                        b.InstallmentPlan!.Id == model.IdOfInstallmentPlanToPay);
 
-                Transfer transfer = new Transfer();
+                var transfer = new Transfer();
 
                 transfer.Id = ++_idForTransfer;
 
                 foreach (var transferDb in _context.Transfers.ToList())
-                {
                     if (transfer.Id == transferDb.Id)
-                    {
                         transfer.Id = ++_idForTransfer;
-                    }
-                }
 
                 transfer.AmountOfMoney = installmentPlan.InstallmentPlan.AmountOfMoney;
                 client.BankBalance -= transfer.AmountOfMoney;
@@ -976,13 +938,11 @@ public class BankController : Controller
                 installmentPlan.InstallmentPlan.Hidden = true;
 
                 foreach (var installmentPlanToRemove in admin.OpennedInstallmentPlans)
-                {
                     if (installmentPlanToRemove.InstallmentPlan!.Equals(installmentPlan.InstallmentPlan))
                     {
                         admin.OpennedInstallmentPlans!.Remove(installmentPlanToRemove);
                         break;
                     }
-                }
 
 
                 admin.DeletedInstallmentPlans.Add(
@@ -995,7 +955,6 @@ public class BankController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -1029,7 +988,6 @@ public class BankController : Controller
     public async Task<IActionResult> PayForCredit(PayForCreditModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfCreditToPay != null)
             {
                 var client = GetClient();
@@ -1039,31 +997,25 @@ public class BankController : Controller
                 var credit = client.CreditsAndApproves!.Find(b => b.Id == model.IdOfCreditToPay);
 
 
-                Transfer transfer = new Transfer();
+                var transfer = new Transfer();
 
                 transfer.Id = ++_idForTransfer;
 
                 foreach (var transferDb in _context.Transfers.ToList())
-                {
                     if (transfer.Id == transferDb.Id)
-                    {
                         transfer.Id = ++_idForTransfer;
-                    }
-                }
 
                 transfer.AmountOfMoney = credit.Credit.AmountOfMoney;
-                client.BankBalance -= transfer.AmountOfMoney + (transfer.AmountOfMoney * (credit.Credit.Percent / 100));
+                client.BankBalance -= transfer.AmountOfMoney + transfer.AmountOfMoney * (credit.Credit.Percent / 100);
 
                 credit.Credit.Hidden = true;
 
                 foreach (var creditsToRemove in admin.OpennedCredits!)
-                {
                     if (creditsToRemove.Credit!.Equals(credit.Credit))
                     {
                         admin.OpennedCredits!.Remove(creditsToRemove);
                         break;
                     }
-                }
 
                 admin.DeletedCredits!.Add(new RollBackDeletedCredit(client, credit.Credit, transfer));
 
@@ -1074,7 +1026,6 @@ public class BankController : Controller
 
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -1106,7 +1057,6 @@ public class BankController : Controller
     public async Task<IActionResult> BlockBankDeposit(BlockBankDepositModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfDepositToBlock != null)
             {
                 var client = GetClient();
@@ -1117,7 +1067,6 @@ public class BankController : Controller
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);
@@ -1148,7 +1097,6 @@ public class BankController : Controller
     public async Task<IActionResult> FreezeBankDeposit(FreezeBankDepositModel model)
     {
         if (ModelState.IsValid)
-        {
             if (model.IdOfDepositToFreeze != null)
             {
                 var client = GetClient();
@@ -1159,7 +1107,6 @@ public class BankController : Controller
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Profile", "Client");
             }
-        }
 
         var client1 = GetClient();
         var bank1 = GetBank(client1);

@@ -5,10 +5,6 @@ namespace LAB1.Entities.AdminRollBack;
 
 public class OpennedBankAccount
 {
-    [Key] public int? Id { get; set; }
-    public Client? Client { get; set; }
-    public BankAccount? BankAccount { get; set; }
-
     public OpennedBankAccount()
     {
     }
@@ -18,4 +14,8 @@ public class OpennedBankAccount
         Client = client;
         BankAccount = bankAccount;
     }
+
+    [Key] public int? Id { get; set; }
+    public Client? Client { get; set; }
+    public BankAccount? BankAccount { get; set; }
 }

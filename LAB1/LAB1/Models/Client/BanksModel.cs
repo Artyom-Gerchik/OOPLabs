@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 namespace LAB1.Models;
 
 public class BanksModel : IValidatableObject
@@ -12,5 +13,4 @@ public class BanksModel : IValidatableObject
 
         return errors;
     }
-
 }

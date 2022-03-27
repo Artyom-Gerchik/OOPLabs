@@ -7,29 +7,29 @@
     {
         <table class="table table-hover table-dark">
             <tbody>
-                <tr>
-                    <th scope="row">Id</th>
-                    <td>@client.Id.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">Name</th>
-                    <td>@client.Name</td>
-                </tr>
-                <tr>
-                    <th scope="row">Surname</th>
-                    <td>@client.Surname</td>
-                </tr>
-                <tr>
-                    <th scope="row">Patronymic</th>
-                    <td>@client.Patronymic</td>
-                </tr>
+            <tr>
+                <th scope="row">Id</th>
+                <td>@client.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Name</th>
+                <td>@client.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Surname</th>
+                <td>@client.Surname</td>
+            </tr>
+            <tr>
+                <th scope="row">Patronymic</th>
+                <td>@client.Patronymic</td>
+            </tr>
             </tbody>
         </table>
     }
     @if (Model.Clients.Count != 0)
     {
         <div class="form-group">
-            <input type="submit" value="Send To Operator" class="btn" />
+            <input type="submit" value="Send To Operator" class="btn"/>
 
         </div>
     }

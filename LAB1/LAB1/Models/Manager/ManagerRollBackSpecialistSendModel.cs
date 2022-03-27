@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 namespace LAB1.Models.Manager;
 
 public class ManagerRollBackSpecialistSendModel : IValidatableObject

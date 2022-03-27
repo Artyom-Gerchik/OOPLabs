@@ -13,18 +13,18 @@
         {
             <table class="table table-hover table-dark">
                 <tbody>
-                    <tr>
-                        <th scope="row">Id Of Oppened bank account</th>
-                        <td>@OpennedBankAccount.Id.ToString()</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Name Of Oppened bank account</th>
-                        <td>@OpennedBankAccount.Name</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">AmountOfMoney Of Oppened bank account</th>
-                        <td>@OpennedBankAccount.AmountOfMoney.ToString()</td>
-                    </tr>
+                <tr>
+                    <th scope="row">Id Of Oppened bank account</th>
+                    <td>@OpennedBankAccount.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name Of Oppened bank account</th>
+                    <td>@OpennedBankAccount.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                    <td>@OpennedBankAccount.AmountOfMoney.ToString()</td>
+                </tr>
                 </tbody>
             </table>
         }
@@ -51,10 +51,9 @@
                 }
             </select>
 
-            <label asp-for="AmountOfMoney">Amount Of Money</label><br />
-            <input type="double" asp-for="AmountOfMoney" />
-            <input type="submit" value="Withdraw" />
+            <label asp-for="AmountOfMoney">Amount Of Money</label><br/>
+            <input type="double" asp-for="AmountOfMoney"/>
+            <input type="submit" value="Withdraw"/>
         </div>
-
     }
 </form>

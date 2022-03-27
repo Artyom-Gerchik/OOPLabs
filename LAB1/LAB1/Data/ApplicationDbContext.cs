@@ -1,5 +1,4 @@
 ﻿using LAB1.Entities;
-using LAB1.Entities.AdminRollBack;
 using LAB1.Entities.UserCategories;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +20,12 @@ public sealed class ApplicationDbContext : IdentityDbContext
     public DbSet<Manager> Managers { get; set; }
     public DbSet<Administrator> Administrators { get; set; }
     public DbSet<Specialist> Specialists { get; set; }
+
     public DbSet<Bank> Banks { get; set; }
+
     //public DbSet<BankApproves> Approves { get; set; }
     public DbSet<Company> Companies { get; set; }
+
     public DbSet<Transfer> Transfers { get; set; }
     //public DbSet<RollBackTransferBetweenBankAccounts> RollBackTransferBetweenBankAccounts { get; set; }
 

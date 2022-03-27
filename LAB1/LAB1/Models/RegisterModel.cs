@@ -47,7 +47,8 @@ public class RegisterModel : IValidatableObject
 
         if (PhoneNumber[0] != '+') errors.Add(new ValidationResult("Phone Number should start with '+'"));
 
-        if (PhoneNumber[1..].Any(x => char.IsLetter(x))) errors.Add(new ValidationResult("Phone Number can't contain letters"));
+        if (PhoneNumber[1..].Any(x => char.IsLetter(x)))
+            errors.Add(new ValidationResult("Phone Number can't contain letters"));
 
         if (Name.Any(x => char.IsDigit(x))) errors.Add(new ValidationResult("Name can't contain digits"));
 
