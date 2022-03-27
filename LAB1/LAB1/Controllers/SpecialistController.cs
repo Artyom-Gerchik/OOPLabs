@@ -21,7 +21,7 @@ public class SpecialistController : Controller
     {
         var specialist = _context.Specialists
             .Include(s => s.ClientsToPaymentProject)
-            .Include(s => s.Company)
+            .Include(s => s.Company).ThenInclude(c => c.Workers)
             .FirstOrDefaultAsync(s => s.Email.Equals(User.Identity.Name)).Result;
         return specialist!;
     }
@@ -129,17 +129,67 @@ public class SpecialistController : Controller
                 .Result;
 
             bankOperator.ClientsWaitingForSalaryProject!.Clear(); ////////////
-            
+
             foreach (var item in specialist.ClientsToPaymentProject!)
             {
                 manager.SendClientsList!.Add(new SpecialistSendClients(item));
             }
-            
+
             bankOperator.ClientsWaitingForSalaryProject!.AddRange(specialist.ClientsToPaymentProject!);
             specialist.ClientsToPaymentProject!.Clear();
 
             _context.Specialists.Update(specialist);
             _context.Operators.Update(bankOperator);
+            _context.Managers.Update(manager);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Specialist");
+        }
+
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult GiveMoneyForWorker()
+    {
+        var spec = GetSpecialist();
+        return View(new GiveMoneyForWorkerModel()
+        {
+            Specialist = spec
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> GiveMoneyForWorker(GiveMoneyForWorkerModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var specialist = GetSpecialist();
+            var client = _context.Clients.FirstOrDefaultAsync(c => c.Id == model.IdOfWorkerToGiveMoney).Result;
+            var bankId = 0;
+
+            foreach (var bank in _context.Banks)
+                if (bank.BankIdentificationCode == specialist.Company!.BankIdentificationCode)
+                {
+                    bankId = (int)bank.Id!;
+                    break;
+                }
+
+            var manager = _context.Managers
+                .Include(m => m.WaitingForRegistrationApprove)
+                .Include(m => m.WaitingForInstallmentPlanApprove)
+                .Include(m => m.WaitingForCreditApprove)
+                .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
+                .Include(m=>m.SpecialistAddedMonies)!.ThenInclude(c=>c.Client)
+                .FirstAsync(o => o.BankId == bankId && o.RoleId == 6).Result;
+
+            client!.BankBalance += 10000;
+
+            manager.SpecialistAddedMonies!.Add(new SpecialistAddedMoney(client));
+
+            _context.Clients.Update(client);
             _context.Managers.Update(manager);
             await _context.SaveChangesAsync();
 

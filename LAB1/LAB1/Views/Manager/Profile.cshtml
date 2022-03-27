@@ -10,7 +10,10 @@
 }
 
 <form asp-action="RollBackSpecialistSend" asp-controller="Manager" asp-anti-forgery="true" method="get">
-    <input class="btn btn-dark" type="submit" value="RollBack Transfers Between Bank Accounts">
+    <input class="btn btn-dark" type="submit" value="RollBack Specialist Send">
+</form>
+<form asp-action="RollBackSpecialistAddedMoney" asp-controller="Manager" asp-anti-forgery="true" method="get">
+    <input class="btn btn-dark" type="submit" value="RollBack Specialist Added Money">
 </form>
 
 <form asp-action="Profile" asp-controller="Manager" asp-anti-forgery="true">

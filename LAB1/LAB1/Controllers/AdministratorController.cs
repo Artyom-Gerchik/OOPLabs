@@ -114,7 +114,7 @@ public class AdministratorController : Controller
             var role = (await _context.Roles.FirstOrDefaultAsync(r => r.Name == "administrator"))!;
             var selectedBank = _context.Banks.FirstOrDefaultAsync(b => b.Id == model.SelectedBankId).Result;
 
-            var admin = new Administrator()
+            var admin = new Administrator() // need to add all additional lists
             {
                 Id = user.Id,
                 Email = user.Email,

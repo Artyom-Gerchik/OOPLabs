@@ -6,6 +6,13 @@
     </form>
 </div>
 
+<div>
+    <form asp-action="GiveMoneyForWorker" asp-controller="Specialist" asp-anti-forgery="true" method="get">
+        <input class="btn btn-dark btn-custom" type="submit" value="Give Money For Worker">
+    </form>
+</div>
+
+
 <form asp-action="Profile" asp-controller="Specialist" asp-anti-forgery="true">
 
     <h3>Hello @Model.Specialist.Name</h3>

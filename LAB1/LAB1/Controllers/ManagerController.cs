@@ -263,7 +263,7 @@ public class ManagerController : Controller
             .Include(m => m.WaitingForRegistrationApprove)
             .Include(m => m.WaitingForInstallmentPlanApprove)
             .Include(m => m.WaitingForCreditApprove)
-            .Include(m => m.SendClientsList)!.ThenInclude(c=>c.Client)
+            .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
             .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
 
         return View(new ManagerRollBackSpecialistSendModel
@@ -282,7 +282,7 @@ public class ManagerController : Controller
                 .Include(m => m.WaitingForRegistrationApprove)
                 .Include(m => m.WaitingForInstallmentPlanApprove)
                 .Include(m => m.WaitingForCreditApprove)
-                .Include(m => m.SendClientsList)!.ThenInclude(c=>c.Client)
+                .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
                 .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
 
             var bankOperator = _context.Operators
@@ -319,16 +319,73 @@ public class ManagerController : Controller
                 }
             }
 
-           
-                bankOperator.ClientsWaitingForSalaryProject!.Remove(listToRollback.Client);
-                specialist!.ClientsToPaymentProject!.Add(listToRollback.Client);
 
-                manager.SendClientsList.Remove(listToRollback);
+            bankOperator.ClientsWaitingForSalaryProject!.Remove(listToRollback.Client);
+            specialist!.ClientsToPaymentProject!.Add(listToRollback.Client);
+
+            manager.SendClientsList.Remove(listToRollback);
 
             _context.Managers.Update(manager);
             _context.Operators.Update(bankOperator);
             _context.Specialists.Update(specialist!);
 
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile", "Manager");
+        }
+
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult RollBackSpecialistAddedMoney()
+    {
+        var manager = _context.Managers
+            .Include(m => m.WaitingForRegistrationApprove)
+            .Include(m => m.WaitingForInstallmentPlanApprove)
+            .Include(m => m.WaitingForCreditApprove)
+            .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
+            .Include(m => m.SpecialistAddedMonies)!.ThenInclude(c => c.Client)
+            .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+
+        return View(new ManagerRollBackSpecialistAddedMoneyModel
+        {
+            Manager = manager
+        });
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RollBackSpecialistAddedMoney(ManagerRollBackSpecialistAddedMoneyModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var manager = _context.Managers
+                .Include(m => m.WaitingForRegistrationApprove)
+                .Include(m => m.WaitingForInstallmentPlanApprove)
+                .Include(m => m.WaitingForCreditApprove)
+                .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
+                .Include(m => m.SpecialistAddedMonies)!.ThenInclude(c => c.Client)
+                .FirstAsync(m => m.Email.Equals(User.Identity.Name)).Result;
+
+
+            var listToRollback = new SpecialistAddedMoney();
+
+            foreach (var list in manager.SpecialistAddedMonies!)
+            {
+                if (list.Id == model.IdOfClientRequest)
+                {
+                    listToRollback = list;
+                    break;
+                }
+            }
+
+            var client = _context.Clients.FirstOrDefaultAsync(c => c.Id == listToRollback.Client.Id).Result;
+            client!.BankBalance -= 10000;
+            manager.SpecialistAddedMonies.Remove(listToRollback);
+            _context.Managers.Update(manager);
+            _context.Clients.Update(client);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", "Manager");

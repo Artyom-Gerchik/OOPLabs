@@ -1,0 +1,47 @@
+@model LAB1.Models.Specialist.GiveMoneyForWorkerModel
+
+<br>
+<hr class="style1">
+<br>
+
+@foreach (var worker in Model.Specialist.Company.Workers)
+{
+    <table class="table table-hover table-dark">
+        <tbody>
+        <tr>
+            <th scope="row">Worker Id</th>
+            <td>@worker.Id.ToString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Worker Name</th>
+            <td>@worker.Name</td>
+        </tr>
+        <tr>
+            <th scope="row">Worker Cash</th>
+            <td>@worker.BankBalance.ToString()</td>
+        </tr>
+        </tbody>
+    </table>
+}
+<br>
+<hr class="style1">
+<br>
+
+<form asp-action="GiveMoneyForWorker" asp-controller="Specialist" asp-anti-forgery="true" method="post">
+
+    @if (Model.Specialist.Company.Workers.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfWorkerToGiveMoney">
+                <option selected>Choose...</option>
+                @foreach (var worker in Model.Specialist.Company.Workers)
+                {
+                    <option value="@worker.Id">@worker.Name</option>
+                }
+            </select>
+            <div class="form-group">
+                <input class="btn btn-success" type="submit" value="Give Some Money">
+            </div>
+        </div>
+    }
+</form>

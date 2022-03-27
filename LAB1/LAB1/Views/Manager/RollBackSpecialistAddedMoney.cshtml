@@ -1,0 +1,47 @@
+@model LAB1.Models.Manager.ManagerRollBackSpecialistAddedMoneyModel
+
+<form asp-action="RollBackSpecialistAddedMoney" asp-controller="Manager" asp-anti-forgery="true" method="post">
+
+    <br>
+    <hr class="style1">
+    <br>
+    <br>
+
+    @foreach (var clientAddedMoney in Model.Manager.SpecialistAddedMonies)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+            <tr>
+                <th scope="row">Id Of Request</th>
+                <td>@clientAddedMoney.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Client Name</th>
+                <td>@clientAddedMoney.Client.Name</td>
+            </tr>
+            </tbody>
+        </table>
+    }
+
+    <br>
+    <br>
+    <hr class="style1">
+    <br>
+
+
+    @if (Model.Manager.SpecialistAddedMonies!.Count != 0)
+    {
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfClientRequest">
+                <option selected>Choose Client</option>
+                @foreach (var request in Model.Manager.SpecialistAddedMonies)
+                {
+                    <option value="@request.Id">@request.Client.Name</option>
+                }
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn"/>
+            </div>
+        </div>
+    }
+</form>
