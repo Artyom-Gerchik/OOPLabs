@@ -1,10 +1,23 @@
 @model LAB1.Models.Bank.GetAnInstallmentPlanModel
 
+<h4>Get An Installment Plan</h4>
+
+<table class="table table-hover table-dark">
+    <tbody>
+        <tr>
+            <th scope="row">Client Salary</th>
+            <td>@Model.Client.Salary.ToString()</td>
+        </tr>
+    </tbody>
+</table>
+
+
 <form asp-action="GetAnInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="post">
+    <div class="validation" asp-validation-summary="All"></div>
     <div>
         <div>
-            <label asp-for="AmountOfMoney">AmountOfMoney</label><br/>
-            <input type="text" asp-for="AmountOfMoney"/>
+            <label asp-for="AmountOfMoney">AmountOfMoney</label><br />
+            <input type="text" asp-for="AmountOfMoney" />
         </div>
     </div>
     <div class="input-group mb-3">
@@ -23,7 +36,7 @@
             }
         </select>
         <div class="form-group">
-            <input type="submit" value="Submit"/>
+            <input type="submit" value="Submit" />
         </div>
     </div>
 </form>

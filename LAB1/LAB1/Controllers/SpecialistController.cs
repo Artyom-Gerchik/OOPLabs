@@ -166,36 +166,43 @@ public class SpecialistController : Controller
     {
         if (ModelState.IsValid)
         {
-            var specialist = GetSpecialist();
-            var client = _context.Clients.FirstOrDefaultAsync(c => c.Id == model.IdOfWorkerToGiveMoney).Result;
-            var bankId = 0;
+            if (model.IdOfWorkerToGiveMoney != null)
+            {
+                var specialist = GetSpecialist();
+                var client = _context.Clients.FirstOrDefaultAsync(c => c.Id == model.IdOfWorkerToGiveMoney).Result;
+                var bankId = 0;
 
-            foreach (var bank in _context.Banks)
-                if (bank.BankIdentificationCode == specialist.Company!.BankIdentificationCode)
-                {
-                    bankId = (int)bank.Id!;
-                    break;
-                }
+                foreach (var bank in _context.Banks)
+                    if (bank.BankIdentificationCode == specialist.Company!.BankIdentificationCode)
+                    {
+                        bankId = (int)bank.Id!;
+                        break;
+                    }
 
-            var manager = _context.Managers
-                .Include(m => m.WaitingForRegistrationApprove)
-                .Include(m => m.WaitingForInstallmentPlanApprove)
-                .Include(m => m.WaitingForCreditApprove)
-                .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
-                .Include(m=>m.SpecialistAddedMonies)!.ThenInclude(c=>c.Client)
-                .FirstAsync(o => o.BankId == bankId && o.RoleId == 6).Result;
+                var manager = _context.Managers
+                    .Include(m => m.WaitingForRegistrationApprove)
+                    .Include(m => m.WaitingForInstallmentPlanApprove)
+                    .Include(m => m.WaitingForCreditApprove)
+                    .Include(m => m.SendClientsList)!.ThenInclude(c => c.Client)
+                    .Include(m => m.SpecialistAddedMonies)!.ThenInclude(c => c.Client)
+                    .FirstAsync(o => o.BankId == bankId && o.RoleId == 6).Result;
 
-            client!.BankBalance += 10000;
+                client!.BankBalance += 10000;
 
-            manager.SpecialistAddedMonies!.Add(new SpecialistAddedMoney(client));
+                manager.SpecialistAddedMonies!.Add(new SpecialistAddedMoney(client));
 
-            _context.Clients.Update(client);
-            _context.Managers.Update(manager);
-            await _context.SaveChangesAsync();
+                _context.Clients.Update(client);
+                _context.Managers.Update(manager);
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("Profile", "Specialist");
+                return RedirectToAction("Profile", "Specialist");
+            }
         }
 
-        return View();
+        var spec1 = GetSpecialist();
+        return View(new GiveMoneyForWorkerModel()
+        {
+            Specialist = spec1
+        });
     }
 }

@@ -1,23 +1,25 @@
 @model LAB1.Models.Bank.MoveMoneyBetweenBankDepositsModel
 
+<h4>Move Money Between Bank Deposits</h4>
+
 @foreach (var i in Model.Client.OpennedBankDeposits)
 {
     if (i.BankId == Model.Bank.Id)
     {
         <table class="table table-hover table-dark">
             <tbody>
-            <tr>
-                <th scope="row">Id Of Oppened bank Deposit</th>
-                <td>@i.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Name Of Oppened bank Deposit</th>
-                <td>@i.Name</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
-                <td>@i.AmountOfMoney.ToString()</td>
-            </tr>
+                <tr>
+                    <th scope="row">Id Of Oppened bank Deposit</th>
+                    <td>@i.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name Of Oppened bank Deposit</th>
+                    <td>@i.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
+                    <td>@i.AmountOfMoney.ToString()</td>
+                </tr>
             </tbody>
         </table>
         <br>
@@ -27,6 +29,7 @@
 }
 
 <form asp-action="MoveMoneyBetweenBankDeposits" asp-controller="Bank" asp-anti-forgery="true" method="post">
+    <div class="validation" asp-validation-summary="All"></div>
     @if (Model.Client.OpennedBankDeposits.Count != 0)
     {
         <div class="input-group mb-3">
@@ -56,7 +59,7 @@
         </div>
         <div>
             <div>
-                <input type="submit" value="Move"/>
+                <input type="submit" value="Move" />
             </div>
         </div>
     }

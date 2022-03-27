@@ -75,49 +75,55 @@ public class ClientController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
-            var clientRole = (await _context.Roles.FirstOrDefaultAsync(r => r.Name == "client"))!;
-            var selectedCompany = _context.Companies.Include(c => c.Workers)
-                .FirstOrDefaultAsync(c => c.Id == model.IdOfSelectedCompany).Result;
-
-            var client = new Client
+            if (model.IdOfSelectedCompany != null)
             {
-                Id = user.Id,
-                Email = user.Email,
-                Password = user.Password,
-                Name = user.Name,
-                Surname = user.Surname,
-                Patronymic = user.Patronymic,
-                PhoneNumber = user.PhoneNumber,
-                RoleId = user.RoleId,
-                Role = clientRole,
-                IdentificationNumber = model.IdentificationNumber,
-                PassportNumberAndSeries = model.PassportNumberAndSeries,
-                CurrentBankId = 0,
-                BanksAndApproves = new List<BankApproves>(),
-                BankBalance = 0,
-                Banks = new List<Bank>(),
-                OpennedBankAccounts = new List<BankAccount>(),
-                InstallmentPlansAndApproves = new List<InstallmentPlanApproves>(),
-                Work = selectedCompany,
-                AtSalaryProject = false,
-                Salary = selectedCompany!.SalaryForWorkers
-            };
+                var user = _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name)).Result;
+                var clientRole = (await _context.Roles.FirstOrDefaultAsync(r => r.Name == "client"))!;
+                var selectedCompany = _context.Companies.Include(c => c.Workers)
+                    .FirstOrDefaultAsync(c => c.Id == model.IdOfSelectedCompany).Result;
 
-            selectedCompany.Workers.Add(client);
+                var client = new Client
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Password = user.Password,
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    Patronymic = user.Patronymic,
+                    PhoneNumber = user.PhoneNumber,
+                    RoleId = user.RoleId,
+                    Role = clientRole,
+                    IdentificationNumber = model.IdentificationNumber,
+                    PassportNumberAndSeries = model.PassportNumberAndSeries,
+                    CurrentBankId = 0,
+                    BanksAndApproves = new List<BankApproves>(),
+                    BankBalance = 0,
+                    Banks = new List<Bank>(),
+                    OpennedBankAccounts = new List<BankAccount>(),
+                    InstallmentPlansAndApproves = new List<InstallmentPlanApproves>(),
+                    Work = selectedCompany,
+                    AtSalaryProject = false,
+                    Salary = selectedCompany!.SalaryForWorkers
+                };
 
-            if (client != null)
-            {
-                _context.Users.Remove(user);
-                _context.Clients.Add(client);
-                _context.Companies.Update(selectedCompany);
-                await _context.SaveChangesAsync();
+                selectedCompany.Workers.Add(client);
 
-                return RedirectToAction("Profile", "Client");
+                if (client != null)
+                {
+                    _context.Users.Remove(user);
+                    _context.Clients.Add(client);
+                    _context.Companies.Update(selectedCompany);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Profile", "Client");
+                }
             }
+            //return RedirectToAction("GetAdditionalInfo", "Client");
         }
-
-        return View(model);
+        //return RedirectToAction("GetAdditionalInfo", "Client");
+        return View(new ClientAdditionalInfoModel
+        {
+            Companies = _context.Companies.ToList()
+        });
     }
 
     [HttpGet]
@@ -176,13 +182,15 @@ public class ClientController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
+            if (model.SelectedBankId != null)
+            {
+                var client = GetClient();
 
-            if (client != null)
-                if (model.SelectedBankId != null)
+                if (client != null)
                 {
+
                     var bank = await _context.Banks.FirstOrDefaultAsync(b =>
-                        b.Id.ToString().Equals(model.SelectedBankId));
+                        b.Id == model.SelectedBankId);
                     client.BanksAndApproves!.Add(new BankApproves(bank!, false));
                     client.Banks!.Add(bank);
                     bank.AmountOfClients++;
@@ -190,13 +198,37 @@ public class ClientController : Controller
                     _context.Banks.Update(bank);
                 }
 
-            await _context.SaveChangesAsync();
+
+                await _context.SaveChangesAsync();
 
 
-            return RedirectToAction("Profile", "Account");
+                return RedirectToAction("Profile", "Account");
+            }
         }
 
-        return View(model);
+        var client1 = GetClient();
+
+        var banks = _context.Banks
+            .Include(b => b.OpennedBankAccounts).ToList();
+
+        var banksToPass = new List<Bank>();
+
+        foreach (var bank in banks)
+            if (client1.BanksAndApproves.Count == banks.Count)
+            {
+                foreach (var approvedBank in client1.BanksAndApproves!)
+                    if (!bank.Equals(approvedBank.Bank))
+                        banksToPass.Add(bank);
+            }
+            else
+            {
+                banksToPass.Add(bank);
+            }
+
+        return View(new BanksModel
+        {
+            Banks = banksToPass
+        });
     }
 
     [HttpGet]
@@ -253,7 +285,26 @@ public class ClientController : Controller
             return RedirectToAction("Profile", "Account");
         }
 
-        return View();
+        var client1 = GetClient();
+
+        var banksToPass = new List<Bank>();
+
+        foreach (var bank in client1.BanksAndApproves)
+            if (bank.Approved == false)
+                banksToPass.Add(bank.Bank!);
+
+
+        var managers = new List<Manager>();
+        foreach (var manager in _context.Managers)
+            if (manager.BankId == client1.CurrentBankId)
+                managers.Add(manager);
+
+        return View(new ClientGetApproveModel
+        {
+            ClientBanks = banksToPass,
+            Managers = managers
+        });
+
     }
 
     [HttpGet]
@@ -261,13 +312,17 @@ public class ClientController : Controller
     public IActionResult ChangeBankId(ClientProfileModel model)
     {
         var client = GetClient();
+        if (model.SelectedBankId != null)
+        {
 
-        client!.CurrentBankId = model.SelectedBankId;
+            client!.CurrentBankId = model.SelectedBankId;
 
-        _context.Clients.Update(client);
-        _context.SaveChanges();
+            _context.Clients.Update(client);
+            _context.SaveChanges();
 
-        return RedirectToAction("BankProfileForClient", "Bank");
+            return RedirectToAction("BankProfileForClient", "Bank");
+        }
+        return RedirectToAction("Profile", "Client");
     }
 
     [HttpGet]
@@ -344,9 +399,9 @@ public class ClientController : Controller
     public IActionResult UpdateInfo()
     {
         var client = GetClient();
-        var bank = GetBank(client);
+        //var bank = GetBank(client);
 
-        if (client.OpennedBankDeposits!.Count != 0)
+        if (client.OpennedBankDeposits != null && client.OpennedBankDeposits!.Count != 0)
             foreach (var deposit in client.OpennedBankDeposits!)
             {
                 var dateOfMoneyBack = deposit.DateOfMoneyBack;
@@ -354,7 +409,7 @@ public class ClientController : Controller
                 deposit.HowMuchLasts = howMuchDaysLasts;
             }
 
-        if (client.InstallmentPlansAndApproves!.Count != 0)
+        if (client.InstallmentPlansAndApproves != null && client.InstallmentPlansAndApproves!.Count != 0)
             foreach (var installmentPlan in client.InstallmentPlansAndApproves!)
             {
                 var dateToPay = installmentPlan.InstallmentPlan!.DateToPay;
@@ -362,7 +417,7 @@ public class ClientController : Controller
                 installmentPlan.InstallmentPlan.HowMuchLasts = howMuchDaysLasts;
             }
 
-        if (client.CreditsAndApproves!.Count != 0)
+        if (client.CreditsAndApproves != null && client.CreditsAndApproves!.Count != 0)
             foreach (var credit in client.CreditsAndApproves!)
             {
                 var dateToPay = credit.Credit!.DateToPay;
@@ -391,19 +446,27 @@ public class ClientController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var specialist = GetSpecialist((int)client.Work.Id);
-            var bankAccount = client.OpennedBankAccounts!.FirstOrDefault(b => b.Id == model.IdOfSelectedBankAccount);
-            bankAccount!.IsASalaryProjectAccount = true;
+            if (model.IdOfSelectedBankAccount != null)
+            {
+                var client = GetClient();
+                var specialist = GetSpecialist((int)client.Work.Id);
+                var bankAccount = client.OpennedBankAccounts!.FirstOrDefault(b => b.Id == model.IdOfSelectedBankAccount);
+                bankAccount!.IsASalaryProjectAccount = true;
 
-            specialist.ClientsToPaymentProject!.Add(client);
-            _context.Clients.Update(client);
-            _context.Specialists.Update(specialist);
-            await _context.SaveChangesAsync();
+                specialist.ClientsToPaymentProject!.Add(client);
+                _context.Clients.Update(client);
+                _context.Specialists.Update(specialist);
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("Profile", "Client");
+                return RedirectToAction("Profile", "Client");
+            }
         }
 
-        return View();
+        var client1 = GetClient();
+
+        return View(new GetTheSalaryProjectForClientModel
+        {
+            ClientBankAccounts = client1.OpennedBankAccounts
+        });
     }
 }

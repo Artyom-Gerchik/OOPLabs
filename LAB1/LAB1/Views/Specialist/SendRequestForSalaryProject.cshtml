@@ -1,30 +1,36 @@
 @model LAB1.Models.Specialist.SendRequestForSalaryProjectModel
 
+<h4>Send Request For Salary Project</h4>
+
 <form asp-action="SendRequestForSalaryProject" asp-controller="Specialist" asp-anti-forgery="true" method="post">
     @foreach (var client in Model.Clients)
     {
         <table class="table table-hover table-dark">
             <tbody>
-            <tr>
-                <th scope="row">Id</th>
-                <td>@client.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Name</th>
-                <td>@client.Name</td>
-            </tr>
-            <tr>
-                <th scope="row">Surname</th>
-                <td>@client.Surname</td>
-            </tr>
-            <tr>
-                <th scope="row">Patronymic</th>
-                <td>@client.Patronymic</td>
-            </tr>
+                <tr>
+                    <th scope="row">Id</th>
+                    <td>@client.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name</th>
+                    <td>@client.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">Surname</th>
+                    <td>@client.Surname</td>
+                </tr>
+                <tr>
+                    <th scope="row">Patronymic</th>
+                    <td>@client.Patronymic</td>
+                </tr>
             </tbody>
         </table>
     }
-    <div class="form-group">
-        <input type="submit" value="Send To Operator" class="btn"/>
-    </div>
+    @if (Model.Clients.Count != 0)
+    {
+        <div class="form-group">
+            <input type="submit" value="Send To Operator" class="btn" />
+
+        </div>
+    }
 </form>

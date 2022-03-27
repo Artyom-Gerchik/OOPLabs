@@ -1,7 +1,9 @@
 @model LAB1.Models.Operator.OperatorRollBackTransferModel
 
-<form asp-action="RollBackTransferBetweenBankAccounts" asp-controller="Operator" asp-anti-forgery="true" method="post">
+<h4> RollBack Transfers Between Bank Accounts</h4>
 
+<form asp-action="RollBackTransferBetweenBankAccounts" asp-controller="Operator" asp-anti-forgery="true" method="post">
+    <div class="validation" asp-validation-summary="All"></div>
     <br>
     <hr class="style1">
     <br>
@@ -11,14 +13,18 @@
     {
         <table class="table table-hover table-dark">
             <tbody>
-            <tr>
-                <th scope="row">Withdrawed Account Name</th>
-                <td>@transfer.BankAccountWhereWithdrawed!.Name</td>
-            </tr>
-            <tr>
-                <th scope="row">Deposited Account Name</th>
-                <td>@transfer.BankAccountToDeposited!.Name</td>
-            </tr>
+                <tr>
+                    <th scope="row">Client Id</th>
+                    <td>@transfer.BankAccountWhereWithdrawed!.ClientId.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Withdrawed Account Name</th>
+                    <td>@transfer.BankAccountWhereWithdrawed!.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">Deposited Account Name</th>
+                    <td>@transfer.BankAccountToDeposited!.Name</td>
+                </tr>
             </tbody>
         </table>
     }
@@ -40,7 +46,7 @@
                 }
             </select>
             <div class="form-group">
-                <input type="submit" value="Submit" class="btn"/>
+                <input type="submit" value="Submit" class="btn" />
             </div>
         </div>
     }

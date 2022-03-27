@@ -1,5 +1,7 @@
 @model LAB1.Models.Bank.SpeedRunDepositModel
 
+<h4>Speed Run Deposit</h4>
+
 <br>
 <hr class="style1">
 <br>
@@ -9,18 +11,18 @@
     {
         <table class="table table-hover table-dark">
             <tbody>
-            <tr>
-                <th scope="row">Id Of Oppened bank account</th>
-                <td>@OpennedDeposits.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Name Of Oppened bank account</th>
-                <td>@OpennedDeposits.Name</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney Of Oppened bank account</th>
-                <td>@OpennedDeposits.AmountOfMoney.ToString()</td>
-            </tr>
+                <tr>
+                    <th scope="row">Id Of Oppened bank account</th>
+                    <td>@OpennedDeposits.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name Of Oppened bank account</th>
+                    <td>@OpennedDeposits.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                    <td>@OpennedDeposits.AmountOfMoney.ToString()</td>
+                </tr>
             </tbody>
         </table>
     }
@@ -30,6 +32,7 @@
 <br>
 
 <form asp-action="SpeedRunDeposit" asp-controller="Bank" asp-anti-forgery="true" method="post">
+    <div class="validation" asp-validation-summary="All"></div>
 
     @if (Model.Client.OpennedBankDeposits.Count != 0)
     {
@@ -45,7 +48,7 @@
                 }
             </select>
             <div>
-                <input type="submit" value="Speed Run"/>
+                <input type="submit" value="Speed Run" />
             </div>
         </div>
     }

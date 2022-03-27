@@ -1,27 +1,29 @@
 @model LAB1.Models.Bank.PayForCreditModel
 
+<h4>Pay For Credit</h4>
+
 @foreach (var opennedCredit in Model.Client.CreditsAndApproves)
 {
     if (opennedCredit.Credit.BankId == Model.Bank.Id && opennedCredit.Approved == true)
     {
         <table class="table table-hover table-dark">
             <tbody>
-            <tr>
-                <th scope="row">Id Of Bank, where bank credit was opened</th>
-                <td>@opennedCredit.Credit.BankId.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Id Of Oppened Installment Plan</th>
-                <td>@opennedCredit.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney</th>
-                <td>@opennedCredit.Credit.AmountOfMoney.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Approved</th>
-                <td>@opennedCredit.Approved.ToString()</td>
-            </tr>
+                <tr>
+                    <th scope="row">Id Of Bank, where bank credit was opened</th>
+                    <td>@opennedCredit.Credit.BankId.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Id Of Oppened Installment Plan</th>
+                    <td>@opennedCredit.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney</th>
+                    <td>@opennedCredit.Credit.AmountOfMoney.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Approved</th>
+                    <td>@opennedCredit.Approved.ToString()</td>
+                </tr>
             </tbody>
         </table>
         <br>
@@ -31,7 +33,7 @@
 }
 
 <form asp-action="PayForCredit" asp-controller="Bank" asp-anti-forgery="true" method="post">
-
+    <div class="validation" asp-validation-summary="All"></div>
     @if (Model.Client.CreditsAndApproves.Count != 0)
     {
         <div class="input-group mb-3">
@@ -46,7 +48,7 @@
                 }
             </select>
             <div>
-                <input type="submit" value="Pay"/>
+                <input type="submit" value="Pay" />
             </div>
         </div>
     }

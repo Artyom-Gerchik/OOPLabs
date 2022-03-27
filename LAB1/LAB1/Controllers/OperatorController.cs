@@ -177,56 +177,63 @@ public class OperatorController : Controller
     {
         if (ModelState.IsValid)
         {
-            var bankOperator = GetOperator();
-            var admin = GetAdministrator(bankOperator);
-
-            var transferToRollBack = new Transfer();
-            var rollbackTransfer = new RollBackTransferBetweenBankAccounts();
-
-            foreach (var transfer in bankOperator.TransfersBetweenBankAccounts!)
+            if (model.SelectedTransferId != null)
             {
-                if (transfer.Transfer.Id == model.SelectedTransferId)
+                var bankOperator = GetOperator();
+                var admin = GetAdministrator(bankOperator);
+
+                var transferToRollBack = new Transfer();
+                var rollbackTransfer = new RollBackTransferBetweenBankAccounts();
+
+                foreach (var transfer in bankOperator.TransfersBetweenBankAccounts!)
                 {
-                    transferToRollBack = transfer.Transfer;
-                    break;
+                    if (transfer.Transfer.Id == model.SelectedTransferId)
+                    {
+                        transferToRollBack = transfer.Transfer;
+                        break;
+                    }
                 }
-            }
 
-            foreach (var transfer in bankOperator.TransfersBetweenBankAccounts!)
-            {
-                if (transfer.Transfer.Equals(transferToRollBack))
+                foreach (var transfer in bankOperator.TransfersBetweenBankAccounts!)
                 {
-                    rollbackTransfer = transfer;
-                    break;
+                    if (transfer.Transfer.Equals(transferToRollBack))
+                    {
+                        rollbackTransfer = transfer;
+                        break;
+                    }
                 }
-            }
 
-            var accountWereWithdrawed = rollbackTransfer.BankAccountWhereWithdrawed;
-            var accountWereDeposited = rollbackTransfer.BankAccountToDeposited;
+                var accountWereWithdrawed = rollbackTransfer.BankAccountWhereWithdrawed;
+                var accountWereDeposited = rollbackTransfer.BankAccountToDeposited;
 
-            accountWereWithdrawed!.AmountOfMoney += rollbackTransfer.Transfer!.AmountOfMoney;
-            accountWereDeposited!.AmountOfMoney -= rollbackTransfer.Transfer!.AmountOfMoney;
+                accountWereWithdrawed!.AmountOfMoney += rollbackTransfer.Transfer!.AmountOfMoney;
+                accountWereDeposited!.AmountOfMoney -= rollbackTransfer.Transfer!.AmountOfMoney;
 
-            foreach (var rollBackTmp in admin.TransfersBetweenBankAccounts!)
-            {
-                if (rollBackTmp.BankAccountWhereWithdrawed!.Equals(rollbackTransfer.BankAccountWhereWithdrawed) &&
-                    rollBackTmp.Transfer!.Equals(rollbackTransfer.Transfer))
+                foreach (var rollBackTmp in admin.TransfersBetweenBankAccounts!)
                 {
-                    admin.TransfersBetweenBankAccounts!.Remove(rollBackTmp);
-                    break;
+                    if (rollBackTmp.BankAccountWhereWithdrawed!.Equals(rollbackTransfer.BankAccountWhereWithdrawed) &&
+                        rollBackTmp.Transfer!.Equals(rollbackTransfer.Transfer))
+                    {
+                        admin.TransfersBetweenBankAccounts!.Remove(rollBackTmp);
+                        break;
+                    }
                 }
+
+
+                bankOperator.TransfersBetweenBankAccounts!.Remove(rollbackTransfer);
+
+                _context.Administrators.Update(admin);
+                _context.Operators.Update(bankOperator);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Profile", "Operator");
             }
-
-
-            bankOperator.TransfersBetweenBankAccounts!.Remove(rollbackTransfer);
-
-            _context.Administrators.Update(admin);
-            _context.Operators.Update(bankOperator);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Profile", "Operator");
         }
 
-        return View();
+        var bankOperator1 = GetOperator();
+        return View(new OperatorRollBackTransferModel()
+        {
+            Operator = bankOperator1
+        });
     }
 }

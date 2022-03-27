@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LAB1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220325231332_tmp6")]
-    partial class tmp6
+    [Migration("20220327201940_ClearOne")]
+    partial class ClearOne
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,37 @@ namespace LAB1.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("RollBackClosedDeposit");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackDeletedCredit", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AdministratorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CreditId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("TransferId")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdministratorId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("CreditId");
+
+                    b.HasIndex("TransferId");
+
+                    b.ToTable("RollBackDeletedCredit");
                 });
 
             modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackDeletedInstallmentPlan", b =>
@@ -221,6 +252,9 @@ namespace LAB1.Migrations
                     b.Property<int?>("BankAccountWhereWithdrawedId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("OperatorId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double?>("TransferId")
                         .HasColumnType("REAL");
 
@@ -231,6 +265,8 @@ namespace LAB1.Migrations
                     b.HasIndex("BankAccountToDepositedId");
 
                     b.HasIndex("BankAccountWhereWithdrawedId");
+
+                    b.HasIndex("OperatorId");
 
                     b.HasIndex("TransferId");
 
@@ -337,6 +373,9 @@ namespace LAB1.Migrations
                     b.Property<int?>("BankId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool?>("Blocked")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("ClientId")
                         .HasColumnType("INTEGER");
 
@@ -345,6 +384,9 @@ namespace LAB1.Migrations
 
                     b.Property<DateTime>("DateOfMoneyBack")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool?>("Frozen")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool?>("Hidden")
                         .HasColumnType("INTEGER");
@@ -592,9 +634,6 @@ namespace LAB1.Migrations
                     b.Property<int?>("BankId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool?>("Blocked")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("ClientId")
                         .HasColumnType("INTEGER");
 
@@ -605,9 +644,6 @@ namespace LAB1.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("DurationInMonths")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool?>("Frozen")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool?>("Hidden")
@@ -650,6 +686,48 @@ namespace LAB1.Migrations
                     b.HasIndex("InstallmentPlanId");
 
                     b.ToTable("InstallmentPlanApproves");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.ManagerRollBack.SpecialistAddedMoney", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.ToTable("SpecialistAddedMoney");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.ManagerRollBack.SpecialistSendClients", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.ToTable("SpecialistSendClients");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Role", b =>
@@ -1171,6 +1249,31 @@ namespace LAB1.Migrations
                     b.Navigation("Client");
                 });
 
+            modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackDeletedCredit", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
+                        .WithMany("DeletedCredits")
+                        .HasForeignKey("AdministratorId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("LAB1.Entities.Credit", "Credit")
+                        .WithMany()
+                        .HasForeignKey("CreditId");
+
+                    b.HasOne("LAB1.Entities.Transfer", "Transfer")
+                        .WithMany()
+                        .HasForeignKey("TransferId");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Credit");
+
+                    b.Navigation("Transfer");
+                });
+
             modelBuilder.Entity("LAB1.Entities.AdminRollBack.RollBackDeletedInstallmentPlan", b =>
                 {
                     b.HasOne("LAB1.Entities.UserCategories.Administrator", null)
@@ -1266,6 +1369,10 @@ namespace LAB1.Migrations
                     b.HasOne("LAB1.Entities.BankAccount", "BankAccountWhereWithdrawed")
                         .WithMany()
                         .HasForeignKey("BankAccountWhereWithdrawedId");
+
+                    b.HasOne("LAB1.Entities.UserCategories.Operator", null)
+                        .WithMany("TransfersBetweenBankAccounts")
+                        .HasForeignKey("OperatorId");
 
                     b.HasOne("LAB1.Entities.Transfer", "Transfer")
                         .WithMany()
@@ -1390,10 +1497,40 @@ namespace LAB1.Migrations
                     b.Navigation("InstallmentPlan");
                 });
 
+            modelBuilder.Entity("LAB1.Entities.ManagerRollBack.SpecialistAddedMoney", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LAB1.Entities.UserCategories.Manager", null)
+                        .WithMany("SpecialistAddedMonies")
+                        .HasForeignKey("ManagerId");
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("LAB1.Entities.ManagerRollBack.SpecialistSendClients", b =>
+                {
+                    b.HasOne("LAB1.Entities.UserCategories.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LAB1.Entities.UserCategories.Manager", null)
+                        .WithMany("SendClientsList")
+                        .HasForeignKey("ManagerId");
+
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("LAB1.Entities.UserCategories.User", b =>
                 {
                     b.HasOne("LAB1.Entities.Role", "Role")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
@@ -1547,11 +1684,6 @@ namespace LAB1.Migrations
                     b.Navigation("Workers");
                 });
 
-            modelBuilder.Entity("LAB1.Entities.Role", b =>
-                {
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("LAB1.Entities.Bank", b =>
                 {
                     b.Navigation("OpennedBankAccounts");
@@ -1568,6 +1700,8 @@ namespace LAB1.Migrations
                     b.Navigation("ClosedDepositsToRollBack");
 
                     b.Navigation("DeletedBankAccounts");
+
+                    b.Navigation("DeletedCredits");
 
                     b.Navigation("DeletedInstallmentPlans");
 
@@ -1602,6 +1736,8 @@ namespace LAB1.Migrations
             modelBuilder.Entity("LAB1.Entities.UserCategories.Operator", b =>
                 {
                     b.Navigation("ClientsWaitingForSalaryProject");
+
+                    b.Navigation("TransfersBetweenBankAccounts");
                 });
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Specialist", b =>
@@ -1611,6 +1747,10 @@ namespace LAB1.Migrations
 
             modelBuilder.Entity("LAB1.Entities.UserCategories.Manager", b =>
                 {
+                    b.Navigation("SendClientsList");
+
+                    b.Navigation("SpecialistAddedMonies");
+
                     b.Navigation("WaitingForCreditApprove");
 
                     b.Navigation("WaitingForInstallmentPlanApprove");

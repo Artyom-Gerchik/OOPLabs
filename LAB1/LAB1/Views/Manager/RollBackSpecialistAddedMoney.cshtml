@@ -1,6 +1,7 @@
 @model LAB1.Models.Manager.ManagerRollBackSpecialistAddedMoneyModel
 
 <form asp-action="RollBackSpecialistAddedMoney" asp-controller="Manager" asp-anti-forgery="true" method="post">
+    <div class="validation" asp-validation-summary="All"></div>
 
     <br>
     <hr class="style1">
@@ -11,14 +12,14 @@
     {
         <table class="table table-hover table-dark">
             <tbody>
-            <tr>
-                <th scope="row">Id Of Request</th>
-                <td>@clientAddedMoney.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Client Name</th>
-                <td>@clientAddedMoney.Client.Name</td>
-            </tr>
+                <tr>
+                    <th scope="row">Id Of Request</th>
+                    <td>@clientAddedMoney.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Client Name</th>
+                    <td>@clientAddedMoney.Client.Name</td>
+                </tr>
             </tbody>
         </table>
     }
@@ -40,7 +41,7 @@
                 }
             </select>
             <div class="form-group">
-                <input type="submit" value="Submit" class="btn"/>
+                <input type="submit" value="Submit" class="btn" />
             </div>
         </div>
     }

@@ -1528,7 +1528,7 @@ namespace LAB1.Migrations
             modelBuilder.Entity("LAB1.Entities.UserCategories.User", b =>
                 {
                     b.HasOne("LAB1.Entities.Role", "Role")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
@@ -1680,11 +1680,6 @@ namespace LAB1.Migrations
                     b.Navigation("Specialists");
 
                     b.Navigation("Workers");
-                });
-
-            modelBuilder.Entity("LAB1.Entities.Role", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("LAB1.Entities.Bank", b =>

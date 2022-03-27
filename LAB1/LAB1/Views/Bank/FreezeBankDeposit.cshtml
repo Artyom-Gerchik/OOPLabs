@@ -1,23 +1,25 @@
 @model LAB1.Models.Bank.FreezeBankDepositModel
 
+<h4>Freeze An Bank Deposit</h4>
+
 @foreach (var OpennedDeposits in Model.Client.OpennedBankDeposits)
 {
     if (OpennedDeposits.BankId == Model.Bank.Id && !(bool)OpennedDeposits.Frozen! && !(bool)OpennedDeposits.Blocked!)
     {
         <table class="table table-hover table-dark">
             <tbody>
-            <tr>
-                <th scope="row">Id Of Oppened bank Deposit</th>
-                <td>@OpennedDeposits.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Name Of Oppened bank Deposit</th>
-                <td>@OpennedDeposits.Name</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
-                <td>@OpennedDeposits.AmountOfMoney.ToString()</td>
-            </tr>
+                <tr>
+                    <th scope="row">Id Of Oppened bank Deposit</th>
+                    <td>@OpennedDeposits.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Name Of Oppened bank Deposit</th>
+                    <td>@OpennedDeposits.Name</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
+                    <td>@OpennedDeposits.AmountOfMoney.ToString()</td>
+                </tr>
             </tbody>
         </table>
         <br>
@@ -27,7 +29,7 @@
 }
 
 <form asp-action="FreezeBankDeposit" asp-controller="Bank" asp-anti-forgery="true" method="post">
-
+    <div class="validation" asp-validation-summary="All"></div>
     @if (Model.Client.OpennedBankDeposits.Count != 0)
     {
         <div class="input-group mb-3">
@@ -42,7 +44,7 @@
                 }
             </select>
             <div>
-                <input type="submit" value="Speed Run"/>
+                <input type="submit" value="Freeze" />
             </div>
         </div>
     }

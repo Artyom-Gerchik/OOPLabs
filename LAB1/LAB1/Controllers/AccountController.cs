@@ -128,7 +128,6 @@ public class AccountController : Controller
             var user = (await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email))!;
             if (user == null)
             {
-                if (model.PhoneNumber.Length < 6) return RedirectToAction("Register", "Account");
 
                 user = new User
                 {
@@ -150,7 +149,7 @@ public class AccountController : Controller
                 return RedirectToAction("Profile", "Account");
             }
 
-            ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+            ModelState.AddModelError("", "Invlaid");
         }
 
         return View(model);
@@ -178,7 +177,7 @@ public class AccountController : Controller
                 return RedirectToAction("Profile", "Account");
             }
 
-            ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+            ModelState.AddModelError("", "Invalid Login Or(And) Password");
         }
 
         return View(model);

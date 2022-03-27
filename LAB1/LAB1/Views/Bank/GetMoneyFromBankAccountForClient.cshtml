@@ -1,5 +1,7 @@
 @model LAB1.Models.Bank.GetMoneyFromBankAccountForClientModel
 
+<h4>Get Money From An Bank Account</h4>
+
 <br>
 <hr class="style1">
 <br>
@@ -11,18 +13,18 @@
         {
             <table class="table table-hover table-dark">
                 <tbody>
-                <tr>
-                    <th scope="row">Id Of Oppened bank account</th>
-                    <td>@OpennedBankAccount.Id.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">Name Of Oppened bank account</th>
-                    <td>@OpennedBankAccount.Name</td>
-                </tr>
-                <tr>
-                    <th scope="row">AmountOfMoney Of Oppened bank account</th>
-                    <td>@OpennedBankAccount.AmountOfMoney.ToString()</td>
-                </tr>
+                    <tr>
+                        <th scope="row">Id Of Oppened bank account</th>
+                        <td>@OpennedBankAccount.Id.ToString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Name Of Oppened bank account</th>
+                        <td>@OpennedBankAccount.Name</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                        <td>@OpennedBankAccount.AmountOfMoney.ToString()</td>
+                    </tr>
                 </tbody>
             </table>
         }
@@ -33,6 +35,7 @@
 <br>
 
 <form asp-action="GetMoneyFromBankAccountForClient" asp-controller="Bank" asp-anti-forgery="true" method="post">
+    <div class="validation" asp-validation-summary="All"></div>
 
     @if (Model.Client.OpennedBankAccounts.Count != 0)
     {
@@ -47,13 +50,11 @@
                     }
                 }
             </select>
-            <div>
-                <label asp-for="AmountOfMoney">Amount Of Monney</label><br/>
-                <input type="double" asp-for="AmountOfMoney"/>
-            </div>
-            <div>
-                <input type="submit" value="Withdraw"/>
-            </div>
+
+            <label asp-for="AmountOfMoney">Amount Of Money</label><br />
+            <input type="double" asp-for="AmountOfMoney" />
+            <input type="submit" value="Withdraw" />
         </div>
+
     }
 </form>

@@ -12,26 +12,26 @@
 }
 
 <div>
-    <div>
+    @* <div>
         <form asp-action="AddMoneyForClient" asp-controller="Client" asp-anti-forgery="true" method="get">
-            <input class="btn btn-dark btn-custom" type="submit" value="Add 10k">
+        <input class="btn btn-dark btn-custom" type="submit" value="Add 10k">
         </form>
-    </div>
+        </div>*@
     <div>
         <form asp-action="PayDay" asp-controller="Client" asp-anti-forgery="true" method="get">
             <input class="btn btn-dark btn-custom" type="submit" value="It's PayDay, fellas!">
         </form>
     </div>
-    <div>
+    @* <div>
         <form asp-action="RemoveAllMoneyFromClient" asp-controller="Client" asp-anti-forgery="true" method="get">
-            <input class="btn btn-dark btn-custom" type="submit" value="Remove All Money From Client">
+        <input class="btn btn-dark btn-custom" type="submit" value="Remove All Money From Client">
         </form>
-    </div>
-    <div>
+        </div>*@
+    @* <div>
         <form asp-action="Wipe" asp-controller="Client" asp-anti-forgery="true" method="get">
-            <input class="btn btn-danger btn-custom" type="submit" value="Wipe Bank Deposits, Installment Plans, Bank Accounts etc.">
+        <input class="btn btn-danger btn-custom" type="submit" value="Wipe Bank Deposits, Installment Plans, Bank Accounts etc.">
         </form>
-    </div>
+        </div>*@
     <div>
         <form asp-action="UpdateInfo" asp-controller="Client" asp-anti-forgery="true" method="get">
             <input class="btn btn-success btn-custom" type="submit" value="Update Info About Deposits / Installment Plans / Credits">
@@ -70,7 +70,7 @@
                 }
             </select>
             <div class="form-group">
-                <input type="submit" value="Submit" class="btn"/>
+                <input type="submit" value="Submit" class="btn" />
             </div>
         </div>
     }
@@ -82,238 +82,238 @@
 
 <form asp-action="Profile" asp-controller="Client" asp-anti-forgery="true">
 
-<h3>Hello @Model.Client.Name</h3>
-<table class="table table-hover table-dark">
-    <tbody>
-    <tr>
-        <th scope="row">Id</th>
-        <td>@Model.Client.Id.ToString()</td>
-    </tr>
-    <tr>
-        <th scope="row">Name</th>
-        <td>@Model.Client.Name</td>
-    </tr>
-    <tr>
-        <th scope="row">Surname</th>
-        <td>@Model.Client.Surname</td>
-    </tr>
-    <tr>
-        <th scope="row">Patronymic</th>
-        <td>@Model.Client.Patronymic</td>
-    </tr>
-    <tr>
-        <th scope="row">Email</th>
-        <td>@Model.Client.Email</td>
-    </tr>
-    <tr>
-        <th scope="row">Phone Number</th>
-        <td>@Model.Client.PhoneNumber</td>
-    </tr>
-    <tr>
-        <th scope="row">Role Id</th>
-        <td>@Model.Client.RoleId.ToString()</td>
-    </tr>
-    <tr>
-        <th scope="row">Passport Number And Series</th>
-        <td>@Model.Client.PassportNumberAndSeries</td>
-    </tr>
-    <tr>
-        <th scope="row">Identification Number</th>
-        <td>@Model.Client.IdentificationNumber</td>
-    </tr>
-    <tr>
-        <th scope="row">Current Bank Id</th>
-        <td>@Model.Client.CurrentBankId.ToString()</td>
-    </tr>
-    <tr>
-        <th scope="row">Salary</th>
-        <td>@Model.Client.Salary.ToString()</td>
-    </tr>
-    <tr>
-        <th scope="row">Current Cash Balance</th>
-        <td>@Model.Client.BankBalance.ToString()</td>
-    </tr>
-    <tr>
-        <th scope="row">Work</th>
-        <td>@Model.Client.Work.LegalName</td>
-    </tr>
-    </tbody>
-</table>
-<br>
-<hr class="style1">
-<br>
-<br>
-<hr class="style1">
-<br>
+    <h3>Hello @Model.Client.Name</h3>
+    <table class="table table-hover table-dark">
+        <tbody>
+            <tr>
+                <th scope="row">Id</th>
+                <td>@Model.Client.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Name</th>
+                <td>@Model.Client.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Surname</th>
+                <td>@Model.Client.Surname</td>
+            </tr>
+            <tr>
+                <th scope="row">Patronymic</th>
+                <td>@Model.Client.Patronymic</td>
+            </tr>
+            <tr>
+                <th scope="row">Email</th>
+                <td>@Model.Client.Email</td>
+            </tr>
+            <tr>
+                <th scope="row">Phone Number</th>
+                <td>@Model.Client.PhoneNumber</td>
+            </tr>
+            <tr>
+                <th scope="row">Role Id</th>
+                <td>@Model.Client.RoleId.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Passport Number And Series</th>
+                <td>@Model.Client.PassportNumberAndSeries</td>
+            </tr>
+            <tr>
+                <th scope="row">Identification Number</th>
+                <td>@Model.Client.IdentificationNumber</td>
+            </tr>
+            <tr>
+                <th scope="row">Current Bank Id</th>
+                <td>@Model.Client.CurrentBankId.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Salary</th>
+                <td>@Model.Client.Salary.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Current Cash Balance</th>
+                <td>@Model.Client.BankBalance.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Work</th>
+                <td>@Model.Client.Work.LegalName</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <hr class="style1">
+    <br>
+    <br>
+    <hr class="style1">
+    <br>
 
-<h1> Openned Bank Accounts </h1>
-@foreach (var i in Model.Client.OpennedBankAccounts!)
-{
-    if (!(bool)i.Hidden!)
+    <h1> Openned Bank Accounts </h1>
+    @foreach (var i in Model.Client.OpennedBankAccounts!)
     {
-        <table class="table table-hover table-dark">
-            <tbody>
-            <tr>
-                <th scope="row">Id Of Bank, where bank account was opened</th>
-                <td>@i.BankId.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Id Of Oppened bank account</th>
-                <td>@i.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Name Of Oppened bank account</th>
-                <td>@i.Name</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney Of Oppened bank account</th>
-                <td>@i.AmountOfMoney.ToString()</td>
-            </tr>
-            </tbody>
-        </table>
-    }
-}
-
-<br>
-<hr class="style1">
-<br>
-<br>
-<hr class="style1">
-<br>
-<h1> Openned Bank Deposits </h1>
-
-@foreach (var i in Model.Client.OpennedBankDeposits)
-{
-    if (!(bool)i.Hidden! && !(bool)i.Blocked!)
-    {
-        <table class="table table-hover table-dark">
-            <tbody>
-            <tr>
-                <th scope="row">Id Of Bank, where bank deposit was opened</th>
-                <td>@i.BankId.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Id Of Oppened bank Deposit</th>
-                <td>@i.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Name Of Oppened bank Deposit</th>
-                <td>@i.Name</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
-                <td>@i.AmountOfMoney.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Opened</th>
-                <td>@i.DateOfDeal.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Will close</th>
-                <td>@i.DateOfMoneyBack.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Days remaining</th>
-                <td>(@i.HowMuchLasts.ToString())</td>
-            </tr>
-            <tr>
-                <th scope="row">Frozen?</th>
-                <td>(@i.Frozen.ToString())</td>
-            </tr>
-            </tbody>
-        </table>
-    }
-}
-<br>
-<hr class="style1">
-<br>
-
-<br>
-<hr class="style1">
-<br>
-<h1> Openned Bank Installment Plan </h1>
-
-@if (Model.Client.InstallmentPlansAndApproves.Count != null)
-{
-    @foreach (var installmentPlan in Model.Client.InstallmentPlansAndApproves)
-    {
-        if (!(bool)installmentPlan.InstallmentPlan!.Hidden!)
+        if (!(bool)i.Hidden!)
         {
             <table class="table table-hover table-dark">
                 <tbody>
-                <tr>
-                    <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
-                    <td>@installmentPlan.InstallmentPlan.BankId.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">Id Of Oppened Installment Plan</th>
-                    <td>@installmentPlan.Id.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">How Much Days Lasts</th>
-                    <td>@installmentPlan.InstallmentPlan.HowMuchLasts.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">AmountOfMoney</th>
-                    <td>@installmentPlan.InstallmentPlan.AmountOfMoney.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">Approved</th>
-                    <td>@installmentPlan.Approved.ToString()</td>
-                </tr>
+                    <tr>
+                        <th scope="row">Id Of Bank, where bank account was opened</th>
+                        <td>@i.BankId.ToString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Id Of Oppened bank account</th>
+                        <td>@i.Id.ToString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Name Of Oppened bank account</th>
+                        <td>@i.Name</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">AmountOfMoney Of Oppened bank account</th>
+                        <td>@i.AmountOfMoney.ToString()</td>
+                    </tr>
                 </tbody>
             </table>
         }
     }
-}
-<br>
-<hr class="style1">
-<br>
 
-<br>
-<hr class="style1">
-<br>
-<h1> Openned Credits </h1>
+    <br>
+    <hr class="style1">
+    <br>
+    <br>
+    <hr class="style1">
+    <br>
+    <h1> Openned Bank Deposits </h1>
 
-@if (Model.Client.CreditsAndApproves!.Count != null)
-{
-    @foreach (var credit in Model.Client.CreditsAndApproves)
+    @foreach (var i in Model.Client.OpennedBankDeposits)
     {
-        if (!(bool)credit.Credit!.Hidden!)
+        if (!(bool)i.Hidden! && !(bool)i.Blocked!)
         {
             <table class="table table-hover table-dark">
                 <tbody>
-                <tr>
-                    <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
-                    <td>@credit.Credit.BankId.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">Id Of Oppened Installment Plan</th>
-                    <td>@credit.Id.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">How Much Days Lasts</th>
-                    <td>@credit.Credit.HowMuchLasts.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">Percent</th>
-                    <td>@credit.Credit.Percent.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">AmountOfMoney</th>
-                    <td>@credit.Credit.AmountOfMoney.ToString()</td>
-                </tr>
-                <tr>
-                    <th scope="row">Approved</th>
-                    <td>@credit.Approved.ToString()</td>
-                </tr>
+                    <tr>
+                        <th scope="row">Id Of Bank, where bank deposit was opened</th>
+                        <td>@i.BankId.ToString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Id Of Oppened bank Deposit</th>
+                        <td>@i.Id.ToString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Name Of Oppened bank Deposit</th>
+                        <td>@i.Name</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">AmountOfMoney Of Oppened bank Deposit</th>
+                        <td>@i.AmountOfMoney.ToString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Opened</th>
+                        <td>@i.DateOfDeal.ToString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Will close</th>
+                        <td>@i.DateOfMoneyBack.ToString()</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Days remaining</th>
+                        <td>(@i.HowMuchLasts.ToString())</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Frozen?</th>
+                        <td>(@i.Frozen.ToString())</td>
+                    </tr>
                 </tbody>
             </table>
         }
     }
-}
-<br>
-<hr class="style1">
-<br>
+    <br>
+    <hr class="style1">
+    <br>
+
+    <br>
+    <hr class="style1">
+    <br>
+    <h1> Openned Bank Installment Plan </h1>
+
+    @if (Model.Client.InstallmentPlansAndApproves.Count != null)
+    {
+        @foreach (var installmentPlan in Model.Client.InstallmentPlansAndApproves)
+        {
+            if (!(bool)installmentPlan.InstallmentPlan!.Hidden!)
+            {
+                <table class="table table-hover table-dark">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
+                            <td>@installmentPlan.InstallmentPlan.BankId.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Id Of Oppened Installment Plan</th>
+                            <td>@installmentPlan.Id.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">How Much Days Lasts</th>
+                            <td>@installmentPlan.InstallmentPlan.HowMuchLasts.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">AmountOfMoney</th>
+                            <td>@installmentPlan.InstallmentPlan.AmountOfMoney.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Approved</th>
+                            <td>@installmentPlan.Approved.ToString()</td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        }
+    }
+    <br>
+    <hr class="style1">
+    <br>
+
+    <br>
+    <hr class="style1">
+    <br>
+    <h1> Openned Credits </h1>
+
+    @if (Model.Client.CreditsAndApproves!.Count != null)
+    {
+        @foreach (var credit in Model.Client.CreditsAndApproves)
+        {
+            if (!(bool)credit.Credit!.Hidden!)
+            {
+                <table class="table table-hover table-dark">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
+                            <td>@credit.Credit.BankId.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Id Of Oppened Installment Plan</th>
+                            <td>@credit.Id.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">How Much Days Lasts</th>
+                            <td>@credit.Credit.HowMuchLasts.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Percent</th>
+                            <td>@credit.Credit.Percent.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">AmountOfMoney</th>
+                            <td>@credit.Credit.AmountOfMoney.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Approved</th>
+                            <td>@credit.Approved.ToString()</td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        }
+    }
+    <br>
+    <hr class="style1">
+    <br>
 
 </form>

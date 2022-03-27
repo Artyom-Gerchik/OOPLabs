@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-namespace LAB1.Models.Manager;
+namespace LAB1.Models;
 
-public class ManagerRollBackSpecialistAddedMoneyModel : IValidatableObject
+public class BanksModel : IValidatableObject
 {
-    public Entities.UserCategories.Manager? Manager { get; set; }
-    public int? IdOfClientRequest { get; set; }
+    public List<Entities.Bank>? Banks { get; set; }
+    public int? SelectedBankId { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -12,4 +12,5 @@ public class ManagerRollBackSpecialistAddedMoneyModel : IValidatableObject
 
         return errors;
     }
+
 }

@@ -1,27 +1,29 @@
 @model LAB1.Models.Bank.PayForInstallmentPlanModel
 
+<h4>Pay For Installment Plan</h4>
+
 @foreach (var opennedInstallmentPlan in Model.Client.InstallmentPlansAndApproves)
 {
     if (opennedInstallmentPlan.InstallmentPlan.BankId == Model.Bank.Id && opennedInstallmentPlan.Approved == true)
     {
         <table class="table table-hover table-dark">
             <tbody>
-            <tr>
-                <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
-                <td>@opennedInstallmentPlan.InstallmentPlan.BankId.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Id Of Oppened Installment Plan</th>
-                <td>@opennedInstallmentPlan.Id.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">AmountOfMoney</th>
-                <td>@opennedInstallmentPlan.InstallmentPlan.AmountOfMoney.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">Approved</th>
-                <td>@opennedInstallmentPlan.Approved.ToString()</td>
-            </tr>
+                <tr>
+                    <th scope="row">Id Of Bank, where bank installmentPlan was opened</th>
+                    <td>@opennedInstallmentPlan.InstallmentPlan.BankId.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Id Of Oppened Installment Plan</th>
+                    <td>@opennedInstallmentPlan.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">AmountOfMoney</th>
+                    <td>@opennedInstallmentPlan.InstallmentPlan.AmountOfMoney.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Approved</th>
+                    <td>@opennedInstallmentPlan.Approved.ToString()</td>
+                </tr>
             </tbody>
         </table>
         <br>
@@ -31,7 +33,7 @@
 }
 
 <form asp-action="PayForInstallmentPlan" asp-controller="Bank" asp-anti-forgery="true" method="post">
-
+    <div class="validation" asp-validation-summary="All"></div>
     @if (Model.Client.InstallmentPlansAndApproves.Count != 0)
     {
         <div class="input-group mb-3">
@@ -46,7 +48,7 @@
                 }
             </select>
             <div>
-                <input type="submit" value="Pay"/>
+                <input type="submit" value="Pay" />
             </div>
         </div>
     }

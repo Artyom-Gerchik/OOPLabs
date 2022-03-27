@@ -1,5 +1,7 @@
 @model LAB1.Models.Specialist.GiveMoneyForWorkerModel
 
+<h4>Give 10k for worker</h4>
+
 <br>
 <hr class="style1">
 <br>
@@ -8,18 +10,18 @@
 {
     <table class="table table-hover table-dark">
         <tbody>
-        <tr>
-            <th scope="row">Worker Id</th>
-            <td>@worker.Id.ToString()</td>
-        </tr>
-        <tr>
-            <th scope="row">Worker Name</th>
-            <td>@worker.Name</td>
-        </tr>
-        <tr>
-            <th scope="row">Worker Cash</th>
-            <td>@worker.BankBalance.ToString()</td>
-        </tr>
+            <tr>
+                <th scope="row">Worker Id</th>
+                <td>@worker.Id.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Worker Name</th>
+                <td>@worker.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Worker Cash</th>
+                <td>@worker.BankBalance.ToString()</td>
+            </tr>
         </tbody>
     </table>
 }
@@ -28,7 +30,7 @@
 <br>
 
 <form asp-action="GiveMoneyForWorker" asp-controller="Specialist" asp-anti-forgery="true" method="post">
-
+    <div class="validation" asp-validation-summary="All"></div>
     @if (Model.Specialist.Company.Workers.Count != 0)
     {
         <div class="input-group mb-3">

@@ -202,46 +202,53 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var bank = GetBank(client);
-            var admin = GetAdministrator(client);
-
-            var bankAccountToRemove = new BankAccount();
-            foreach (var bankAccount in client.OpennedBankAccounts!)
+            if (model.IdOfBankAccountToClose != null)
             {
-                if (bankAccount.Id == model.IdOfBankAccountToClose)
+                var client = GetClient();
+                var bank = GetBank(client);
+                var admin = GetAdministrator(client);
+
+                var bankAccountToRemove = new BankAccount();
+                foreach (var bankAccount in client.OpennedBankAccounts!)
                 {
-                    bankAccountToRemove = bankAccount;
-                    break;
+                    if (bankAccount.Id == model.IdOfBankAccountToClose)
+                    {
+                        bankAccountToRemove = bankAccount;
+                        break;
+                    }
                 }
-            }
 
 
-            foreach (var opennedBankAccount in admin.OpennedBankAccounts!)
-            {
-                if (opennedBankAccount.BankAccount!.Equals(bankAccountToRemove))
+                foreach (var opennedBankAccount in admin.OpennedBankAccounts!)
                 {
-                    admin.OpennedBankAccounts.Remove(opennedBankAccount);
-                    bankAccountToRemove.Hidden = true;
-                    break;
+                    if (opennedBankAccount.BankAccount!.Equals(bankAccountToRemove))
+                    {
+                        admin.OpennedBankAccounts.Remove(opennedBankAccount);
+                        bankAccountToRemove.Hidden = true;
+                        break;
+                    }
                 }
+
+                admin.DeletedBankAccounts!.Add(new DeletedBankAccount(client, bankAccountToRemove));
+
+                _context.Clients.Update(client);
+                _context.Banks.Update(bank);
+                _context.Administrators.Update(admin);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Profile", "Client");
             }
-
-            admin.DeletedBankAccounts!.Add(new DeletedBankAccount(client, bankAccountToRemove));
-
-
-            //client.OpennedBankAccounts.Remove(bankAccountToRemove);
-            //bank.OpennedBankAccounts?.Remove(bankAccountToRemove);
-
-            _context.Clients.Update(client);
-            _context.Banks.Update(bank);
-            _context.Administrators.Update(admin);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Profile", "Client");
         }
 
-        return View(model);
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+
+        return View(new CloseBankAccountForClientModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
     [HttpGet]
@@ -265,26 +272,52 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
+            if (model.IdOfBankAccountToWithdraw != null)
+            {
 
-            var bankAccountToWithDraw = new BankAccount();
-            foreach (var bankAccount in client.OpennedBankAccounts)
-                if (bankAccount.Id == model.IdOfBankAccountToWithdraw)
+
+                var client = GetClient();
+
+                var bankAccountToWithDraw = new BankAccount();
+                foreach (var bankAccount in client.OpennedBankAccounts)
+                    if (bankAccount.Id == model.IdOfBankAccountToWithdraw)
+                    {
+                        bankAccountToWithDraw = bankAccount;
+                        break;
+                    }
+
+                if (bankAccountToWithDraw.AmountOfMoney < model.AmountOfMoney)
                 {
-                    bankAccountToWithDraw = bankAccount;
-                    break;
+                    var client2 = GetClient();
+                    var bank2 = GetBank(client2);
+
+
+                    return View(new GetMoneyFromBankAccountForClientModel
+                    {
+                        Client = client2,
+                        Bank = bank2
+                    });
                 }
 
-            bankAccountToWithDraw.AmountOfMoney -= model.AmountOfMoney;
-            client.BankBalance += model.AmountOfMoney;
+                bankAccountToWithDraw.AmountOfMoney -= model.AmountOfMoney;
+                client.BankBalance += model.AmountOfMoney;
 
-            _context.Clients.Update(client);
-            await _context.SaveChangesAsync();
+                _context.Clients.Update(client);
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("Profile", "Client");
+                return RedirectToAction("Profile", "Client");
+            }
         }
 
-        return View(model);
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+
+        return View(new GetMoneyFromBankAccountForClientModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
     [HttpGet]
@@ -308,6 +341,7 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
+
             var client = GetClient();
             var admin = GetAdministrator(client);
             var bankOperator = GetOperator(client);
@@ -316,11 +350,21 @@ public class BankController : Controller
             var bankAccountToDeposit = new BankAccount();
             foreach (var bankAccount in client.OpennedBankAccounts)
             {
-                if (bankAccount.Id == model.IdOfBankAccountToWithdraw)
-                    bankAccountToWithDraw = bankAccount;
-                //break;
-
+                if (bankAccount.Id == model.IdOfBankAccountToWithdraw) bankAccountToWithDraw = bankAccount;
                 if (bankAccount.Id == model.IdOfBankAccountToDeposit) bankAccountToDeposit = bankAccount;
+            }
+
+            if (bankAccountToWithDraw.AmountOfMoney < model.AmountOfMoney)
+            {
+                var client1 = GetClient();
+                var bank1 = GetBank(client1);
+
+
+                return View(new MoveMoneyBetweenBankAccountModel
+                {
+                    Client = client1,
+                    Bank = bank1
+                });
             }
 
             Transfer transfer = new Transfer();
@@ -352,7 +396,15 @@ public class BankController : Controller
             return RedirectToAction("Profile", "Client");
         }
 
-        return View(model);
+        var client2 = GetClient();
+        var bank2 = GetBank(client2);
+
+
+        return View(new MoveMoneyBetweenBankAccountModel
+        {
+            Client = client2,
+            Bank = bank2
+        });
     }
 
     [HttpGet]
@@ -368,39 +420,42 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var bank = GetBank(client);
-            var admin = GetAdministrator(client);
+            var tmp = model.DateOfMoneyBack.Subtract(DateTime.Today).Days;
+            if (tmp > 0 && model.Percent > 0 && model.Percent <= 100)
+            {
+                var client = GetClient();
+                var bank = GetBank(client);
+                var admin = GetAdministrator(client);
 
-            var bankDeposit = new BankDeposit();
+                var bankDeposit = new BankDeposit();
 
-            bankDeposit.Name = model.Name;
-            bankDeposit.AmountOfMoney = model.AmountOfMoney;
-            bankDeposit.DateOfDeal = DateTime.Today;
-            bankDeposit.DateOfMoneyBack = model.DateOfMoneyBack;
-            bankDeposit.Hidden = false;
-            bankDeposit.Blocked = false;
-            bankDeposit.Frozen = false;
+                bankDeposit.Name = model.Name;
+                bankDeposit.AmountOfMoney = model.AmountOfMoney;
+                bankDeposit.DateOfDeal = DateTime.Today;
+                bankDeposit.DateOfMoneyBack = model.DateOfMoneyBack;
+                bankDeposit.Hidden = false;
+                bankDeposit.Blocked = false;
+                bankDeposit.Frozen = false;
 
-            var HowMuchLasts = new TimeSpan();
-            HowMuchLasts = DateTime.Today.Subtract(model.DateOfMoneyBack);
-            bankDeposit.HowMuchLasts = Math.Abs(HowMuchLasts.Days);
-            bankDeposit.Percent = model.Percent;
-            client.BankBalance -= model.AmountOfMoney;
+                var HowMuchLasts = new TimeSpan();
+                HowMuchLasts = DateTime.Today.Subtract(model.DateOfMoneyBack);
+                bankDeposit.HowMuchLasts = Math.Abs(HowMuchLasts.Days);
+                bankDeposit.Percent = model.Percent;
+                client.BankBalance -= model.AmountOfMoney;
 
-            client.OpennedBankDeposits!.Add(bankDeposit);
-            bank.OpennedBankDeposits!.Add(bankDeposit);
+                client.OpennedBankDeposits!.Add(bankDeposit);
+                bank.OpennedBankDeposits!.Add(bankDeposit);
 
-            admin.OpennedDepositsToRollBack!.Add(new RollBackOpenedDeposit(client, bankDeposit));
+                admin.OpennedDepositsToRollBack!.Add(new RollBackOpenedDeposit(client, bankDeposit));
 
-            _context.Clients.Update(client);
-            _context.Banks.Update(bank);
-            _context.Administrators.Update(admin);
-            await _context.SaveChangesAsync();
+                _context.Clients.Update(client);
+                _context.Banks.Update(bank);
+                _context.Administrators.Update(admin);
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("Profile", "Client");
+                return RedirectToAction("Profile", "Client");
+            }
         }
-
         return View(model);
     }
 
@@ -425,34 +480,45 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var bank = GetBank(client);
-            var admin = GetAdministrator(client);
-
-            var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToWithdraw);
-            client.BankBalance += bankDeposit!.AmountOfMoney + bankDeposit.AmountOfMoney * (bankDeposit.Percent / 100);
-
-            foreach (var opennedDeposit in admin.OpennedDepositsToRollBack!)
+            if (model.IdOfDepositToWithdraw != null)
             {
-                if (opennedDeposit.BankDeposit!.Equals(bankDeposit))
+                var client = GetClient();
+                var bank = GetBank(client);
+                var admin = GetAdministrator(client);
+
+                var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToWithdraw);
+                client.BankBalance += bankDeposit!.AmountOfMoney + bankDeposit.AmountOfMoney * (bankDeposit.Percent / 100);
+
+                foreach (var opennedDeposit in admin.OpennedDepositsToRollBack!)
                 {
-                    admin.OpennedDepositsToRollBack.Remove(opennedDeposit);
-                    opennedDeposit.BankDeposit.Hidden = true;
-                    break;
+                    if (opennedDeposit.BankDeposit!.Equals(bankDeposit))
+                    {
+                        admin.OpennedDepositsToRollBack.Remove(opennedDeposit);
+                        opennedDeposit.BankDeposit.Hidden = true;
+                        break;
+                    }
                 }
+
+                admin.ClosedDepositsToRollBack!.Add(new RollBackClosedDeposit(client, bankDeposit));
+
+                _context.Clients.Update(client);
+                _context.Banks.Update(bank);
+                _context.Administrators.Update(admin);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Profile", "Client");
             }
-
-            admin.ClosedDepositsToRollBack!.Add(new RollBackClosedDeposit(client, bankDeposit));
-
-            _context.Clients.Update(client);
-            _context.Banks.Update(bank);
-            _context.Administrators.Update(admin);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Profile", "Client");
         }
 
-        return View(model);
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+
+        return View(new GetMoneyFromDepositModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
 
@@ -476,18 +542,28 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var bank = GetBank(client);
+            if (model.IdOfDepositToSpeedRun != null)
+            {
+                var client = GetClient();
+                var bank = GetBank(client);
 
-            var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToSpeedRun);
+                var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToSpeedRun);
 
-            bankDeposit!.HowMuchLasts = 0;
-            await _context.SaveChangesAsync();
+                bankDeposit!.HowMuchLasts = 0;
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("Profile", "Client");
+                return RedirectToAction("Profile", "Client");
+            }
         }
 
-        return View(model);
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+        return View(new SpeedRunDepositModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
     [HttpGet]
@@ -511,54 +587,65 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var bank = GetBank(client);
-            var admin = GetAdministrator(client);
-
-            var bankDepositToWithdraw = new BankDeposit();
-            var bankDepositToDeposit = new BankDeposit();
-            foreach (var bankDeposit in client.OpennedBankDeposits!)
+            if (model.IdOfBankDepositToWithdraw != null && model.IdOfBankDepositToDeposit != null)
             {
-                if (bankDeposit.Id == model.IdOfBankDepositToWithdraw) bankDepositToWithdraw = bankDeposit;
+                var client = GetClient();
+                var bank = GetBank(client);
+                var admin = GetAdministrator(client);
 
-                if (bankDeposit.Id == model.IdOfBankDepositToDeposit) bankDepositToDeposit = bankDeposit;
-            }
-
-            Transfer transfer = new Transfer();
-
-            transfer.Id = ++_idForTransfer;
-
-            foreach (var transferDb in _context.Transfers.ToList())
-            {
-                if (transfer.Id == transferDb.Id)
+                var bankDepositToWithdraw = new BankDeposit();
+                var bankDepositToDeposit = new BankDeposit();
+                foreach (var bankDeposit in client.OpennedBankDeposits!)
                 {
-                    transfer.Id = ++_idForTransfer;
+                    if (bankDeposit.Id == model.IdOfBankDepositToWithdraw) bankDepositToWithdraw = bankDeposit;
+
+                    if (bankDeposit.Id == model.IdOfBankDepositToDeposit) bankDepositToDeposit = bankDeposit;
                 }
+
+                Transfer transfer = new Transfer();
+
+                transfer.Id = ++_idForTransfer;
+
+                foreach (var transferDb in _context.Transfers.ToList())
+                {
+                    if (transfer.Id == transferDb.Id)
+                    {
+                        transfer.Id = ++_idForTransfer;
+                    }
+                }
+
+                transfer.AmountOfMoney = bankDepositToWithdraw.AmountOfMoney +
+                                         bankDepositToWithdraw.AmountOfMoney * (bankDepositToWithdraw.Percent / 100);
+
+                bankDepositToDeposit.AmountOfMoney += transfer.AmountOfMoney;
+                bankDepositToWithdraw.AmountOfMoney -= transfer.AmountOfMoney;
+                bankDepositToWithdraw.Hidden = true;
+
+                var tmp = admin.OpennedDepositsToRollBack!.FirstOrDefault(b =>
+                    b.BankDeposit!.Equals(bankDepositToWithdraw));
+
+                admin.OpennedDepositsToRollBack!.Remove(tmp);
+                admin.TransfersBetweenBankDeposits!.Add(
+                    new RollBackTransferBetweenBankDeposits(bankDepositToWithdraw, bankDepositToDeposit, transfer));
+
+                //client.OpennedBankDeposits.Remove(bankDepositToWithdraw);
+                //bank.OpennedBankDeposits!.Remove(bankDepositToWithdraw);
+                _context.Administrators.Update(admin);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Profile", "Client");
             }
-
-            transfer.AmountOfMoney = bankDepositToWithdraw.AmountOfMoney +
-                                     bankDepositToWithdraw.AmountOfMoney * (bankDepositToWithdraw.Percent / 100);
-
-            bankDepositToDeposit.AmountOfMoney += transfer.AmountOfMoney;
-            bankDepositToWithdraw.AmountOfMoney -= transfer.AmountOfMoney;
-            bankDepositToWithdraw.Hidden = true;
-
-            var tmp = admin.OpennedDepositsToRollBack!.FirstOrDefault(b =>
-                b.BankDeposit!.Equals(bankDepositToWithdraw));
-
-            admin.OpennedDepositsToRollBack!.Remove(tmp);
-            admin.TransfersBetweenBankDeposits!.Add(
-                new RollBackTransferBetweenBankDeposits(bankDepositToWithdraw, bankDepositToDeposit, transfer));
-
-            //client.OpennedBankDeposits.Remove(bankDepositToWithdraw);
-            //bank.OpennedBankDeposits!.Remove(bankDepositToWithdraw);
-            _context.Administrators.Update(admin);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Profile", "Client");
         }
 
-        return View(model);
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+
+        return View(new MoveMoneyBetweenBankDepositsModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
     [HttpGet]
@@ -589,47 +676,68 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var bank = GetBank(client);
-            var admin = GetAdministrator(client);
-            var manager = _context.Managers
-                .Include(m => m.WaitingForRegistrationApprove)
-                .Include(m => m.WaitingForInstallmentPlanApprove)
-                .FirstAsync(m => m.Id == model.IdOfSelectedManager).Result;
-
-            var installmentPlan = new InstallmentPlan();
-
-            installmentPlan.DateOfDeal = DateTime.Today;
-            installmentPlan.DateToPay = installmentPlan.DateOfDeal.AddMonths((int)model.SelectedAmountOfMonth);
-            installmentPlan.DurationInMonths = model.DurationInMonths;
-            installmentPlan.HowMuchLasts =
-                Math.Abs(installmentPlan.DateToPay.Subtract(installmentPlan.DateOfDeal).Days);
-            installmentPlan.AmountOfMoney = model.AmountOfMoney;
-            installmentPlan.BankId = bank.Id;
-            installmentPlan.ClientId = client.Id;
-            installmentPlan.Hidden = false;
-
-            client.InstallmentPlansAndApproves!.Add(new InstallmentPlanApproves(installmentPlan!, false));
-            bank.OpennedInstallmentPlans!.Add(installmentPlan);
-
-
-            if (model.IdOfSelectedManager != null)
-                if (!manager.WaitingForInstallmentPlanApprove.Contains(client))
+            if (model.IdOfSelectedManager != null && model.SelectedAmountOfMonth != null)
+            {
+                var client = GetClient();
+                if ((client.Salary / 2) > model.AmountOfMoney)
                 {
-                    manager.WaitingForInstallmentPlanApprove.Add(client);
+                    var bank = GetBank(client);
+                    var admin = GetAdministrator(client);
+                    var manager = _context.Managers
+                        .Include(m => m.WaitingForRegistrationApprove)
+                        .Include(m => m.WaitingForInstallmentPlanApprove)
+                        .FirstAsync(m => m.Id == model.IdOfSelectedManager).Result;
+
+                    var installmentPlan = new InstallmentPlan();
+
+                    installmentPlan.DateOfDeal = DateTime.Today;
+                    installmentPlan.DateToPay = installmentPlan.DateOfDeal.AddMonths((int)model.SelectedAmountOfMonth);
+                    installmentPlan.DurationInMonths = model.DurationInMonths;
+                    installmentPlan.HowMuchLasts =
+                        Math.Abs(installmentPlan.DateToPay.Subtract(installmentPlan.DateOfDeal).Days);
+                    installmentPlan.AmountOfMoney = model.AmountOfMoney;
+                    installmentPlan.BankId = bank.Id;
+                    installmentPlan.ClientId = client.Id;
+                    installmentPlan.Hidden = false;
+
+                    client.InstallmentPlansAndApproves!.Add(new InstallmentPlanApproves(installmentPlan!, false));
+                    bank.OpennedInstallmentPlans!.Add(installmentPlan);
+
+
+                    if (model.IdOfSelectedManager != null)
+                        if (!manager.WaitingForInstallmentPlanApprove.Contains(client))
+                        {
+                            manager.WaitingForInstallmentPlanApprove.Add(client);
+                            _context.Managers.Update(manager);
+                            await _context.SaveChangesAsync();
+                        }
+
                     _context.Managers.Update(manager);
+                    _context.Clients.Update(client);
+                    _context.Banks.Update(bank);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Profile", "Client");
                 }
-
-            _context.Managers.Update(manager);
-            _context.Clients.Update(client);
-            _context.Banks.Update(bank);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Profile", "Client");
+            }
         }
 
-        return View(model);
+        var client1 = GetClient();
+
+        var managers1 = new List<Manager>();
+        foreach (var manager in _context.Managers)
+            if (manager.BankId == client1.CurrentBankId)
+                managers1.Add(manager);
+
+        var months1 = new List<int>(new[] { 3, 6, 9, 12, 24 });
+
+
+        return View(new GetAnInstallmentPlanModel
+        {
+            Client = client1,
+            Managers = managers1,
+            AmountOfMonths = months1
+        });
     }
 
     [HttpGet]
@@ -648,6 +756,7 @@ public class BankController : Controller
 
         return View(new GetCreditModel
         {
+            Client = client,
             Managers = managers,
             AmountOfMonths = months
         });
@@ -659,47 +768,69 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var bank = GetBank(client);
-            var manager = _context.Managers
-                .Include(m => m.WaitingForRegistrationApprove)
-                .Include(m => m.WaitingForInstallmentPlanApprove)
-                .Include(m => m.WaitingForCreditApprove)
-                .FirstAsync(m => m.Id == model.IdOfSelectedManager).Result;
-
-            var credit = new Credit();
-
-            credit.DateOfDeal = DateTime.Today;
-            credit.DateToPay = credit.DateOfDeal.AddMonths((int)model.SelectedAmountOfMonth);
-            credit.DurationInMonths = model.DurationInMonths;
-            credit.HowMuchLasts =
-                Math.Abs(credit.DateToPay.Subtract(credit.DateOfDeal).Days);
-            credit.AmountOfMoney = model.AmountOfMoney;
-            credit.BankId = bank.Id;
-            credit.ClientId = client.Id;
-            credit.Percent = model.Percent;
-            credit.Hidden = false;
-
-            client.CreditsAndApproves!.Add(new CreditsAndApproves(credit!, false));
-            bank.OpennedCredits!.Add(credit);
-
-            if (model.IdOfSelectedManager != null)
-                if (!manager.WaitingForCreditApprove!.Contains(client))
+            if (model.IdOfSelectedManager != null && model.SelectedAmountOfMonth != null && model.Percent > 0 && model.Percent < 100)
+            {
+                var client = GetClient();
+                if ((client.Salary / 2) > model.AmountOfMoney + (model.AmountOfMoney * (model.Percent / 100)))
                 {
-                    manager.WaitingForCreditApprove.Add(client);
+                    var bank = GetBank(client);
+                    var manager = _context.Managers
+                        .Include(m => m.WaitingForRegistrationApprove)
+                        .Include(m => m.WaitingForInstallmentPlanApprove)
+                        .Include(m => m.WaitingForCreditApprove)
+                        .FirstAsync(m => m.Id == model.IdOfSelectedManager).Result;
+
+                    var credit = new Credit();
+
+                    credit.DateOfDeal = DateTime.Today;
+                    credit.DateToPay = credit.DateOfDeal.AddMonths((int)model.SelectedAmountOfMonth);
+                    credit.DurationInMonths = model.DurationInMonths;
+                    credit.HowMuchLasts =
+                        Math.Abs(credit.DateToPay.Subtract(credit.DateOfDeal).Days);
+                    credit.AmountOfMoney = model.AmountOfMoney;
+                    credit.BankId = bank.Id;
+                    credit.ClientId = client.Id;
+                    credit.Percent = model.Percent;
+                    credit.Hidden = false;
+
+                    client.CreditsAndApproves!.Add(new CreditsAndApproves(credit!, false));
+                    bank.OpennedCredits!.Add(credit);
+
+                    if (model.IdOfSelectedManager != null)
+                        if (!manager.WaitingForCreditApprove!.Contains(client))
+                        {
+                            manager.WaitingForCreditApprove.Add(client);
+                            _context.Managers.Update(manager);
+                            await _context.SaveChangesAsync();
+                        }
+
                     _context.Managers.Update(manager);
+                    _context.Clients.Update(client);
+                    _context.Banks.Update(bank);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Profile", "Client");
                 }
-
-            _context.Managers.Update(manager);
-            _context.Clients.Update(client);
-            _context.Banks.Update(bank);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Profile", "Client");
+            }
         }
 
-        return View(model);
+
+        var client1 = GetClient();
+
+        var managers1 = new List<Manager>();
+        foreach (var manager in _context.Managers)
+            if (manager.BankId == client1.CurrentBankId)
+                managers1.Add(manager);
+
+        var months1 = new List<int>(new[] { 3, 6, 9, 12, 24 });
+
+
+        return View(new GetCreditModel
+        {
+            Client = client1,
+            Managers = managers1,
+            AmountOfMonths = months1
+        });
     }
 
     [HttpGet]
@@ -723,18 +854,29 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
+            if (model.IdOfInstallmentPlanToSpeedRun != null)
+            {
+                var client = GetClient();
 
-            var installmentPlan =
-                client.InstallmentPlansAndApproves.Find(b => b.Id == model.IdOfInstallmentPlanToSpeedRun);
+                var installmentPlan =
+                    client.InstallmentPlansAndApproves.Find(b => b.Id == model.IdOfInstallmentPlanToSpeedRun);
 
-            installmentPlan.InstallmentPlan.HowMuchLasts = 0;
-            await _context.SaveChangesAsync();
+                installmentPlan.InstallmentPlan.HowMuchLasts = 0;
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("Profile", "Client");
+                return RedirectToAction("Profile", "Client");
+            }
         }
 
-        return View(model);
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+
+        return View(new SpeedRunInstallmentPlanModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
 
@@ -759,18 +901,31 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
+            if (model.IdOfCreditToSpeedRun != null)
+            {
 
-            var credit =
-                client.CreditsAndApproves!.Find(c => c.Id == model.IdOfCreditToSpeedRun);
 
-            credit.Credit.HowMuchLasts = 0;
-            await _context.SaveChangesAsync();
+                var client = GetClient();
 
-            return RedirectToAction("Profile", "Client");
+                var credit =
+                    client.CreditsAndApproves!.Find(c => c.Id == model.IdOfCreditToSpeedRun);
+
+                credit.Credit.HowMuchLasts = 0;
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Profile", "Client");
+            }
         }
 
-        return View(model);
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+
+        return View(new SpeedRunCreditModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
     [HttpGet]
@@ -794,52 +949,63 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var bank = GetBank(client);
-            var admin = GetAdministrator(client);
-
-            var installmentPlan =
-                client.InstallmentPlansAndApproves!.Find(b => b.InstallmentPlan!.Id == model.IdOfInstallmentPlanToPay);
-
-            Transfer transfer = new Transfer();
-
-            transfer.Id = ++_idForTransfer;
-
-            foreach (var transferDb in _context.Transfers.ToList())
+            if (model.IdOfInstallmentPlanToPay != null)
             {
-                if (transfer.Id == transferDb.Id)
+                var client = GetClient();
+                var bank = GetBank(client);
+                var admin = GetAdministrator(client);
+
+                var installmentPlan =
+                    client.InstallmentPlansAndApproves!.Find(b => b.InstallmentPlan!.Id == model.IdOfInstallmentPlanToPay);
+
+                Transfer transfer = new Transfer();
+
+                transfer.Id = ++_idForTransfer;
+
+                foreach (var transferDb in _context.Transfers.ToList())
                 {
-                    transfer.Id = ++_idForTransfer;
+                    if (transfer.Id == transferDb.Id)
+                    {
+                        transfer.Id = ++_idForTransfer;
+                    }
                 }
-            }
 
-            transfer.AmountOfMoney = installmentPlan.InstallmentPlan.AmountOfMoney;
-            client.BankBalance -= transfer.AmountOfMoney;
+                transfer.AmountOfMoney = installmentPlan.InstallmentPlan.AmountOfMoney;
+                client.BankBalance -= transfer.AmountOfMoney;
 
-            installmentPlan.InstallmentPlan.Hidden = true;
+                installmentPlan.InstallmentPlan.Hidden = true;
 
-            foreach (var installmentPlanToRemove in admin.OpennedInstallmentPlans)
-            {
-                if (installmentPlanToRemove.InstallmentPlan!.Equals(installmentPlan.InstallmentPlan))
+                foreach (var installmentPlanToRemove in admin.OpennedInstallmentPlans)
                 {
-                    admin.OpennedInstallmentPlans!.Remove(installmentPlanToRemove);
-                    break;
+                    if (installmentPlanToRemove.InstallmentPlan!.Equals(installmentPlan.InstallmentPlan))
+                    {
+                        admin.OpennedInstallmentPlans!.Remove(installmentPlanToRemove);
+                        break;
+                    }
                 }
+
+
+                admin.DeletedInstallmentPlans.Add(
+                    new RollBackDeletedInstallmentPlan(client, installmentPlan.InstallmentPlan, transfer));
+
+                _context.Clients.Update(client);
+                _context.Banks.Update(bank);
+                _context.Administrators.Update(admin);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Profile", "Client");
             }
-
-
-            admin.DeletedInstallmentPlans.Add(
-                new RollBackDeletedInstallmentPlan(client, installmentPlan.InstallmentPlan, transfer));
-
-            _context.Clients.Update(client);
-            _context.Banks.Update(bank);
-            _context.Administrators.Update(admin);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Profile", "Client");
         }
 
-        return View(model);
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+
+        return View(new PayForInstallmentPlanModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
 
@@ -864,53 +1030,61 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
-            var bank = GetBank(client);
-            var admin = GetAdministrator(client);
-
-            var credit = client.CreditsAndApproves!.Find(b => b.Id == model.IdOfCreditToPay);
-
-
-            Transfer transfer = new Transfer();
-
-            transfer.Id = ++_idForTransfer;
-
-            foreach (var transferDb in _context.Transfers.ToList())
+            if (model.IdOfCreditToPay != null)
             {
-                if (transfer.Id == transferDb.Id)
+                var client = GetClient();
+                var bank = GetBank(client);
+                var admin = GetAdministrator(client);
+
+                var credit = client.CreditsAndApproves!.Find(b => b.Id == model.IdOfCreditToPay);
+
+
+                Transfer transfer = new Transfer();
+
+                transfer.Id = ++_idForTransfer;
+
+                foreach (var transferDb in _context.Transfers.ToList())
                 {
-                    transfer.Id = ++_idForTransfer;
+                    if (transfer.Id == transferDb.Id)
+                    {
+                        transfer.Id = ++_idForTransfer;
+                    }
                 }
-            }
 
-            transfer.AmountOfMoney = credit.Credit.AmountOfMoney;
-            client.BankBalance -= transfer.AmountOfMoney + (transfer.AmountOfMoney * (credit.Credit.Percent / 100));
+                transfer.AmountOfMoney = credit.Credit.AmountOfMoney;
+                client.BankBalance -= transfer.AmountOfMoney + (transfer.AmountOfMoney * (credit.Credit.Percent / 100));
 
-            credit.Credit.Hidden = true;
+                credit.Credit.Hidden = true;
 
-            foreach (var creditsToRemove in admin.OpennedCredits!)
-            {
-                if (creditsToRemove.Credit!.Equals(credit.Credit))
+                foreach (var creditsToRemove in admin.OpennedCredits!)
                 {
-                    admin.OpennedCredits!.Remove(creditsToRemove);
-                    break;
+                    if (creditsToRemove.Credit!.Equals(credit.Credit))
+                    {
+                        admin.OpennedCredits!.Remove(creditsToRemove);
+                        break;
+                    }
                 }
+
+                admin.DeletedCredits!.Add(new RollBackDeletedCredit(client, credit.Credit, transfer));
+
+                _context.Clients.Update(client);
+                _context.Banks.Update(bank);
+                _context.Administrators.Update(admin);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Profile", "Client");
             }
-
-            admin.DeletedCredits!.Add(new RollBackDeletedCredit(client, credit.Credit, transfer));
-
-            //client.CreditsAndApproves.Remove(credit);
-            //bank.OpennedCredits!.Remove(credit.Credit);
-
-            _context.Clients.Update(client);
-            _context.Banks.Update(bank);
-            _context.Administrators.Update(admin);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Profile", "Client");
         }
 
-        return View(model);
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+
+        return View(new PayForCreditModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
     [HttpGet]
@@ -933,16 +1107,26 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
+            if (model.IdOfDepositToBlock != null)
+            {
+                var client = GetClient();
 
-            var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToBlock);
+                var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToBlock);
 
-            bankDeposit!.Blocked = true;
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Profile", "Client");
+                bankDeposit!.Blocked = true;
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Profile", "Client");
+            }
         }
 
-        return View();
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+        return View(new BlockBankDepositModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 
     [HttpGet]
@@ -965,15 +1149,25 @@ public class BankController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = GetClient();
+            if (model.IdOfDepositToFreeze != null)
+            {
+                var client = GetClient();
 
-            var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToFreeze);
+                var bankDeposit = client.OpennedBankDeposits!.Find(b => b.Id == model.IdOfDepositToFreeze);
 
-            bankDeposit!.Frozen = true;
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Profile", "Client");
+                bankDeposit!.Frozen = true;
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Profile", "Client");
+            }
         }
 
-        return View();
+        var client1 = GetClient();
+        var bank1 = GetBank(client1);
+
+        return View(new FreezeBankDepositModel
+        {
+            Client = client1,
+            Bank = bank1
+        });
     }
 }
