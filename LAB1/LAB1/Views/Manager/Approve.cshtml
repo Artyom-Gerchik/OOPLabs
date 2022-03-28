@@ -9,6 +9,22 @@
 <h1>Approve Registration</h1>
 <form asp-action="Approve" asp-controller="Manager" asp-anti-forgery="true" method="post">
     <div class="validation" asp-validation-summary="All"></div>
+    @foreach (var client in Model.ClientsToApproveBankRegistration)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+                <tr>
+                    <th scope="row">Client Id</th>
+                    <td>@client.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Client Name</th>
+                    <td>@client.Name</td>
+                </tr>
+            </tbody>
+        </table>
+
+    }
     <div class="input-group mb-3">
         <select class="custom-select" id="inputGroupSelect01" asp-for="@Model!.IdOfApprovedClientForRegistration">
             <option selected>Choose...</option>
@@ -19,7 +35,7 @@
 
         </select>
         <div class="form-group">
-            <input type="submit" value="Approve" class="btn"/>
+            <input type="submit" value="Approve" class="btn" />
         </div>
     </div>
 </form>
@@ -34,6 +50,22 @@
 
 <form asp-action="Approve" asp-controller="Manager" asp-anti-forgery="true" method="post">
     <div class="validation" asp-validation-summary="All"></div>
+    @foreach (var client in Model.ClientsToApproveInstallmentPlan)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+                <tr>
+                    <th scope="row">Client Id</th>
+                    <td>@client.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Client Name</th>
+                    <td>@client.Name</td>
+                </tr>
+            </tbody>
+        </table>
+
+    }
     <div class="input-group mb-3">
         <select class="custom-select" id="inputGroupSelect02" asp-for="@Model!.IdOfApprovedClientForInstallmentPlan">
             <option selected>Choose...</option>
@@ -44,7 +76,7 @@
 
         </select>
         <div class="form-group">
-            <input type="submit" value="Approve" class="btn"/>
+            <input type="submit" value="Approve" class="btn" />
         </div>
     </div>
 </form>
@@ -59,6 +91,22 @@
 
 <form asp-action="Approve" asp-controller="Manager" asp-anti-forgery="true" method="post">
     <div class="validation" asp-validation-summary="All"></div>
+    @foreach (var client in Model.WaitingForCreditApprove)
+    {
+        <table class="table table-hover table-dark">
+            <tbody>
+                <tr>
+                    <th scope="row">Client Id</th>
+                    <td>@client.Id.ToString()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Client Name</th>
+                    <td>@client.Name</td>
+                </tr>
+            </tbody>
+        </table>
+
+    }
     <div class="input-group mb-3">
         <select class="custom-select" id="inputGroupSelect03" asp-for="@Model!.IdOfApprovedClientForCredit">
             <option selected>Choose...</option>
@@ -69,7 +117,7 @@
 
         </select>
         <div class="form-group">
-            <input type="submit" value="Approve" class="btn"/>
+            <input type="submit" value="Approve" class="btn" />
         </div>
     </div>
 </form>

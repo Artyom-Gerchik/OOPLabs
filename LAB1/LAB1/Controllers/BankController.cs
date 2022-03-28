@@ -411,34 +411,36 @@ public class BankController : Controller
                 var client = GetClient();
                 var bank = GetBank(client);
                 var admin = GetAdministrator(client);
+                if (client.BankBalance >= model.AmountOfMoney) {
 
-                var bankDeposit = new BankDeposit();
+                    var bankDeposit = new BankDeposit();
 
-                bankDeposit.Name = model.Name;
-                bankDeposit.AmountOfMoney = model.AmountOfMoney;
-                bankDeposit.DateOfDeal = DateTime.Today;
-                bankDeposit.DateOfMoneyBack = model.DateOfMoneyBack;
-                bankDeposit.Hidden = false;
-                bankDeposit.Blocked = false;
-                bankDeposit.Frozen = false;
+                    bankDeposit.Name = model.Name;
+                    bankDeposit.AmountOfMoney = model.AmountOfMoney;
+                    bankDeposit.DateOfDeal = DateTime.Today;
+                    bankDeposit.DateOfMoneyBack = model.DateOfMoneyBack;
+                    bankDeposit.Hidden = false;
+                    bankDeposit.Blocked = false;
+                    bankDeposit.Frozen = false;
 
-                var HowMuchLasts = new TimeSpan();
-                HowMuchLasts = DateTime.Today.Subtract(model.DateOfMoneyBack);
-                bankDeposit.HowMuchLasts = Math.Abs(HowMuchLasts.Days);
-                bankDeposit.Percent = model.Percent;
-                client.BankBalance -= model.AmountOfMoney;
+                    var HowMuchLasts = new TimeSpan();
+                    HowMuchLasts = DateTime.Today.Subtract(model.DateOfMoneyBack);
+                    bankDeposit.HowMuchLasts = Math.Abs(HowMuchLasts.Days);
+                    bankDeposit.Percent = model.Percent;
+                    client.BankBalance -= model.AmountOfMoney;
 
-                client.OpennedBankDeposits!.Add(bankDeposit);
-                bank.OpennedBankDeposits!.Add(bankDeposit);
+                    client.OpennedBankDeposits!.Add(bankDeposit);
+                    bank.OpennedBankDeposits!.Add(bankDeposit);
 
-                admin.OpennedDepositsToRollBack!.Add(new RollBackOpenedDeposit(client, bankDeposit));
+                    admin.OpennedDepositsToRollBack!.Add(new RollBackOpenedDeposit(client, bankDeposit));
 
-                _context.Clients.Update(client);
-                _context.Banks.Update(bank);
-                _context.Administrators.Update(admin);
-                await _context.SaveChangesAsync();
+                    _context.Clients.Update(client);
+                    _context.Banks.Update(bank);
+                    _context.Administrators.Update(admin);
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction("Profile", "Client");
+                    return RedirectToAction("Profile", "Client");
+                }
             }
         }
 
@@ -923,37 +925,40 @@ public class BankController : Controller
                 var installmentPlan =
                     client.InstallmentPlansAndApproves!.Find(b =>
                         b.InstallmentPlan!.Id == model.IdOfInstallmentPlanToPay);
+                if (client.BankBalance >= installmentPlan.InstallmentPlan.AmountOfMoney)
+                {
 
-                var transfer = new Transfer();
+                    var transfer = new Transfer();
 
-                transfer.Id = ++_idForTransfer;
+                    transfer.Id = ++_idForTransfer;
 
-                foreach (var transferDb in _context.Transfers.ToList())
-                    if (transfer.Id == transferDb.Id)
-                        transfer.Id = ++_idForTransfer;
+                    foreach (var transferDb in _context.Transfers.ToList())
+                        if (transfer.Id == transferDb.Id)
+                            transfer.Id = ++_idForTransfer;
 
-                transfer.AmountOfMoney = installmentPlan.InstallmentPlan.AmountOfMoney;
-                client.BankBalance -= transfer.AmountOfMoney;
+                    transfer.AmountOfMoney = installmentPlan.InstallmentPlan.AmountOfMoney;
+                    client.BankBalance -= transfer.AmountOfMoney;
 
-                installmentPlan.InstallmentPlan.Hidden = true;
+                    installmentPlan.InstallmentPlan.Hidden = true;
 
-                foreach (var installmentPlanToRemove in admin.OpennedInstallmentPlans)
-                    if (installmentPlanToRemove.InstallmentPlan!.Equals(installmentPlan.InstallmentPlan))
-                    {
-                        admin.OpennedInstallmentPlans!.Remove(installmentPlanToRemove);
-                        break;
-                    }
+                    foreach (var installmentPlanToRemove in admin.OpennedInstallmentPlans)
+                        if (installmentPlanToRemove.InstallmentPlan!.Equals(installmentPlan.InstallmentPlan))
+                        {
+                            admin.OpennedInstallmentPlans!.Remove(installmentPlanToRemove);
+                            break;
+                        }
 
 
-                admin.DeletedInstallmentPlans.Add(
-                    new RollBackDeletedInstallmentPlan(client, installmentPlan.InstallmentPlan, transfer));
+                    admin.DeletedInstallmentPlans.Add(
+                        new RollBackDeletedInstallmentPlan(client, installmentPlan.InstallmentPlan, transfer));
 
-                _context.Clients.Update(client);
-                _context.Banks.Update(bank);
-                _context.Administrators.Update(admin);
-                await _context.SaveChangesAsync();
+                    _context.Clients.Update(client);
+                    _context.Banks.Update(bank);
+                    _context.Administrators.Update(admin);
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction("Profile", "Client");
+                    return RedirectToAction("Profile", "Client");
+                }
             }
 
         var client1 = GetClient();
@@ -996,35 +1001,38 @@ public class BankController : Controller
 
                 var credit = client.CreditsAndApproves!.Find(b => b.Id == model.IdOfCreditToPay);
 
+                if (client.BankBalance >= credit.Credit.AmountOfMoney + credit.Credit.AmountOfMoney * (credit.Credit.Percent / 100))
+                {
 
-                var transfer = new Transfer();
+                    var transfer = new Transfer();
 
-                transfer.Id = ++_idForTransfer;
+                    transfer.Id = ++_idForTransfer;
 
-                foreach (var transferDb in _context.Transfers.ToList())
-                    if (transfer.Id == transferDb.Id)
-                        transfer.Id = ++_idForTransfer;
+                    foreach (var transferDb in _context.Transfers.ToList())
+                        if (transfer.Id == transferDb.Id)
+                            transfer.Id = ++_idForTransfer;
 
-                transfer.AmountOfMoney = credit.Credit.AmountOfMoney;
-                client.BankBalance -= transfer.AmountOfMoney + transfer.AmountOfMoney * (credit.Credit.Percent / 100);
+                    transfer.AmountOfMoney = credit.Credit.AmountOfMoney;
+                    client.BankBalance -= transfer.AmountOfMoney + transfer.AmountOfMoney * (credit.Credit.Percent / 100);
 
-                credit.Credit.Hidden = true;
+                    credit.Credit.Hidden = true;
 
-                foreach (var creditsToRemove in admin.OpennedCredits!)
-                    if (creditsToRemove.Credit!.Equals(credit.Credit))
-                    {
-                        admin.OpennedCredits!.Remove(creditsToRemove);
-                        break;
-                    }
+                    foreach (var creditsToRemove in admin.OpennedCredits!)
+                        if (creditsToRemove.Credit!.Equals(credit.Credit))
+                        {
+                            admin.OpennedCredits!.Remove(creditsToRemove);
+                            break;
+                        }
 
-                admin.DeletedCredits!.Add(new RollBackDeletedCredit(client, credit.Credit, transfer));
+                    admin.DeletedCredits!.Add(new RollBackDeletedCredit(client, credit.Credit, transfer));
 
-                _context.Clients.Update(client);
-                _context.Banks.Update(bank);
-                _context.Administrators.Update(admin);
-                await _context.SaveChangesAsync();
+                    _context.Clients.Update(client);
+                    _context.Banks.Update(bank);
+                    _context.Administrators.Update(admin);
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction("Profile", "Client");
+                    return RedirectToAction("Profile", "Client");
+                }
             }
 
         var client1 = GetClient();
