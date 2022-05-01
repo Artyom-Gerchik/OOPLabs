@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "rectangle.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
@@ -13,6 +14,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_RectangleButton_clicked()
 {
-//    DefaultRectangle* rectangle = new DefaultRectangle();
-//    paintScene->setCurrentFigure(rectangle);
+    Rectangle* rectangle = new Rectangle();
+    //paintScene->setCurrentFigure(rectangle);
 }
