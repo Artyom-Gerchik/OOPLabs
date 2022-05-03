@@ -7,7 +7,7 @@
 
 #include "figure.h"
 
-class Rectangle: Figure
+class Rectangle : public Figure
 {
 
 private:

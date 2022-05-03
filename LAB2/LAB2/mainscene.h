@@ -11,16 +11,25 @@
 
 #include "figure.h"
 #include "brush.h"
-#include "floodfill.h""
+#include "floodfill.h"
 
-class MainScene
+class MainScene : public QGraphicsScene
 {
 
 private:
 
+    enum Tools
+    {
+        Initial,
+        Move,
+        Draw,
+        Fill,
+        DrawFigure
+    };
+
     /*VARS*/
     int ChosedThickness;
-    int ChosedTool;
+    Tools ChosedTool;
     /*VARS*/
 
     /*COLOR*/
@@ -33,21 +42,24 @@ private:
     FloodFill FloodFill;
     /* TOOLS */
 
-    void MouseDownEvent(QGraphicsSceneMouseEvent *event);
-    void MouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void MouseUpEvent(QGraphicsSceneMouseEvent *event);
+    Figure* ChosedFigure;
+    QVector<QPoint> ListOfCenters;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 public:
-    MainScene();
+    MainScene(QObject *parent = 0);
     ~MainScene();
 
     void SetChosedThickness(int NewChosedThickness);
-    void SetChosedTool(int NewChosedTool);
+    void SetChosedTool(Tools NewChosedTool);
     void SetChosedPenColor(const QColor &NewChosedPenColor);
     void SetChosedBrushColor(const QColor &NewChosedBrushColor);
     void SetChosedFigure(Figure *NewChosedFigure);
-    void Rotate(int Rotate);
-    void Zoom (qreal Scale);
+    void Rotate(int RotateAngle);
+    void Scale (qreal ScaleValue);
     void Undo();
     void Redo();
     int GetChosedThickness() const;
