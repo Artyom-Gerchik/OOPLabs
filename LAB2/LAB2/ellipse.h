@@ -1,21 +1,19 @@
-#ifndef RECTANGLE_H
-#define RECTANGLE_H
+#ifndef ELLIPSE_H
+#define ELLIPSE_H
 
 #include "forfigureheirs.h"
 
-class Rectangle : public Figure
+class Ellipse : public Figure
 {
-
-private:
     int X;
     int Y;
-    QGraphicsRectItem* rectangle;
+    QGraphicsEllipseItem* ellipse;
 
 public:
-    Rectangle();
+    Ellipse();
     void Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor colorPen, QColor colorBrush, int thickness);
     void Move(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene);
     void Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene);
 };
 
-#endif // RECTANGLE_H
+#endif // ELLIPSE_H

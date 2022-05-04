@@ -4,6 +4,8 @@ MainScene::MainScene(QObject *parent) : QGraphicsScene(parent)
 {
     ChosedTool = Initial;
     ChosedFigure = NULL;
+    CopiedFigure = NULL;
+    FigureToPaste = NULL;
 }
 
 MainScene::~MainScene()
@@ -74,8 +76,6 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 update();
             }
         }
-
-
         break;
     }
 
@@ -86,10 +86,49 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         update();
         break;
     }
+//    case(Copy):{
+
+//        QPointF PointToFind;
+//        PointToFind.setX(event->scenePos().x());
+//        PointToFind.setY(event->scenePos().y());
+//        QList<QGraphicsItem *> FiguresList = items(PointToFind); // getting all figures, wich on this point
+
+//        if(!FiguresList.isEmpty()){
+//            int centerPoint = 0;
+
+//            for(int i = 0; i < items().length(); i++){
+//                centerPoint = ListOfCenters.at(i).x();
+
+//                if(items().at(i) == FiguresList.at(0) && items().at(i) -> isVisible() && centerPoint != 0){ // FiguresList(0) because we need only upper figure
+//                    CopiedFigure = new Figure();
+//                    CopiedFigure -> SetFigureExternalRepresentation(items().at(i));
+//                    CopiedFigure -> SetFigureCenterPoint(ListOfCenters.at(i));
+//                    CopiedFigure -> GetFigureExternalRepresentation() -> setPos(event -> scenePos().x() - CopiedFigure -> GetFigureCenterPoint().x(),
+//                                                                                event -> scenePos().y() - CopiedFigure -> GetFigureCenterPoint().y());
+//                    break;
+//                }
+//                update();
+//            }
+//            if(centerPoint == 0){
+//                ChosedFigure = NULL;
+//            }
+//        }
+//        break;
+//    }
+//    case(Paste):{
+
+//        FigureToPaste = CopiedFigure;
+//        FigureToPaste -> Release(event, this);
+//        ListOfCenters.push_front(FigureToPaste -> GetFigureCenterPoint());
+//        update();
+
+//        break;
+//    }
 
     }
 
 }
+
 void MainScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
     QPoint point;
 
@@ -151,7 +190,7 @@ void MainScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event){
     case(DrawFigure):{ // draw a figure
         QMessageLogger().debug() << "CASE DRAW FIGURE IN MOUSE UP EVENT IN SCENE";
 
-        ChosedFigure -> Release(event,this);
+        ChosedFigure -> Release(event, this);
         ListOfCenters.push_front(ChosedFigure -> GetFigureCenterPoint());
         update();
         break;
@@ -180,7 +219,6 @@ void MainScene::SetChosedBrushColor(const QColor &NewChosedBrushColor){
 void MainScene::SetChosedFigure(Figure *NewChosedFigure){
     ChosedFigure = NewChosedFigure;
     ChosedTool = DrawFigure;
-    QMessageLogger().debug() << "TOOL:" <<ChosedTool;
 }
 
 void MainScene::Rotate(int RotateAngle){

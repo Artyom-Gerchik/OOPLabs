@@ -1,18 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QMessageBox>
-#include <QWidget>
-#include <QTimer>
-#include <QResizeEvent>
-#include <QColorDialog>
-#include <QFileDialog>
-#include <QGraphicsRectItem>
-
-#include "mainscene.h"
-#include "rectangle.h"
-
+#include "formainwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -40,9 +29,50 @@ private:
     void Scale(QResizeEvent * event);
     void Error(QString message);
 
+    QMenu *figuresMenu;
+    QMenu *toolsMenu;
+
+    QAction *figures_draw_rectangle_act;
+    QAction *figures_draw_ellipse_act;
+    QAction *figures_draw_polygon_act;
+    QAction *figures_draw_line_act;
+    QAction *figures_draw_broken_act;
+    QAction *figures_draw_freestyle_act;
+
+    QAction *tools_move_act;
+    QAction *tools_choose_pen_color_act;
+    QAction *tools_choose_floodfill_color_act;
+    QAction *tools_undo_act;
+    QAction *tools_redo_act;
+    QAction *tools_scale_up_act;
+    QAction *tools_scale_down_act;
+    QAction *tools_rotate_right_act;
+    QAction *tools_rotate_left_act;
+    QAction *tools_copy_act;
+    QAction *tools_paste_act;
+
 private slots:
     void slotTimer();
-    void on_RectangleButton_clicked();
 
+    void figures_draw_rectangle();
+    void figures_draw_ellipse();
+    void figures_draw_polygon();
+    void figures_draw_line();
+    void figures_draw_broken();
+    void figures_draw_freestyle();
+
+    void tools_move();
+    void tools_choose_pen_color();
+    void tools_choose_floodfill_color();
+    void tools_undo();
+    void tools_redo();
+    void tools_scale_up();
+    void tools_scale_down();
+    void tools_rotate_right();
+    void tools_rotate_left();
+    void tools_copy();
+    void tools_paste();
+
+    void on_penWidthBox_valueChanged(int arg1);
 };
 #endif // MAINWINDOW_H

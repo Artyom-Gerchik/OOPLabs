@@ -5,7 +5,7 @@ Rectangle::Rectangle()
 
 }
 
-void Rectangle::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor colorPen, QColor colorBrush, int thickness)
+void Rectangle::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)
 {
     rectangle = new QGraphicsRectItem();
     SetFigureExternalRepresentation(rectangle);
@@ -13,10 +13,10 @@ void Rectangle::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QC
     QPen pen;
 
     pen.setWidth(thickness);
-    pen.setColor(colorPen);
+    pen.setColor(penColor);
 
     rectangle -> setPen(pen);
-    rectangle -> setBrush(colorBrush);
+    rectangle -> setBrush(brushColor);
     rectangle -> setRect(event -> scenePos().x(), event -> scenePos().y(), 1, 1);
     X = event -> scenePos().x();
     Y = event -> scenePos().y();
@@ -37,7 +37,7 @@ void Rectangle::Move(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene)
 void Rectangle::Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene)
 {
     QPoint point;
-    point.setX(rectangle->boundingRect().topLeft().x() + (rectangle->boundingRect().bottomRight().x() - rectangle->boundingRect().topLeft().x())/2);
-    point.setY(rectangle->boundingRect().topLeft().y() + (rectangle->boundingRect().bottomRight().y() - rectangle->boundingRect().topLeft().y())/2);
+    point.setX(rectangle -> boundingRect().topLeft().x() + (rectangle -> boundingRect().bottomRight().x() - rectangle -> boundingRect().topLeft().x()) / 2);
+    point.setY(rectangle -> boundingRect().topLeft().y() + (rectangle -> boundingRect().bottomRight().y() - rectangle -> boundingRect().topLeft().y()) / 2);
     SetFigureCenterPoint(point);
 }

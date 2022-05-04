@@ -12,20 +12,13 @@
 #include "figure.h"
 #include "brush.h"
 #include "floodfill.h"
+#include "toolsenum.h"
 
 class MainScene : public QGraphicsScene
 {
 
 private:
 
-    enum Tools
-    {
-        Initial,
-        Move,
-        Draw,
-        Fill,
-        DrawFigure
-    };
 
     /*VARS*/
     int ChosedThickness;
@@ -43,6 +36,8 @@ private:
     /* TOOLS */
 
     Figure* ChosedFigure;
+    Figure* CopiedFigure;
+    Figure* FigureToPaste;
     QVector<QPoint> ListOfCenters;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
