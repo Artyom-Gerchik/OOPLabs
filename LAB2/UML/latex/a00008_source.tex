@@ -1,0 +1,30 @@
+\hypertarget{a00008_source}{}\doxysection{polygon.\+h}
+\label{a00008_source}\index{LAB2/polygon.h@{LAB2/polygon.h}}
+\mbox{\hyperlink{a00008}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef POLYGON\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define POLYGON\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{a00053}{forfigureheirs.h}}"{}}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{class }\mbox{\hyperlink{a00110}{Polygon}} : \textcolor{keyword}{public} \mbox{\hyperlink{a00090}{Figure}}}
+\DoxyCodeLine{7 \{}
+\DoxyCodeLine{8 \textcolor{keyword}{private}:}
+\DoxyCodeLine{9     \textcolor{keywordtype}{int} countOfAngles;}
+\DoxyCodeLine{10     \textcolor{keywordtype}{bool} start;}
+\DoxyCodeLine{11     QGraphicsPolygonItem* polygon;}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13     QColor chosedPenColor;}
+\DoxyCodeLine{14     QColor chosedBrushColor;}
+\DoxyCodeLine{15     \textcolor{keywordtype}{int} chosedPenThickness;}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keyword}{public}:}
+\DoxyCodeLine{18     \mbox{\hyperlink{a00110_ac183e712f8be1e13f1c9d5b4d4512ead}{Polygon}}();}
+\DoxyCodeLine{19     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00110_ab2e70e10a6fcfcaaeb14360a1f0ce639}{Press}}(QGraphicsSceneMouseEvent *event, \mbox{\hyperlink{a00186}{QGraphicsScene}} *scene, QColor colorPen, QColor colorBrush, \textcolor{keywordtype}{int} thickness);}
+\DoxyCodeLine{20     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00110_afdef585c2a354f8e1fcd71258c57b102}{Move}}(QGraphicsSceneMouseEvent *event, \mbox{\hyperlink{a00186}{QGraphicsScene}} *scene);}
+\DoxyCodeLine{21     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00110_a89ef2fbcb585db8b96ec821e1d74d6fe}{Release}}(QGraphicsSceneMouseEvent *event, \mbox{\hyperlink{a00186}{QGraphicsScene}} *scene);}
+\DoxyCodeLine{22 \};}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// POLYGON\_H}}
+
+\end{DoxyCode}

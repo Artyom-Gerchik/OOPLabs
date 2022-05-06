@@ -1,0 +1,84 @@
+\hypertarget{a00017_source}{}\doxysection{mainwindow.\+h}
+\label{a00017_source}\index{LAB2/mainwindow.h@{LAB2/mainwindow.h}}
+\mbox{\hyperlink{a00017}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef MAINWINDOW\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define MAINWINDOW\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{a00020}{formainwindow.h}}"{}}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 QT\_BEGIN\_NAMESPACE}
+\DoxyCodeLine{7 \textcolor{keyword}{namespace }\mbox{\hyperlink{a00074}{Ui}} \{ \textcolor{keyword}{class }\mbox{\hyperlink{a00106}{MainWindow}}; \}}
+\DoxyCodeLine{8 QT\_END\_NAMESPACE}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{class }\mbox{\hyperlink{a00106}{MainWindow}} : \textcolor{keyword}{public} \mbox{\hyperlink{a00190}{QMainWindow}}}
+\DoxyCodeLine{11 \{}
+\DoxyCodeLine{12     Q\_OBJECT}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{keyword}{public}:}
+\DoxyCodeLine{15     \mbox{\hyperlink{a00106_a996c5a2b6f77944776856f08ec30858d}{MainWindow}}(QWidget *parent = \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{16     \mbox{\hyperlink{a00106_ae98d00a93bc118200eeef9f9bba1dba7}{\string~MainWindow}}();}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{private}:}
+\DoxyCodeLine{19     Ui::MainWindow *ui;}
+\DoxyCodeLine{20     QTimer *timer;}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22     \mbox{\hyperlink{a00102}{MainScene}} *mainScene;}
+\DoxyCodeLine{23     QColorDialog *colorDialog;}
+\DoxyCodeLine{24     QColor penColor;}
+\DoxyCodeLine{25     QColor brushColor;}
+\DoxyCodeLine{26     \textcolor{keywordtype}{int} rotateAngle;}
+\DoxyCodeLine{27     \textcolor{keywordtype}{int} thickness;}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29     \textcolor{keywordtype}{void} Scale(QResizeEvent * event);}
+\DoxyCodeLine{30     \textcolor{keywordtype}{void} Error(QString message);}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32     QMenu *figuresMenu;}
+\DoxyCodeLine{33     QMenu *toolsMenu;}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     QAction *figures\_draw\_rectangle\_act;}
+\DoxyCodeLine{36     QAction *figures\_draw\_ellipse\_act;}
+\DoxyCodeLine{37     QAction *figures\_draw\_polygon\_act;}
+\DoxyCodeLine{38     QAction *figures\_draw\_line\_act;}
+\DoxyCodeLine{39     QAction *figures\_draw\_broken\_act;}
+\DoxyCodeLine{40     QAction *figures\_draw\_freestyle\_act;}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42     QAction *tools\_move\_act;}
+\DoxyCodeLine{43     QAction *tools\_choose\_pen\_color\_act;}
+\DoxyCodeLine{44     QAction *tools\_choose\_floodfill\_color\_act;}
+\DoxyCodeLine{45     QAction *tools\_undo\_act;}
+\DoxyCodeLine{46     QAction *tools\_redo\_act;}
+\DoxyCodeLine{47     QAction *tools\_scale\_up\_act;}
+\DoxyCodeLine{48     QAction *tools\_scale\_down\_act;}
+\DoxyCodeLine{49     QAction *tools\_rotate\_right\_act;}
+\DoxyCodeLine{50     QAction *tools\_rotate\_left\_act;}
+\DoxyCodeLine{51     QAction *tools\_copy\_act;}
+\DoxyCodeLine{52     QAction *tools\_paste\_act;}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keyword}{private} slots:}
+\DoxyCodeLine{55     \textcolor{keywordtype}{void} slotTimer();}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57     \textcolor{keywordtype}{void} figures\_draw\_rectangle();}
+\DoxyCodeLine{58     \textcolor{keywordtype}{void} figures\_draw\_ellipse();}
+\DoxyCodeLine{59     \textcolor{keywordtype}{void} figures\_draw\_polygon();}
+\DoxyCodeLine{60     \textcolor{keywordtype}{void} figures\_draw\_line();}
+\DoxyCodeLine{61     \textcolor{keywordtype}{void} figures\_draw\_broken();}
+\DoxyCodeLine{62     \textcolor{keywordtype}{void} figures\_draw\_freestyle();}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64     \textcolor{keywordtype}{void} tools\_move();}
+\DoxyCodeLine{65     \textcolor{keywordtype}{void} tools\_choose\_pen\_color();}
+\DoxyCodeLine{66     \textcolor{keywordtype}{void} tools\_choose\_floodfill\_color();}
+\DoxyCodeLine{67     \textcolor{keywordtype}{void} tools\_undo();}
+\DoxyCodeLine{68     \textcolor{keywordtype}{void} tools\_redo();}
+\DoxyCodeLine{69     \textcolor{keywordtype}{void} tools\_scale\_up();}
+\DoxyCodeLine{70     \textcolor{keywordtype}{void} tools\_scale\_down();}
+\DoxyCodeLine{71     \textcolor{keywordtype}{void} tools\_rotate\_right();}
+\DoxyCodeLine{72     \textcolor{keywordtype}{void} tools\_rotate\_left();}
+\DoxyCodeLine{73     \textcolor{keywordtype}{void} tools\_copy();}
+\DoxyCodeLine{74     \textcolor{keywordtype}{void} tools\_paste();}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76     \textcolor{keywordtype}{void} on\_penWidthBox\_valueChanged(\textcolor{keywordtype}{int} arg1);}
+\DoxyCodeLine{77 \};}
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// MAINWINDOW\_H}}
+
+\end{DoxyCode}

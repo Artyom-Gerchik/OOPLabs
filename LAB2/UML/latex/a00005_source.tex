@@ -1,0 +1,37 @@
+\hypertarget{a00005_source}{}\doxysection{figure.\+h}
+\label{a00005_source}\index{LAB2/figure.h@{LAB2/figure.h}}
+\mbox{\hyperlink{a00005}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef FIGURE\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define FIGURE\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <QGraphicsScene>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <QGraphicsItem>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <QGraphicsSceneMouseEvent>}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{a00090}{Figure}}}
+\DoxyCodeLine{9 \{}
+\DoxyCodeLine{10 \textcolor{keyword}{private}:}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12     QGraphicsItem* FigureExternalRepresentation;}
+\DoxyCodeLine{13     QPoint FigureCenterPoint;}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{keyword}{public}:}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17     \mbox{\hyperlink{a00090_a1d9e03a4db51fcdca64aa5137e72b076}{Figure}}();}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19     QGraphicsItem *\mbox{\hyperlink{a00090_aeba7505e67955d851f88c9495295a2b8}{GetFigureExternalRepresentation}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{20     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00090_af7f8ecc5d9e673990c59c1a262270c4b}{SetFigureExternalRepresentation}}(QGraphicsItem *FigureExternalRepresentationToSet);}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22     QPoint \mbox{\hyperlink{a00090_aa603129588b878136b06d06712b88c9c}{GetFigureCenterPoint}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{23     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00090_a15d0f395d12e25b65c6dcf55a1ea9c96}{SetFigureCenterPoint}}(QPoint FigureCenterPointToSet);}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{a00090_aa54d4f2ab5b72aa68829e3867fc36901}{Press}}(QGraphicsSceneMouseEvent *event, \mbox{\hyperlink{a00186}{QGraphicsScene}} *scene, QColor colorPen, QColor colorBrush, \textcolor{keywordtype}{int} thickness);}
+\DoxyCodeLine{26     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{a00090_a0a853388ec62d0672701b1cb396587c1}{Move}}(QGraphicsSceneMouseEvent *event, \mbox{\hyperlink{a00186}{QGraphicsScene}} *scene);}
+\DoxyCodeLine{27     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{a00090_a5a7fd65d3b3fed5b0098144c6e3be376}{Release}}(QGraphicsSceneMouseEvent *event, \mbox{\hyperlink{a00186}{QGraphicsScene}} *scene);}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \};}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// FIGURE\_H}}
+
+\end{DoxyCode}

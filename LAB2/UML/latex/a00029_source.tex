@@ -1,0 +1,70 @@
+\hypertarget{a00029_source}{}\doxysection{mainscene.\+h}
+\label{a00029_source}\index{LAB2/mainscene.h@{LAB2/mainscene.h}}
+\mbox{\hyperlink{a00029}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef MAINSCENE\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define MAINSCENE\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <QGraphicsScene>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <QGraphicsSceneMouseEvent>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <QGraphicsItem>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <QPainter>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <QTimer>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <QDebug>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <QCursor>}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{a00005}{figure.h}}"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{a00059}{brush.h}}"{}}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{a00014}{floodfill.h}}"{}}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{a00038}{toolsenum.h}}"{}}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keyword}{class }\mbox{\hyperlink{a00102}{MainScene}} : \textcolor{keyword}{public} \mbox{\hyperlink{a00186}{QGraphicsScene}}}
+\DoxyCodeLine{18 \{}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keyword}{private}:}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23     \textcolor{comment}{/*VARS*/}}
+\DoxyCodeLine{24     \textcolor{keywordtype}{int} ChosedThickness;}
+\DoxyCodeLine{25     \mbox{\hyperlink{a00038_a2db0829141c827d2244332baa065cf15}{Tools}} ChosedTool;}
+\DoxyCodeLine{26     \textcolor{comment}{/*VARS*/}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28     \textcolor{comment}{/*COLOR*/}}
+\DoxyCodeLine{29     QColor ChosedPenColor;}
+\DoxyCodeLine{30     QColor ChosedBrushColor;}
+\DoxyCodeLine{31     \textcolor{comment}{/*COLOR*/}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \textcolor{comment}{/* TOOLS */}}
+\DoxyCodeLine{34     \mbox{\hyperlink{a00082}{Brush}} \mbox{\hyperlink{a00082}{Brush}};}
+\DoxyCodeLine{35     \mbox{\hyperlink{a00094}{FloodFill}} \mbox{\hyperlink{a00094}{FloodFill}};}
+\DoxyCodeLine{36     \textcolor{comment}{/* TOOLS */}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38     \mbox{\hyperlink{a00090}{Figure}}* ChosedFigure;}
+\DoxyCodeLine{39     \mbox{\hyperlink{a00090}{Figure}}* CopiedFigure;}
+\DoxyCodeLine{40     \mbox{\hyperlink{a00090}{Figure}}* FigureToPaste;}
+\DoxyCodeLine{41     QVector<QPoint> ListOfCenters;}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \textcolor{keywordtype}{void} mousePressEvent(QGraphicsSceneMouseEvent *event);}
+\DoxyCodeLine{44     \textcolor{keywordtype}{void} mouseMoveEvent(QGraphicsSceneMouseEvent *event);}
+\DoxyCodeLine{45     \textcolor{keywordtype}{void} mouseReleaseEvent(QGraphicsSceneMouseEvent *event);}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{keyword}{public}:}
+\DoxyCodeLine{48     \mbox{\hyperlink{a00102_a539e1c90b1c7f2e910d44cfd8ec45e1c}{MainScene}}(QObject *parent = 0);}
+\DoxyCodeLine{49     \mbox{\hyperlink{a00102_a6f5a9b6606eb0534d828a11881e0a73f}{\string~MainScene}}();}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00102_afdcaeb11bcf65ed91624f7c87dad799c}{SetChosedThickness}}(\textcolor{keywordtype}{int} NewChosedThickness);}
+\DoxyCodeLine{52     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00102_ac1763a213b4357f86822bd3d2d9a6718}{SetChosedTool}}(\mbox{\hyperlink{a00038_a2db0829141c827d2244332baa065cf15}{Tools}} NewChosedTool);}
+\DoxyCodeLine{53     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00102_acf285e51cd38ee6ac8e5559239105a6a}{SetChosedPenColor}}(\textcolor{keyword}{const} QColor \&NewChosedPenColor);}
+\DoxyCodeLine{54     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00102_aec527a7dfc64415300c017a31035a5cf}{SetChosedBrushColor}}(\textcolor{keyword}{const} QColor \&NewChosedBrushColor);}
+\DoxyCodeLine{55     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00102_ac8cdb54cfb76ba93aeddf25e10fe9e1b}{SetChosedFigure}}(\mbox{\hyperlink{a00090}{Figure}} *NewChosedFigure);}
+\DoxyCodeLine{56     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00102_a084b9d941b04269c17460bfb2effb968}{Rotate}}(\textcolor{keywordtype}{int} RotateAngle);}
+\DoxyCodeLine{57     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00102_aa59bec67ae01521e5dd66f6a219c1875}{Scale}} (qreal ScaleValue);}
+\DoxyCodeLine{58     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00102_a9dd783846d86d37f1d5298c8566c1f7b}{Undo}}();}
+\DoxyCodeLine{59     \textcolor{keywordtype}{void} \mbox{\hyperlink{a00102_afa1484e36031f561f2122a2756833a1c}{Redo}}();}
+\DoxyCodeLine{60     \textcolor{keywordtype}{int} \mbox{\hyperlink{a00102_a94c276c7ceaec15e29afabd049a6797f}{GetChosedThickness}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62 \};}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// MAINSCENE\_H}}
+
+\end{DoxyCode}
