@@ -13,6 +13,7 @@ SOURCES += \
     brush.cpp \
     ellipse.cpp \
     figure.cpp \
+    figurefactory.cpp \
     figureserializer.cpp \
     floodfill.cpp \
     line.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     brush.h \
     ellipse.h \
     figure.h \
+    figurefactory.h \
     figureserializer.h \
     floodfill.h \
     forfigureheirs.h \

@@ -33,10 +33,12 @@ Figure* FigureSerializer::load(QString filePath){
     if(!inFile.open(QIODevice::ReadOnly))
         return nullptr;
 
-    QJsonDocument document = QJsonDocument().fromJson(inFile.readAll());
-    QJsonObject jsonObj = document.object();
-    Rectangle* rect = new Rectangle();
-    return rect -> DeSerializeFigure(jsonObj);
+    QJsonDocument file = QJsonDocument().fromJson(inFile.readAll());
+    QJsonObject jsonObj = file.object();
 
+    QMessageLogger().debug() << "Deserializing:" + jsonObj.value("Type").toString();
+
+    Figure* figure = figureFactory.CreateFigure(jsonObj.value("Type").toString());
+    return figure -> DeSerializeFigure(jsonObj);
 
 }

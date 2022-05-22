@@ -96,12 +96,12 @@ QJsonObject Ellipse::SerializeFigure()
 
      QJsonObject serialized;
      serialized.insert(KEY_TYPE, QJsonValue::fromVariant("Ellipse"));
-     serialized.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant(GetBoundingRect().topLeft().x()));
-     serialized.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant(GetBoundingRect().topLeft().y()));
-     serialized.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant(GetBoundingRect().bottomRight().x()));
-     serialized.insert(KEY_BOTRIGHT_Y, QJsonValue::fromVariant(GetBoundingRect().bottomRight().y()));
-     serialized.insert(KEY_CENTERPOINT_X, QJsonValue::fromVariant(GetFigureCenterPoint().x()));
-     serialized.insert(KEY_CENTERPOINT_Y, QJsonValue::fromVariant(GetFigureCenterPoint().y()));
+     serialized.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().x()));
+     serialized.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().y()));
+     serialized.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().x()));
+     serialized.insert(KEY_BOTRIGHT_Y, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().y()));
+     serialized.insert(KEY_CENTERPOINT_X, QJsonValue::fromVariant((int)GetFigureCenterPoint().x()));
+     serialized.insert(KEY_CENTERPOINT_Y, QJsonValue::fromVariant((int)GetFigureCenterPoint().y()));
      serialized.insert(KEY_COLORBRUSH, QJsonValue::fromVariant(GetBrushColor()));
      serialized.insert(KEY_COLORPEN, QJsonValue::fromVariant(GetPenColor()));
      serialized.insert(KEY_THICKNESS, QJsonValue::fromVariant(GetChosedThickness()));

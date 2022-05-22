@@ -90,18 +90,19 @@ Figure *Rectangle::CopyItem(){
 }
 
 QJsonObject Rectangle::SerializeFigure(){
+
     qreal rotate = GetFigureExternalRepresentation()->rotation();
     qreal scale = GetFigureExternalRepresentation()->scale();
 
     QJsonObject serializedRect;
 
     serializedRect.insert(KEY_TYPE, QJsonValue::fromVariant("Rectangle"));
-    serializedRect.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant(GetBoundingRect().topLeft().x()));
-    serializedRect.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant(GetBoundingRect().topLeft().y()));
-    serializedRect.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant(GetBoundingRect().bottomRight().x()));
-    serializedRect.insert(KEY_BOTRIGHT_Y, QJsonValue::fromVariant(GetBoundingRect().bottomRight().y()));
-    serializedRect.insert(KEY_CENTERPOINT_X, QJsonValue::fromVariant(GetFigureCenterPoint().x()));
-    serializedRect.insert(KEY_CENTERPOINT_Y, QJsonValue::fromVariant(GetFigureCenterPoint().y()));
+    serializedRect.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().x()));
+    serializedRect.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().y()));
+    serializedRect.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().x()));
+    serializedRect.insert(KEY_BOTRIGHT_Y, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().y()));
+    serializedRect.insert(KEY_CENTERPOINT_X, QJsonValue::fromVariant((int)GetFigureCenterPoint().x()));
+    serializedRect.insert(KEY_CENTERPOINT_Y, QJsonValue::fromVariant((int)GetFigureCenterPoint().y()));
     serializedRect.insert(KEY_COLORBRUSH, QJsonValue::fromVariant(GetBrushColor()));
     serializedRect.insert(KEY_COLORPEN, QJsonValue::fromVariant(GetPenColor()));
     serializedRect.insert(KEY_THICKNESS, QJsonValue::fromVariant(GetChosedThickness()));

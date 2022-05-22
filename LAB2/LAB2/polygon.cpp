@@ -108,70 +108,70 @@ Figure *Polygon::CopyItem(){
 }
 
 QJsonObject Polygon::SerializeFigure()
- {
-     qreal rotate = GetFigureExternalRepresentation()->rotation();
-     qreal scale = GetFigureExternalRepresentation()->scale();
+{
+    qreal rotate = GetFigureExternalRepresentation()->rotation();
+    qreal scale = GetFigureExternalRepresentation()->scale();
 
-     QJsonObject serializeObj;
-     serializeObj.insert(KEY_TYPE, QJsonValue::fromVariant("Polygon"));
+    QJsonObject serializeObj;
+    serializeObj.insert(KEY_TYPE, QJsonValue::fromVariant("Polygon"));
 
-     int i = 0;
-     foreach(QPointF point, ChosedPolygon)
-     {
-         serializeObj.insert(KEY_POLYGON_X + QString::number(i), QJsonValue::fromVariant(point.x()));
-         serializeObj.insert(KEY_POLYGON_Y + QString::number(i), QJsonValue::fromVariant(point.y()));
-         i++;
-     }
-     serializeObj.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant(GetBoundingRect().topLeft().x()));
-     serializeObj.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant(GetBoundingRect().topLeft().y()));
-     serializeObj.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant(GetBoundingRect().bottomRight().x()));
-     serializeObj.insert(KEY_BOTRIGHT_Y, QJsonValue::fromVariant(GetBoundingRect().bottomRight().y()));
-     serializeObj.insert(KEY_CENTERPOINT_X, QJsonValue::fromVariant(GetFigureCenterPoint().x()));
-     serializeObj.insert(KEY_CENTERPOINT_Y, QJsonValue::fromVariant(GetFigureCenterPoint().y()));
-     serializeObj.insert(KEY_COLORBRUSH, QJsonValue::fromVariant(GetBrushColor()));
-     serializeObj.insert(KEY_COLORPEN, QJsonValue::fromVariant(GetPenColor()));
-     serializeObj.insert(KEY_THICKNESS, QJsonValue::fromVariant(GetChosedThickness()));
-     serializeObj.insert(KEY_ROTATE, QJsonValue::fromVariant(rotate));
-     serializeObj.insert(KEY_SCALE, QJsonValue::fromVariant(scale));
+    int i = 0;
+    foreach(QPointF point, ChosedPolygon)
+    {
+        serializeObj.insert(KEY_POLYGON_X + QString::number(i), QJsonValue::fromVariant(point.x()));
+        serializeObj.insert(KEY_POLYGON_Y + QString::number(i), QJsonValue::fromVariant(point.y()));
+        i++;
+    }
+    serializeObj.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().x()));
+    serializeObj.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().y()));
+    serializeObj.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().x()));
+    serializeObj.insert(KEY_BOTRIGHT_Y, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().y()));
+    serializeObj.insert(KEY_CENTERPOINT_X, QJsonValue::fromVariant((int)GetFigureCenterPoint().x()));
+    serializeObj.insert(KEY_CENTERPOINT_Y, QJsonValue::fromVariant((int)GetFigureCenterPoint().y()));
+    serializeObj.insert(KEY_COLORBRUSH, QJsonValue::fromVariant(GetBrushColor()));
+    serializeObj.insert(KEY_COLORPEN, QJsonValue::fromVariant(GetPenColor()));
+    serializeObj.insert(KEY_THICKNESS, QJsonValue::fromVariant(GetChosedThickness()));
+    serializeObj.insert(KEY_ROTATE, QJsonValue::fromVariant(rotate));
+    serializeObj.insert(KEY_SCALE, QJsonValue::fromVariant(scale));
 
-     return serializeObj;
- }
+    return serializeObj;
+}
 
- Figure *Polygon::DeSerializeFigure(QJsonObject inObj)
- {
-     Polygon* result = new Polygon();
-     QGraphicsPolygonItem* newPolygonItem = new QGraphicsPolygonItem();
+Figure *Polygon::DeSerializeFigure(QJsonObject inObj)
+{
+    Polygon* result = new Polygon();
+    QGraphicsPolygonItem* newPolygonItem = new QGraphicsPolygonItem();
 
-     QPen pen;
-     pen.setWidth(inObj.value(KEY_THICKNESS).toInt());
-     pen.setColor(inObj.value(KEY_COLORPEN).toString());
+    QPen pen;
+    pen.setWidth(inObj.value(KEY_THICKNESS).toInt());
+    pen.setColor(inObj.value(KEY_COLORPEN).toString());
 
-     QPolygonF polygon;
-     for(int i = 0; i < inObj.length(); i++)
-     {
-         if(inObj.value(KEY_POLYGON_X + QString::number(i)).toInt() == 0)
-             break;
-         polygon << QPoint(inObj.value(KEY_POLYGON_X + QString::number(i)).toInt(), inObj.value(KEY_POLYGON_Y + QString::number(i)).toInt());
-     }
+    QPolygonF polygon;
+    for(int i = 0; i < inObj.length(); i++)
+    {
+        if(inObj.value(KEY_POLYGON_X + QString::number(i)).toInt() == 0)
+            break;
+        polygon << QPoint(inObj.value(KEY_POLYGON_X + QString::number(i)).toInt(), inObj.value(KEY_POLYGON_Y + QString::number(i)).toInt());
+    }
 
-     QRectF rect;
-     rect.setTopLeft(QPointF(inObj.value(KEY_TOPLEFT_X).toInt(), inObj.value(KEY_TOPLEFT_Y).toInt()));
-     rect.setBottomRight(QPointF(inObj.value(KEY_BOTRIGHT_X).toInt(), inObj.value(KEY_BOTRIGHT_Y).toInt()));
+    QRectF rect;
+    rect.setTopLeft(QPointF(inObj.value(KEY_TOPLEFT_X).toInt(), inObj.value(KEY_TOPLEFT_Y).toInt()));
+    rect.setBottomRight(QPointF(inObj.value(KEY_BOTRIGHT_X).toInt(), inObj.value(KEY_BOTRIGHT_Y).toInt()));
 
-     newPolygonItem->setBrush(QColor(inObj.value(KEY_COLORBRUSH).toString()));
-     newPolygonItem->setPen(pen);
-     newPolygonItem->setScale(inObj.value(KEY_SCALE).toInt());
-     newPolygonItem->setRotation(inObj.value(KEY_ROTATE).toInt());
-     newPolygonItem->setTransformOriginPoint(QPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt()));
-     newPolygonItem->setFillRule(Qt::WindingFill);
-     newPolygonItem->setPolygon(polygon);
+    newPolygonItem->setBrush(QColor(inObj.value(KEY_COLORBRUSH).toString()));
+    newPolygonItem->setPen(pen);
+    newPolygonItem->setScale(inObj.value(KEY_SCALE).toInt());
+    newPolygonItem->setRotation(inObj.value(KEY_ROTATE).toInt());
+    newPolygonItem->setTransformOriginPoint(QPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt()));
+    newPolygonItem->setFillRule(Qt::WindingFill);
+    newPolygonItem->setPolygon(polygon);
 
-     result->SetBoundingRect(rect);
-     result->SetFigureCenterPoint(QPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt()));
-     result->SetBrushColor(QColor(inObj.value(KEY_COLORBRUSH).toString()));
-     result->SetPenColor(inObj.value(KEY_COLORPEN).toString());
-     result->SetFigureExternalRepresentation(newPolygonItem);
-     result->SetChosedThickness(inObj.value(KEY_THICKNESS).toInt());
+    result->SetBoundingRect(rect);
+    result->SetFigureCenterPoint(QPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt()));
+    result->SetBrushColor(QColor(inObj.value(KEY_COLORBRUSH).toString()));
+    result->SetPenColor(inObj.value(KEY_COLORPEN).toString());
+    result->SetFigureExternalRepresentation(newPolygonItem);
+    result->SetChosedThickness(inObj.value(KEY_THICKNESS).toInt());
 
-     return result;
- }
+    return result;
+}

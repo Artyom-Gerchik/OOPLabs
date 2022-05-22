@@ -6,11 +6,8 @@
 #include <QJsonValue>
 #include <QJsonDocument>
 
-#include "figure.h"
-#include "rectangle.h"
-#include "ellipse.h"
-#include "polygon.h"
-#include "line.h"
+#include "figurefactory.h"
+
 
 
 class FigureSerializer
@@ -20,6 +17,8 @@ public:
 
     bool dump(Figure* fugure, QString filePath);
     Figure* load(QString filePath);
+private:
+    FigureFactory figureFactory;
 };
 
 #endif // FIGURESERIALIZER_H
