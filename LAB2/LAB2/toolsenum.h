@@ -8,8 +8,8 @@ enum Tools
     Draw,
     Fill,
     DrawFigure,
-//    Copy,
-//    Paste
+    Copy,
+    Paste
 };
 
 #endif // TOOLSENUM_H

@@ -4,8 +4,6 @@ MainScene::MainScene(QObject *parent) : QGraphicsScene(parent)
 {
     ChosedTool = Initial;
     ChosedFigure = NULL;
-    CopiedFigure = NULL;
-    FigureToPaste = NULL;
 }
 
 MainScene::~MainScene()
@@ -39,12 +37,13 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 centerPoint = ListOfCenters.at(i).x();
 
                 if(items().at(i) == FiguresList.at(0) && items().at(i) -> isVisible() && centerPoint != 0){ // FiguresList(0) because we need only upper figure
-                    ChosedFigure = new Figure();
+                    /*ChosedFigure = new Figure();
                     ChosedFigure -> SetFigureExternalRepresentation(items().at(i));
                     ChosedFigure -> SetFigureCenterPoint(ListOfCenters.at(i));
                     ChosedFigure -> GetFigureExternalRepresentation() -> setPos(event -> scenePos().x() - ChosedFigure -> GetFigureCenterPoint().x(),
-                                                                                event -> scenePos().y() - ChosedFigure -> GetFigureCenterPoint().y());
-                    break;
+                                                                                event -> scenePos().y() - ChosedFigure -> GetFigureCenterPoint().y());*/
+                    // break;
+                    ChosedFigure = ListOfFigures.at(i);
                 }
                 update();
             }
@@ -86,44 +85,10 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         update();
         break;
     }
-//    case(Copy):{
-
-//        QPointF PointToFind;
-//        PointToFind.setX(event->scenePos().x());
-//        PointToFind.setY(event->scenePos().y());
-//        QList<QGraphicsItem *> FiguresList = items(PointToFind); // getting all figures, wich on this point
-
-//        if(!FiguresList.isEmpty()){
-//            int centerPoint = 0;
-
-//            for(int i = 0; i < items().length(); i++){
-//                centerPoint = ListOfCenters.at(i).x();
-
-//                if(items().at(i) == FiguresList.at(0) && items().at(i) -> isVisible() && centerPoint != 0){ // FiguresList(0) because we need only upper figure
-//                    CopiedFigure = new Figure();
-//                    CopiedFigure -> SetFigureExternalRepresentation(items().at(i));
-//                    CopiedFigure -> SetFigureCenterPoint(ListOfCenters.at(i));
-//                    CopiedFigure -> GetFigureExternalRepresentation() -> setPos(event -> scenePos().x() - CopiedFigure -> GetFigureCenterPoint().x(),
-//                                                                                event -> scenePos().y() - CopiedFigure -> GetFigureCenterPoint().y());
-//                    break;
-//                }
-//                update();
-//            }
-//            if(centerPoint == 0){
-//                ChosedFigure = NULL;
-//            }
-//        }
-//        break;
-//    }
-//    case(Paste):{
-
-//        FigureToPaste = CopiedFigure;
-//        FigureToPaste -> Release(event, this);
-//        ListOfCenters.push_front(FigureToPaste -> GetFigureCenterPoint());
-//        update();
-
-//        break;
-//    }
+    case(Copy):{
+        CopyItem(event);
+        break;
+    }
 
     }
 
@@ -192,6 +157,9 @@ void MainScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event){
 
         ChosedFigure -> Release(event, this);
         ListOfCenters.push_front(ChosedFigure -> GetFigureCenterPoint());
+        if(!ChosedFigure->IsContinuous){
+            ChosedTool = Move;
+        }
         update();
         break;
     }
@@ -217,6 +185,7 @@ void MainScene::SetChosedBrushColor(const QColor &NewChosedBrushColor){
 }
 
 void MainScene::SetChosedFigure(Figure *NewChosedFigure){
+    ListOfFigures.push_front(NewChosedFigure);
     ChosedFigure = NewChosedFigure;
     ChosedTool = DrawFigure;
 }
@@ -262,3 +231,24 @@ void MainScene::Redo(){
 int MainScene::GetChosedThickness() const{
     return ChosedThickness;
 }
+
+void MainScene::DeleteItem(){
+    if(ChosedFigure != NULL && ChosedFigure->GetFigureExternalRepresentation()->isVisible()){
+        ChosedFigure->GetFigureExternalRepresentation()->setVisible(false);
+    }
+}
+
+void MainScene::CopyItem(QGraphicsSceneMouseEvent *event){
+    Figure* Figure = ChosedFigure->CopyItem();
+    ListOfFigures.push_front(Figure);
+    Figure->GetFigureExternalRepresentation()->setPos(event->scenePos().x() - ChosedFigure->GetFigureCenterPoint().x(),
+                                                      event->scenePos().y() - ChosedFigure->GetFigureCenterPoint().y());
+    ListOfCenters.push_front(Figure->GetFigureCenterPoint());
+    this->addItem(Figure->GetFigureExternalRepresentation());
+    this->update();
+}
+
+void MainScene::Dump(QString FilePath){
+    serializer.dump(ChosedFigure, FilePath);
+}
+

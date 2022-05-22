@@ -50,6 +50,8 @@ private:
     QAction *tools_rotate_left_act;
     QAction *tools_copy_act;
     QAction *tools_paste_act;
+    QAction *tools_delete_act;
+    QAction *tools_serialize_act;
 
 private slots:
     void slotTimer();
@@ -72,6 +74,8 @@ private slots:
     void tools_rotate_left();
     void tools_copy();
     void tools_paste();
+    void tools_delete();
+    void tools_serialize();
 
     void on_penWidthBox_valueChanged(int arg1);
 };

@@ -13,6 +13,7 @@
 #include "brush.h"
 #include "floodfill.h"
 #include "toolsenum.h"
+#include "figureserializer.h"
 
 class MainScene : public QGraphicsScene
 {
@@ -33,12 +34,12 @@ private:
     /* TOOLS */
     Brush Brush;
     FloodFill FloodFill;
+    FigureSerializer serializer;
     /* TOOLS */
 
     Figure* ChosedFigure;
-    Figure* CopiedFigure;
-    Figure* FigureToPaste;
     QVector<QPoint> ListOfCenters;
+    QVector<Figure*> ListOfFigures;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -58,6 +59,12 @@ public:
     void Undo();
     void Redo();
     int GetChosedThickness() const;
+
+    void DeleteItem();
+    void CopyItem(QGraphicsSceneMouseEvent *event);
+    void Dump(QString filePath);
+    void Load(QString);
+
 
 };
 

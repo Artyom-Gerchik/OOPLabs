@@ -3,6 +3,8 @@
 Line::Line()
 {
 
+    IsContinuous = false;
+
 }
 
 void Line::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)

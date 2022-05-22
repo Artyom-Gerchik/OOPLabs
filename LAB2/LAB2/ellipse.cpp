@@ -3,6 +3,8 @@
 Ellipse::Ellipse()
 {
 
+    IsContinuous = false;
+
 }
 
 void Ellipse::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)
@@ -43,4 +45,8 @@ void Ellipse::Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene)
     point.setX(ellipse -> boundingRect().topLeft().x() + (ellipse -> boundingRect().bottomRight().x() - ellipse -> boundingRect().topLeft().x()) / 2);
     point.setY(ellipse -> boundingRect().topLeft().y() + (ellipse -> boundingRect().bottomRight().y() - ellipse -> boundingRect().topLeft().y()) / 2);
     SetFigureCenterPoint(point);
+}
+
+Figure *Ellipse::CopyItem(){
+
 }

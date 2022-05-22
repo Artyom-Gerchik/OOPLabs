@@ -8,7 +8,6 @@ class Broken : public Figure
 private:
     int X;
     int Y;
-    bool start;
     QGraphicsLineItem* broken;
 
     QColor chosedPenColor;

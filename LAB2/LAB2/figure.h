@@ -15,13 +15,13 @@ private:
     QPoint FigureCenterPoint;
     QColor PenColor;
     QColor BrushColor;
-    QRectF BoundsRect;
+    QRectF BoundingRect;
     int ChosedThickness;
 
 
 public:
     bool IsContinuous;
-    bool FirstTime;
+    bool Start;
 
     Figure();
 
@@ -49,8 +49,8 @@ public:
     const QColor &GetPenColor() const;
     void SetPenColor(const QColor &NewPenColor);
 
-    const QRectF &GetBoundsRect() const;
-    void SetBoundsRect(const QRectF &NewBoundsRect);
+    const QRectF &GetBoundingRect() const;
+    void SetBoundingRect(const QRectF &NewBoundingRect);
 
 };
 

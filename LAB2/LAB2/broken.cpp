@@ -2,12 +2,13 @@
 
 Broken::Broken()
 {
-    start = true;
+    IsContinuous = true;
+    Start = true;
 }
 
 void Broken::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)
 {
-    if(start){
+    if(Start){
         chosedPenColor = penColor;
         chosedPenThickness = thickness;
     }
@@ -23,7 +24,7 @@ void Broken::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColo
 
     broken -> setPen(pen);
 
-    if(start){
+    if(Start){
         X = event -> scenePos().x();
         Y = event -> scenePos().y();
         broken -> setLine(X, Y, X, Y);
@@ -50,7 +51,7 @@ void Broken::Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene)
     X = event -> scenePos().x();
     Y = event -> scenePos().y();
 
-    start = false;
+    Start = false;
 
     QPoint point;
     point.setX(broken -> boundingRect().topLeft().x() + (broken -> boundingRect().bottomRight().x() - broken -> boundingRect().topLeft().x()) / 2);

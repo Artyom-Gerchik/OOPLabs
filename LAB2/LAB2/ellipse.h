@@ -11,9 +11,10 @@ class Ellipse : public Figure
 
 public:
     Ellipse();
-    void Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor colorPen, QColor colorBrush, int thickness);
-    void Move(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene);
-    void Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene);
+    void Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor colorPen, QColor colorBrush, int thickness) final;
+    void Move(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene) final;
+    void Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene) final;
+    Figure *CopyItem();
 };
 
 #endif // ELLIPSE_H

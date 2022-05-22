@@ -7,7 +7,7 @@ class Polygon : public Figure
 {
 private:
     int countOfAngles;
-    bool start;
+    bool Start;
     QGraphicsPolygonItem* polygon;
 
     QColor chosedPenColor;

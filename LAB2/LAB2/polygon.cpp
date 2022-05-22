@@ -2,9 +2,10 @@
 
 Polygon::Polygon()
 {
+    IsContinuous = true;
     countOfAngles = 0;
     polygon = new QGraphicsPolygonItem();
-    start = true;
+    Start = true;
 }
 
 void Polygon::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)
@@ -12,13 +13,13 @@ void Polygon::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QCol
     QPolygonF polygonf = polygon -> polygon();
     SetFigureExternalRepresentation(polygon);
 
-    if(start){
+    if(Start){
 
         polygonf << QPointF(event -> scenePos().x(), event -> scenePos().y());
         chosedPenColor = penColor;
         chosedBrushColor = brushColor;
         chosedPenThickness = thickness;
-        start = false;
+        Start = false;
     }
 
     polygonf << QPointF(event -> scenePos().x(), event -> scenePos().y());

@@ -76,10 +76,10 @@ void Figure::SetPenColor(const QColor &NewPenColor){
     PenColor = NewPenColor;
 }
 
-const QRectF &Figure::GetBoundsRect() const{
-    return BoundsRect;
+const QRectF &Figure::GetBoundingRect() const{
+    return BoundingRect;
 }
 
-void Figure::SetBoundsRect(const QRectF &NewBoundsRect){
-    BoundsRect = NewBoundsRect;
+void Figure::SetBoundingRect(const QRectF &NewBoundingRect){
+    BoundingRect = NewBoundingRect;
 }
