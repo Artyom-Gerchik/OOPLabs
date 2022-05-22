@@ -39,3 +39,47 @@ void Figure::Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene)
 {
 
 }
+
+QJsonObject Figure::SerializeFigure(){
+
+}
+
+QJsonObject Figure::DeSerializeFigure(){
+
+}
+
+Figure* Figure::CopyItem(){
+
+}
+
+const QColor &Figure::GetBrushColor() const{
+    return BrushColor;
+}
+
+void Figure::SetBrushColor(const QColor &NewBrushColor){
+    BrushColor = NewBrushColor;
+}
+
+int Figure::GetChosedThickness() const{
+    return ChosedThickness;
+}
+
+void Figure::SetChosedThickness(int NewThickness){
+    ChosedThickness = NewThickness;
+}
+
+const QColor &Figure::GetPenColor() const{
+    return PenColor;
+}
+
+void Figure::SetPenColor(const QColor &NewPenColor){
+    PenColor = NewPenColor;
+}
+
+const QRectF &Figure::GetBoundsRect() const{
+    return BoundsRect;
+}
+
+void Figure::SetBoundsRect(const QRectF &NewBoundsRect){
+    BoundsRect = NewBoundsRect;
+}
