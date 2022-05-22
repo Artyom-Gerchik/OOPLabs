@@ -4,6 +4,13 @@
 #include <QMainWindow>
 #include <QtWidgets>
 
+QString ellipse = typeid (new Ellipse()).name();
+QString rectangle = typeid (new Rectangle()).name();
+QString line = typeid (new Line()).name();
+QString broken = typeid (new Broken()).name();
+QString polygon = typeid (new Polygon()).name();
+
+
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
 
@@ -143,6 +150,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     timer -> start(100);
 
     this->setFixedSize(QSize(800, 500));
+
+    updateFiguresTable();
+
 }
 
 MainWindow::~MainWindow(){
@@ -168,31 +178,26 @@ void MainWindow::slotTimer(){
 }
 
 void MainWindow::figures_draw_rectangle(){
-    Rectangle* rectangle = new Rectangle();
     mainScene -> SetChosedFigure(rectangle);
     QMessageLogger().debug() << "rectangle SELECTED IN MAIN WINDOW";
 }
 
 void MainWindow::figures_draw_ellipse(){
-    Ellipse* ellipse = new Ellipse();
     mainScene -> SetChosedFigure(ellipse);
     QMessageLogger().debug() << "ellipse SELECTED IN MAIN WINDOW";
 }
 
 void MainWindow::figures_draw_polygon(){
-    Polygon* polygon = new Polygon();
     mainScene -> SetChosedFigure(polygon);
     QMessageLogger().debug() << "polygon SELECTED IN MAIN WINDOW";
 }
 
 void MainWindow::figures_draw_line(){
-    Line* line = new Line();
     mainScene -> SetChosedFigure(line);
     QMessageLogger().debug() << "line SELECTED IN MAIN WINDOW";
 }
 
 void MainWindow::figures_draw_broken(){
-    Broken* broken = new Broken();
     mainScene -> SetChosedFigure(broken);
     QMessageLogger().debug() << "broken SELECTED IN MAIN WINDOW";
 }
@@ -293,5 +298,29 @@ void MainWindow::on_penWidthBox_valueChanged(int arg1)
 {
     thickness = ui ->penWidthBox ->value();
     mainScene ->SetChosedThickness(thickness);
+}
+
+void MainWindow::updateFiguresTable(){
+    ui->figureTable->setColumnCount(1);
+
+    ui->figureTable->setRowCount(mainScene->ImportedFigures->count());
+    ui->figureTable->setHorizontalHeaderLabels(QStringList()<< "Название фигуры");
+
+    for(int row = 0; row < mainScene->ImportedFigures->count(); row++)
+    {
+        QTableWidgetItem *index = new QTableWidgetItem(tr("%1").arg(mainScene->ImportedFigures->at(row)));
+        ui->figureTable->setItem(row, 0, index);
+        ui->figureTable->item(row, 0)->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsSelectable);
+
+        //        QTableWidgetItem *BIK = new QTableWidgetItem(tr("%1").arg("Активна"));
+        //        ui->CustomTable->setItem(row, 1, BIK);
+        //        ui->CustomTable->item(row, 1)->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsSelectable);
+    }
+
+}
+
+void MainWindow::on_choseButton_clicked(){
+    int choose = ui->choseSpinBox->value();
+    mainScene->SetChosedFigure(mainScene->ImportedFigures->at(choose - 1));
 }
 

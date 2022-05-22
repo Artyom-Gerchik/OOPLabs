@@ -51,6 +51,9 @@ public:
     const QRectF &GetBoundingRect() const;
     void SetBoundingRect(const QRectF &NewBoundingRect);
 
+    virtual Figure *CreateFigure();
+    virtual QString GetFigureClassName();
+
 };
 
 #endif // FIGURE_H

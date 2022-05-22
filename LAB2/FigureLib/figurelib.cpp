@@ -84,3 +84,11 @@ void Figure::SetBoundingRect(const QRectF &NewBoundingRect){
     BoundingRect = NewBoundingRect;
 }
 
+Figure *Figure::CreateFigure(){
+
+}
+
+QString Figure::GetFigureClassName(){
+
+}
+

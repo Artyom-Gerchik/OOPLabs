@@ -12,6 +12,10 @@ class FigureFactory
 public:
     FigureFactory();
     Figure *CreateFigure(QString FigureName);
+    void RegistrateNewFigure(Figure* figure);
+
+private:
+    QMap<QString, Figure*> FiguresMap;
 };
 
 #endif // FIGUREFACTORY_H

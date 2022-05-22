@@ -1,7 +1,5 @@
 #include "figureserializer.h"
 
-#define KEY_CENTERPOINT "CenterPoint"
-#define KEY_EXTERNALIMAGEOFFIGURE "ExternalImageOfFigure"
 
 FigureSerializer::FigureSerializer()
 {
@@ -27,7 +25,7 @@ bool FigureSerializer::dump(Figure* figure, QString filePath){
     return true;
 }
 
-Figure* FigureSerializer::load(QString filePath){
+Figure* FigureSerializer::load(QString filePath, FigureFactory* Factory){
     QFile inFile(filePath);
 
     if(!inFile.open(QIODevice::ReadOnly))
@@ -38,7 +36,7 @@ Figure* FigureSerializer::load(QString filePath){
 
     QMessageLogger().debug() << "Deserializing:" + jsonObj.value("Type").toString();
 
-    Figure* figure = figureFactory.CreateFigure(jsonObj.value("Type").toString());
+    Figure* figure = Factory->CreateFigure(jsonObj.value("Type").toString());
     return figure -> DeSerializeFigure(jsonObj);
 
 }

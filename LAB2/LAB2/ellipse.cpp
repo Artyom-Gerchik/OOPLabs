@@ -18,6 +18,14 @@ Ellipse::Ellipse()
     IsContinuous = false;
 }
 
+Figure *Ellipse::CreateFigure(){
+    return new Ellipse();
+}
+
+QString Ellipse::GetFigureClassName(){
+    return typeid(this).name();
+}
+
 void Ellipse::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)
 {
 
@@ -90,54 +98,54 @@ Figure *Ellipse::CopyItem(){
 }
 
 QJsonObject Ellipse::SerializeFigure()
- {
-     qreal rotate = GetFigureExternalRepresentation()->rotation();
-     qreal scale = GetFigureExternalRepresentation()->scale();
+{
+    qreal rotate = GetFigureExternalRepresentation()->rotation();
+    qreal scale = GetFigureExternalRepresentation()->scale();
 
-     QJsonObject serialized;
-     serialized.insert(KEY_TYPE, QJsonValue::fromVariant("Ellipse"));
-     serialized.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().x()));
-     serialized.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().y()));
-     serialized.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().x()));
-     serialized.insert(KEY_BOTRIGHT_Y, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().y()));
-     serialized.insert(KEY_CENTERPOINT_X, QJsonValue::fromVariant((int)GetFigureCenterPoint().x()));
-     serialized.insert(KEY_CENTERPOINT_Y, QJsonValue::fromVariant((int)GetFigureCenterPoint().y()));
-     serialized.insert(KEY_COLORBRUSH, QJsonValue::fromVariant(GetBrushColor()));
-     serialized.insert(KEY_COLORPEN, QJsonValue::fromVariant(GetPenColor()));
-     serialized.insert(KEY_THICKNESS, QJsonValue::fromVariant(GetChosedThickness()));
-     serialized.insert(KEY_ROTATE, QJsonValue::fromVariant(rotate));
-     serialized.insert(KEY_SCALE, QJsonValue::fromVariant(scale));
+    QJsonObject serialized;
+    serialized.insert(KEY_TYPE, QJsonValue::fromVariant(GetFigureClassName()));
+    serialized.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().x()));
+    serialized.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().y()));
+    serialized.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().x()));
+    serialized.insert(KEY_BOTRIGHT_Y, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().y()));
+    serialized.insert(KEY_CENTERPOINT_X, QJsonValue::fromVariant((int)GetFigureCenterPoint().x()));
+    serialized.insert(KEY_CENTERPOINT_Y, QJsonValue::fromVariant((int)GetFigureCenterPoint().y()));
+    serialized.insert(KEY_COLORBRUSH, QJsonValue::fromVariant(GetBrushColor()));
+    serialized.insert(KEY_COLORPEN, QJsonValue::fromVariant(GetPenColor()));
+    serialized.insert(KEY_THICKNESS, QJsonValue::fromVariant(GetChosedThickness()));
+    serialized.insert(KEY_ROTATE, QJsonValue::fromVariant(rotate));
+    serialized.insert(KEY_SCALE, QJsonValue::fromVariant(scale));
 
-     return serialized;
- }
+    return serialized;
+}
 
- Figure *Ellipse::DeSerializeFigure(QJsonObject inObj)
- {
-     Ellipse* deSerializedItem = new Ellipse();
-     QGraphicsEllipseItem* newEllipseItem = new QGraphicsEllipseItem();
+Figure *Ellipse::DeSerializeFigure(QJsonObject inObj)
+{
+    Ellipse* deSerializedItem = new Ellipse();
+    QGraphicsEllipseItem* newEllipseItem = new QGraphicsEllipseItem();
 
-     QPen pen;
-     pen.setWidth(inObj.value(KEY_THICKNESS).toInt());
-     pen.setColor(inObj.value(KEY_COLORPEN).toString());
+    QPen pen;
+    pen.setWidth(inObj.value(KEY_THICKNESS).toInt());
+    pen.setColor(inObj.value(KEY_COLORPEN).toString());
 
-     QRectF rect;
-     rect.setTopLeft(QPointF(inObj.value(KEY_TOPLEFT_X).toInt(), inObj.value(KEY_TOPLEFT_Y).toInt()));
-     rect.setBottomRight(QPointF(inObj.value(KEY_BOTRIGHT_X).toInt(), inObj.value(KEY_BOTRIGHT_Y).toInt()));
+    QRectF rect;
+    rect.setTopLeft(QPointF(inObj.value(KEY_TOPLEFT_X).toInt(), inObj.value(KEY_TOPLEFT_Y).toInt()));
+    rect.setBottomRight(QPointF(inObj.value(KEY_BOTRIGHT_X).toInt(), inObj.value(KEY_BOTRIGHT_Y).toInt()));
 
-     newEllipseItem->setRect(rect);
-     newEllipseItem->setBrush(QColor(inObj.value(KEY_COLORBRUSH).toString()));
-     newEllipseItem->setPen(pen);
-     newEllipseItem->setScale(inObj.value(KEY_SCALE).toInt());
-     newEllipseItem->setRotation(inObj.value(KEY_ROTATE).toInt());
-     newEllipseItem->setTransformOriginPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt());
+    newEllipseItem->setRect(rect);
+    newEllipseItem->setBrush(QColor(inObj.value(KEY_COLORBRUSH).toString()));
+    newEllipseItem->setPen(pen);
+    newEllipseItem->setScale(inObj.value(KEY_SCALE).toInt());
+    newEllipseItem->setRotation(inObj.value(KEY_ROTATE).toInt());
+    newEllipseItem->setTransformOriginPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt());
 
-     deSerializedItem->SetBoundingRect(rect);
-     deSerializedItem->SetFigureCenterPoint(QPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt()));
-     deSerializedItem->SetBrushColor(inObj.value(KEY_COLORBRUSH).toString());
-     deSerializedItem->SetPenColor(inObj.value(KEY_COLORPEN).toString());
-     deSerializedItem->SetFigureExternalRepresentation(newEllipseItem);
-     deSerializedItem->SetChosedThickness(inObj.value(KEY_THICKNESS).toInt());
+    deSerializedItem->SetBoundingRect(rect);
+    deSerializedItem->SetFigureCenterPoint(QPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt()));
+    deSerializedItem->SetBrushColor(inObj.value(KEY_COLORBRUSH).toString());
+    deSerializedItem->SetPenColor(inObj.value(KEY_COLORPEN).toString());
+    deSerializedItem->SetFigureExternalRepresentation(newEllipseItem);
+    deSerializedItem->SetChosedThickness(inObj.value(KEY_THICKNESS).toInt());
 
-     return deSerializedItem;
- }
+    return deSerializedItem;
+}
 

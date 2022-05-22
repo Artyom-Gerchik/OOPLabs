@@ -13,6 +13,10 @@ private:
 
 public:
     Line();
+
+    Figure *CreateFigure() final;
+    QString GetFigureClassName() final;
+
     void Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor colorPen, QColor colorBrush, int thickness) final;
     void Move(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene) final;
     void Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene) final;

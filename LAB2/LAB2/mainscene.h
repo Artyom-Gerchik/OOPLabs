@@ -14,6 +14,7 @@
 #include "floodfill.h"
 #include "toolsenum.h"
 #include "figureserializer.h"
+#include "libextractor.h"
 
 class MainScene : public QGraphicsScene
 {
@@ -47,7 +48,11 @@ private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+    FigureFactory* Factory;
+    LibExtractor* Extractor;
+
 public:
+    QStringList *ImportedFigures;
     MainScene(QObject *parent = 0);
     ~MainScene();
 
@@ -55,7 +60,7 @@ public:
     void SetChosedTool(Tools NewChosedTool);
     void SetChosedPenColor(const QColor &NewChosedPenColor);
     void SetChosedBrushColor(const QColor &NewChosedBrushColor);
-    void SetChosedFigure(Figure *NewChosedFigure);
+    void SetChosedFigure(QString FigureName);
     void Rotate(int RotateAngle);
     void Scale (qreal ScaleValue);
     void Undo();

@@ -15,6 +15,7 @@ SOURCES += \
     figurefactory.cpp \
     figureserializer.cpp \
     floodfill.cpp \
+    libextractor.cpp \
     line.cpp \
     main.cpp \
     mainscene.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     figureserializer.h \
     floodfill.h \
     formainwindow.h \
+    libextractor.h \
     line.h \
     mainscene.h \
     mainwindow.h \

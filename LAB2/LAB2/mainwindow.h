@@ -54,6 +54,9 @@ private:
     QAction *tools_serialize_act;
     QAction *tools_de_serialize_act;
 
+    void updateFiguresTable();
+
+
 private slots:
     void slotTimer();
 
@@ -80,5 +83,8 @@ private slots:
     void tools_de_serialize();
 
     void on_penWidthBox_valueChanged(int arg1);
+
+    void on_choseButton_clicked();
+
 };
 #endif // MAINWINDOW_H

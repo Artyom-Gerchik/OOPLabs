@@ -16,9 +16,7 @@ public:
     FigureSerializer();
 
     bool dump(Figure* fugure, QString filePath);
-    Figure* load(QString filePath);
-private:
-    FigureFactory figureFactory;
+    Figure* load(QString filePath, FigureFactory* Factory);
 };
 
 #endif // FIGURESERIALIZER_H

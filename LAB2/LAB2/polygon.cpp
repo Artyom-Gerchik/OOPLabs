@@ -23,6 +23,14 @@ Polygon::Polygon()
     Start = true;
 }
 
+Figure *Polygon::CreateFigure(){
+    return new Polygon();
+}
+
+QString Polygon::GetFigureClassName(){
+    return typeid(this).name();
+}
+
 void Polygon::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)
 {
     SetBrushColor(brushColor);
@@ -113,7 +121,7 @@ QJsonObject Polygon::SerializeFigure()
     qreal scale = GetFigureExternalRepresentation()->scale();
 
     QJsonObject serializeObj;
-    serializeObj.insert(KEY_TYPE, QJsonValue::fromVariant("Polygon"));
+    serializeObj.insert(KEY_TYPE, QJsonValue::fromVariant(GetFigureClassName()));
 
     int i = 0;
     foreach(QPointF point, ChosedPolygon)

@@ -4,6 +4,12 @@ MainScene::MainScene(QObject *parent) : QGraphicsScene(parent)
 {
     ChosedTool = Initial;
     ChosedFigure = NULL;
+
+    Factory = new FigureFactory();
+    Extractor = new LibExtractor();
+    ImportedFigures = new QStringList();
+
+    Extractor -> UpdateImportedLibs(ImportedFigures, Factory);
 }
 
 MainScene::~MainScene()
@@ -197,10 +203,16 @@ void MainScene::SetChosedBrushColor(const QColor &NewChosedBrushColor){
     ChosedBrushColor = NewChosedBrushColor;
 }
 
-void MainScene::SetChosedFigure(Figure *NewChosedFigure){
-    ListOfFigures.push_front(NewChosedFigure);
-    ChosedFigure = NewChosedFigure;
-    ChosedTool = DrawFigure;
+void MainScene::SetChosedFigure(QString FigureName){
+    //    ListOfFigures.push_front(NewChosedFigure);
+    //    ChosedFigure = NewChosedFigure;
+    ChosedFigure = Factory->CreateFigure(FigureName);
+    if(ChosedFigure != NULL){
+
+        ListOfFigures.push_front(ChosedFigure);
+        ChosedTool = DrawFigure;
+    }
+
 }
 
 void MainScene::Rotate(int RotateAngle){
@@ -257,8 +269,8 @@ void MainScene::CopyItem(QGraphicsSceneMouseEvent *event){
     Figure->GetFigureExternalRepresentation()->setPos(event->scenePos().x() - ChosedFigure->GetFigureCenterPoint().x(),
                                                       event->scenePos().y() - ChosedFigure->GetFigureCenterPoint().y());
     ListOfCenters.push_front(Figure->GetFigureCenterPoint());
-    this->addItem(Figure->GetFigureExternalRepresentation());
-    this->update();
+    addItem(Figure->GetFigureExternalRepresentation());
+    update();
 }
 
 void MainScene::Dump(QString FilePath){
@@ -268,7 +280,7 @@ void MainScene::Dump(QString FilePath){
 }
 
 void MainScene::Load(QString FilePath){
-    Figure* figure = serializer.load(FilePath);
+    Figure* figure = serializer.load(FilePath, Factory);
     loadedFigure = figure;
     ChosedTool = Paste;
 }

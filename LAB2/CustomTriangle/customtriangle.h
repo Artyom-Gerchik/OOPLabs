@@ -1,16 +1,30 @@
-#ifndef ELLIPSE_H
-#define ELLIPSE_H
+#ifndef CUSTOMTRIANGLE_H
+#define CUSTOMTRIANGLE_H
+
+#include "CustomTriangle_global.h"
+
+#include <QGraphicsScene>
+#include <QGraphicsRectItem>
+#include <QGraphicsSceneMouseEvent>
 
 #include "figurelib.h"
 
-class Ellipse : public Figure
+extern "C" CUSTOMTRIANGLE_EXPORT Figure* extractFromLibrary();
+
+class CustomTriangle : public Figure
 {
+private:
     int X;
     int Y;
-    QGraphicsEllipseItem* ellipse;
+    QGraphicsPolygonItem* customTriangle;
+
+    QColor chosedPenColor;
+    QColor chosedBrushColor;
+    int chosedThickness;
+    QPolygonF currentPolygon;
 
 public:
-    Ellipse();
+    CustomTriangle();
 
     Figure *CreateFigure() final;
     QString GetFigureClassName() final;
@@ -24,4 +38,4 @@ public:
     Figure *DeSerializeFigure(QJsonObject inObj) final;
 };
 
-#endif // ELLIPSE_H
+#endif // CUSTOMTRIANGLE_H

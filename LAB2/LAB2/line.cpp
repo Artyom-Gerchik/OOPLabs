@@ -17,6 +17,14 @@ Line::Line()
     IsContinuous = false;
 }
 
+Figure *Line::CreateFigure(){
+    return new Line();
+}
+
+QString Line::GetFigureClassName(){
+    return typeid(this).name();
+}
+
 void Line::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)
 {
     SetBrushColor(brushColor);
@@ -90,7 +98,7 @@ QJsonObject Line::SerializeFigure()
     qreal scale = GetFigureExternalRepresentation()->scale();
 
     QJsonObject serialized;
-    serialized.insert(KEY_TYPE, QJsonValue::fromVariant("Line"));
+    serialized.insert(KEY_TYPE, QJsonValue::fromVariant(GetFigureClassName()));
     serialized.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().x()));
     serialized.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().y()));
     serialized.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().x()));

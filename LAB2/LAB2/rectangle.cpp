@@ -19,6 +19,14 @@ Rectangle::Rectangle()
     IsContinuous = false;
 }
 
+Figure *Rectangle::CreateFigure(){
+    return new Rectangle();
+}
+
+QString Rectangle::GetFigureClassName(){
+    return typeid(this).name();
+}
+
 void Rectangle::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)
 {
     SetBrushColor(brushColor);
@@ -96,7 +104,7 @@ QJsonObject Rectangle::SerializeFigure(){
 
     QJsonObject serializedRect;
 
-    serializedRect.insert(KEY_TYPE, QJsonValue::fromVariant("Rectangle"));
+    serializedRect.insert(KEY_TYPE, QJsonValue::fromVariant(GetFigureClassName()));
     serializedRect.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().x()));
     serializedRect.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant((int)GetBoundingRect().topLeft().y()));
     serializedRect.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant((int)GetBoundingRect().bottomRight().x()));
