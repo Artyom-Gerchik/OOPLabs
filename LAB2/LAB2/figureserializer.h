@@ -5,7 +5,13 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonDocument>
+
 #include "figure.h"
+#include "rectangle.h"
+#include "ellipse.h"
+#include "polygon.h"
+#include "line.h"
+
 
 class FigureSerializer
 {

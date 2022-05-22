@@ -52,6 +52,7 @@ private:
     QAction *tools_paste_act;
     QAction *tools_delete_act;
     QAction *tools_serialize_act;
+    QAction *tools_de_serialize_act;
 
 private slots:
     void slotTimer();
@@ -76,6 +77,7 @@ private slots:
     void tools_paste();
     void tools_delete();
     void tools_serialize();
+    void tools_de_serialize();
 
     void on_penWidthBox_valueChanged(int arg1);
 };

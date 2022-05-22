@@ -33,8 +33,10 @@ Figure* FigureSerializer::load(QString filePath){
     if(!inFile.open(QIODevice::ReadOnly))
         return nullptr;
 
-    QDataStream dumpStream(&inFile);
-    dumpStream.setVersion(QDataStream::Qt_6_0);
+    QJsonDocument document = QJsonDocument().fromJson(inFile.readAll());
+    QJsonObject jsonObj = document.object();
+    Rectangle* rect = new Rectangle();
+    return rect -> DeSerializeFigure(jsonObj);
 
-    Figure* result;
+
 }

@@ -1,12 +1,18 @@
 #include "rectangle.h"
 
-#define KEY_BOUNDINGRECT "BoundingRect"
-#define KEY_CENTERPOINT "CenterPoint"
-#define KEY_COLORBRUSH "BrushColor"
-#define KEY_COLORPEN "PenColor"
-#define KEY_THICKNESS "ChosedThickness"
+#define KEY_TYPE "Type"
+#define KEY_TOPLEFT_X "TopLeft_X"
+#define KEY_TOPLEFT_Y "TopLeft_Y"
+#define KEY_BOTRIGHT_X "BottomRight_X"
+#define KEY_BOTRIGHT_Y "BottomRight_Y"
+#define KEY_CENTERPOINT_X "CenterPoint_X"
+#define KEY_CENTERPOINT_Y "CenterPoint_Y"
+#define KEY_COLORBRUSH "ColorBrush"
+#define KEY_COLORPEN "ColorPen"
+#define KEY_THICKNESS "Thickness"
 #define KEY_ROTATE "Rotate"
 #define KEY_SCALE "Scale"
+
 
 Rectangle::Rectangle()
 {
@@ -55,22 +61,6 @@ void Rectangle::Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene)
     SetBoundingRect(rectangle->boundingRect());
 }
 
-QJsonObject Rectangle::SerializeFigure(){
-    qreal rotate = GetFigureExternalRepresentation()->rotation();
-    qreal scale = GetFigureExternalRepresentation()->scale();
-
-    QJsonObject serializedRect;
-    serializedRect.insert(KEY_BOUNDINGRECT, QJsonValue::fromVariant(GetBoundingRect()));
-    serializedRect.insert(KEY_CENTERPOINT, QJsonValue::fromVariant(GetFigureCenterPoint()));
-    serializedRect.insert(KEY_COLORBRUSH, QJsonValue::fromVariant(GetBrushColor()));
-    serializedRect.insert(KEY_COLORPEN, QJsonValue::fromVariant(GetPenColor()));
-    serializedRect.insert(KEY_THICKNESS, QJsonValue::fromVariant(GetChosedThickness()));
-    serializedRect.insert(KEY_ROTATE, QJsonValue::fromVariant(rotate));
-    serializedRect.insert(KEY_SCALE, QJsonValue::fromVariant(scale));
-
-    return serializedRect;
-}
-
 Figure *Rectangle::CopyItem(){
 
     Rectangle* copiedItem = new Rectangle();
@@ -99,5 +89,54 @@ Figure *Rectangle::CopyItem(){
 
 }
 
+QJsonObject Rectangle::SerializeFigure(){
+    qreal rotate = GetFigureExternalRepresentation()->rotation();
+    qreal scale = GetFigureExternalRepresentation()->scale();
 
+    QJsonObject serializedRect;
 
+    serializedRect.insert(KEY_TYPE, QJsonValue::fromVariant("Rectangle"));
+    serializedRect.insert(KEY_TOPLEFT_X, QJsonValue::fromVariant(GetBoundingRect().topLeft().x()));
+    serializedRect.insert(KEY_TOPLEFT_Y, QJsonValue::fromVariant(GetBoundingRect().topLeft().y()));
+    serializedRect.insert(KEY_BOTRIGHT_X, QJsonValue::fromVariant(GetBoundingRect().bottomRight().x()));
+    serializedRect.insert(KEY_BOTRIGHT_Y, QJsonValue::fromVariant(GetBoundingRect().bottomRight().y()));
+    serializedRect.insert(KEY_CENTERPOINT_X, QJsonValue::fromVariant(GetFigureCenterPoint().x()));
+    serializedRect.insert(KEY_CENTERPOINT_Y, QJsonValue::fromVariant(GetFigureCenterPoint().y()));
+    serializedRect.insert(KEY_COLORBRUSH, QJsonValue::fromVariant(GetBrushColor()));
+    serializedRect.insert(KEY_COLORPEN, QJsonValue::fromVariant(GetPenColor()));
+    serializedRect.insert(KEY_THICKNESS, QJsonValue::fromVariant(GetChosedThickness()));
+    serializedRect.insert(KEY_ROTATE, QJsonValue::fromVariant(rotate));
+    serializedRect.insert(KEY_SCALE, QJsonValue::fromVariant(scale));
+
+    return serializedRect;
+}
+
+Figure *Rectangle::DeSerializeFigure(QJsonObject inObj)
+{
+    Rectangle* result = new Rectangle();
+    QGraphicsRectItem* newRectangleItem = new QGraphicsRectItem();
+
+    QPen pen;
+    pen.setWidth(inObj.value(KEY_THICKNESS).toInt());
+    pen.setColor(inObj.value(KEY_COLORPEN).toString());
+
+    QRectF rect;
+    rect.setTopLeft(QPointF(inObj.value(KEY_TOPLEFT_X).toInt(), inObj.value(KEY_TOPLEFT_Y).toInt()));
+    rect.setBottomRight(QPointF(inObj.value(KEY_BOTRIGHT_X).toInt(), inObj.value(KEY_BOTRIGHT_Y).toInt()));
+
+    newRectangleItem->setRect(rect);
+    newRectangleItem->setBrush(QColor(inObj.value(KEY_COLORBRUSH).toString()));
+    newRectangleItem->setPen(pen);
+    newRectangleItem->setScale(inObj.value(KEY_SCALE).toInt());
+    newRectangleItem->setRotation(inObj.value(KEY_ROTATE).toInt());
+    newRectangleItem->setTransformOriginPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt());
+
+    result->SetBoundingRect(rect);
+    result->SetFigureCenterPoint(QPoint(inObj.value(KEY_CENTERPOINT_X).toInt(), inObj.value(KEY_CENTERPOINT_Y).toInt()));
+    result->SetBrushColor(inObj.value(KEY_COLORBRUSH).toString());
+    result->SetPenColor(inObj.value(KEY_COLORPEN).toString());
+    result->SetFigureExternalRepresentation(newRectangleItem);
+    result->SetChosedThickness(inObj.value(KEY_THICKNESS).toInt());
+
+    return result;
+}

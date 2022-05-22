@@ -89,6 +89,19 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         CopyItem(event);
         break;
     }
+    case(Paste):{
+
+        ListOfFigures.push_front(loadedFigure);
+        loadedFigure -> GetFigureExternalRepresentation()->setPos(event->scenePos().x() - loadedFigure->GetFigureCenterPoint().x(),
+                                                                  event->scenePos().y() - loadedFigure->GetFigureCenterPoint().y());
+
+        ListOfCenters.push_front(loadedFigure -> GetFigureCenterPoint());
+        this -> addItem(loadedFigure -> GetFigureExternalRepresentation());
+        this -> update();
+        ChosedFigure = loadedFigure;
+        ChosedTool = Move;
+        break;
+    }
 
     }
 
@@ -245,9 +258,6 @@ void MainScene::CopyItem(QGraphicsSceneMouseEvent *event){
                                                       event->scenePos().y() - ChosedFigure->GetFigureCenterPoint().y());
     ListOfCenters.push_front(Figure->GetFigureCenterPoint());
     this->addItem(Figure->GetFigureExternalRepresentation());
-    Figure -> GetFigureExternalRepresentation()->setVisible(false);
-    this->update();
-    Figure -> GetFigureExternalRepresentation()->setVisible(true);
     this->update();
 }
 
@@ -255,3 +265,8 @@ void MainScene::Dump(QString FilePath){
     serializer.dump(ChosedFigure, FilePath);
 }
 
+void MainScene::Load(QString FilePath){
+    Figure* figure = serializer.load(FilePath);
+    loadedFigure = figure;
+    ChosedTool = Paste;
+}

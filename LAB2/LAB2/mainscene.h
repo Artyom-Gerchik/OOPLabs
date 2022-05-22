@@ -41,6 +41,8 @@ private:
     QVector<QPoint> ListOfCenters;
     QVector<Figure*> ListOfFigures;
 
+    Figure* loadedFigure;
+
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -63,7 +65,7 @@ public:
     void DeleteItem();
     void CopyItem(QGraphicsSceneMouseEvent *event);
     void Dump(QString filePath);
-    void Load(QString);
+    void Load(QString filePath);
 
 
 };

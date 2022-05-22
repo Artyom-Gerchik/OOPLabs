@@ -35,10 +35,9 @@ public:
     virtual void Move(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene);
     virtual void Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene);
 
-    virtual QJsonObject SerializeFigure();
-    virtual QJsonObject DeSerializeFigure();
-
     virtual Figure* CopyItem();
+    virtual QJsonObject SerializeFigure();
+    virtual Figure* DeSerializeFigure(QJsonObject inObj);
 
     const QColor &GetBrushColor() const;
     void SetBrushColor(const QColor &NewBrushColor);

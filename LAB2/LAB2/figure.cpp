@@ -44,7 +44,7 @@ QJsonObject Figure::SerializeFigure(){
 
 }
 
-QJsonObject Figure::DeSerializeFigure(){
+Figure* Figure::DeSerializeFigure(QJsonObject inObj){
 
 }
 

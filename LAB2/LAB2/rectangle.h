@@ -18,8 +18,9 @@ public:
     void Move(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene) final;
     void Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene) final;
 
-    QJsonObject SerializeFigure() final;
     Figure *CopyItem() final;
+    QJsonObject SerializeFigure() final;
+    Figure *DeSerializeFigure(QJsonObject inObj) final;
 };
 
 #endif // RECTANGLE_H

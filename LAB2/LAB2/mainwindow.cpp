@@ -85,6 +85,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     tools_serialize_act = new QAction(tr("&Serialize"), this);
     tools_serialize_act -> setShortcut(QKeySequence(tr("Ctrl+Shift+S")));
 
+    tools_de_serialize_act = new QAction(tr("&DeSerialize"), this);
+    tools_de_serialize_act -> setShortcut(QKeySequence(tr("Ctrl+Shift+D")));
+
+
+
     connect(tools_move_act, SIGNAL(triggered()), this, SLOT(tools_move()));
     connect(tools_choose_pen_color_act, SIGNAL(triggered()), this, SLOT(tools_choose_pen_color()));
     connect(tools_choose_floodfill_color_act, SIGNAL(triggered()), this, SLOT(tools_choose_floodfill_color()));
@@ -98,6 +103,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     connect(tools_paste_act, SIGNAL(triggered()), this, SLOT(tools_paste()));
     connect(tools_delete_act, SIGNAL(triggered()), this, SLOT(tools_delete()));
     connect(tools_serialize_act, SIGNAL(triggered()), this, SLOT(tools_serialize()));
+    connect(tools_de_serialize_act, SIGNAL(triggered()), this, SLOT(tools_de_serialize()));
 
 
     toolsMenu = new QMenu(tr("&Tools"),this);
@@ -114,6 +120,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     toolsMenu -> addAction(tools_paste_act);
     toolsMenu -> addAction(tools_delete_act);
     toolsMenu -> addAction(tools_serialize_act);
+    toolsMenu -> addAction(tools_de_serialize_act);
     // TOOLS
 
     menuBar() -> addMenu(figuresMenu);
@@ -263,13 +270,23 @@ void MainWindow::tools_delete(){
 }
 
 void MainWindow::tools_serialize(){
-    QString imagePath = QFileDialog::getSaveFileName(
+    QString filePath = QFileDialog::getSaveFileName(
                 this,
                 tr("Save File"),
-                "",
-                tr("TXT (*.txt)" )
+                "Untitled",
+                tr("JSON (*.json)" )
                 );
-    mainScene->Dump(imagePath);
+    mainScene->Dump(filePath);
+}
+
+void MainWindow::tools_de_serialize(){
+    QString filePath = QFileDialog::getOpenFileName(
+                this,
+                tr("Open File"),
+                "",
+                tr("JSON (*.json)" )
+                );
+    mainScene->Load(filePath);
 }
 
 void MainWindow::on_penWidthBox_valueChanged(int arg1)
