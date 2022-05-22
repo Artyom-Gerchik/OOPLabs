@@ -12,7 +12,6 @@ SOURCES += \
     broken.cpp \
     brush.cpp \
     ellipse.cpp \
-    figure.cpp \
     figurefactory.cpp \
     figureserializer.cpp \
     floodfill.cpp \
@@ -27,11 +26,9 @@ HEADERS += \
     broken.h \
     brush.h \
     ellipse.h \
-    figure.h \
     figurefactory.h \
     figureserializer.h \
     floodfill.h \
-    forfigureheirs.h \
     formainwindow.h \
     line.h \
     mainscene.h \
@@ -47,3 +44,8 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+macx: LIBS += -L$$PWD/../Figure/lib/ -lFigureLib.1.0.0
+
+INCLUDEPATH += $$PWD/../Figure/include
+DEPENDPATH += $$PWD/../Figure/include

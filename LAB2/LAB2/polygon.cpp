@@ -172,6 +172,7 @@ Figure *Polygon::DeSerializeFigure(QJsonObject inObj)
     result->SetPenColor(inObj.value(KEY_COLORPEN).toString());
     result->SetFigureExternalRepresentation(newPolygonItem);
     result->SetChosedThickness(inObj.value(KEY_THICKNESS).toInt());
+    result->ChosedPolygon = polygon;
 
     return result;
 }

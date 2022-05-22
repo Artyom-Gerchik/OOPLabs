@@ -1,7 +1,7 @@
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
-#include "forfigureheirs.h"
+#include "figurelib.h"
 #include <QJsonObject>
 
 class Rectangle : public Figure

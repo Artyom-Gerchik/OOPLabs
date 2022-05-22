@@ -1,4 +1,4 @@
-#include "figure.h"
+#include "figurelib.h"
 
 Figure::Figure()
 {
@@ -83,3 +83,4 @@ const QRectF &Figure::GetBoundingRect() const{
 void Figure::SetBoundingRect(const QRectF &NewBoundingRect){
     BoundingRect = NewBoundingRect;
 }
+

@@ -262,7 +262,9 @@ void MainScene::CopyItem(QGraphicsSceneMouseEvent *event){
 }
 
 void MainScene::Dump(QString FilePath){
-    serializer.dump(ChosedFigure, FilePath);
+    if(ChosedFigure != NULL){
+        serializer.dump(ChosedFigure, FilePath);
+    }
 }
 
 void MainScene::Load(QString FilePath){

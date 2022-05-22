@@ -1,7 +1,7 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#include "forfigureheirs.h"
+#include "figurelib.h"
 
 class Polygon : public Figure
 {

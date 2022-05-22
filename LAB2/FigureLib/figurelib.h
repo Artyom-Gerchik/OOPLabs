@@ -1,13 +1,14 @@
 #ifndef FIGURE_H
 #define FIGURE_H
 
+#include "FigureLib_global.h"
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QDataStream>
 #include <QJsonObject>
 
-class Figure
+class FIGURELIB_EXPORT Figure
 {
 private:
 
@@ -17,7 +18,6 @@ private:
     QColor BrushColor;
     QRectF BoundingRect;
     int ChosedThickness;
-
 
 public:
     bool IsContinuous;

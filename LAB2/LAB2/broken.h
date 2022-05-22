@@ -1,7 +1,7 @@
 #ifndef BROKEN_H
 #define BROKEN_H
 
-#include "forfigureheirs.h"
+#include "figurelib.h"
 
 class Broken : public Figure
 {

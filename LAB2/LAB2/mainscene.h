@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <QCursor>
 
-#include "figure.h"
+#include "figurelib.h"
 #include "brush.h"
 #include "floodfill.h"
 #include "toolsenum.h"

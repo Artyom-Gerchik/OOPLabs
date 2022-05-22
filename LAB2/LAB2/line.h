@@ -1,7 +1,7 @@
 #ifndef LINE_H
 #define LINE_H
 
-#include "forfigureheirs.h"
+#include "figurelib.h"
 
 class Line : public Figure
 {

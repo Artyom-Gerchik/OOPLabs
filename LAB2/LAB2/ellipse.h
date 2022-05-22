@@ -1,8 +1,7 @@
 #ifndef ELLIPSE_H
 #define ELLIPSE_H
 
-#include "forfigureheirs.h"
-
+#include "figurelib.h"
 
 class Ellipse : public Figure
 {
