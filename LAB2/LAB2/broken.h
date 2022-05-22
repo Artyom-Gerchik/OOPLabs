@@ -16,9 +16,12 @@ private:
 
 public:
     Broken();
-    void Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness);
-    void Move(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene);
-    void Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene);
+    void Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness) final;
+    void Move(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene) final;
+    void Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene) final;
+
+    QJsonObject SerializeFigure() final;
+    Figure *CopyItem() final;
 };
 
 #endif // BROKEN_H

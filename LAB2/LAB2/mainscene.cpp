@@ -245,6 +245,9 @@ void MainScene::CopyItem(QGraphicsSceneMouseEvent *event){
                                                       event->scenePos().y() - ChosedFigure->GetFigureCenterPoint().y());
     ListOfCenters.push_front(Figure->GetFigureCenterPoint());
     this->addItem(Figure->GetFigureExternalRepresentation());
+    Figure -> GetFigureExternalRepresentation()->setVisible(false);
+    this->update();
+    Figure -> GetFigureExternalRepresentation()->setVisible(true);
     this->update();
 }
 

@@ -10,6 +10,10 @@ Polygon::Polygon()
 
 void Polygon::Press(QGraphicsSceneMouseEvent *event, QGraphicsScene *scene, QColor penColor, QColor brushColor, int thickness)
 {
+    SetBrushColor(brushColor);
+    SetPenColor(penColor);
+    SetChosedThickness(thickness);
+
     QPolygonF polygonf = polygon -> polygon();
     SetFigureExternalRepresentation(polygon);
 
@@ -56,4 +60,34 @@ void Polygon::Release(QGraphicsSceneMouseEvent *event, QGraphicsScene *scen)
     point.setX(polygon -> boundingRect().topLeft().x() + (polygon -> boundingRect().bottomRight().x() - polygon -> boundingRect().topLeft().x()) / 2);
     point.setY(polygon -> boundingRect().topLeft().y() + (polygon -> boundingRect().bottomRight().y() - polygon -> boundingRect().topLeft().y()) / 2);
     SetFigureCenterPoint(point);
+    SetBoundingRect(polygon->boundingRect());
+    ChosedPolygon = polygon->polygon();
+}
+
+Figure *Polygon::CopyItem(){
+
+    Polygon* copiedItem = new Polygon();
+    QGraphicsPolygonItem* newPolygonItem = new QGraphicsPolygonItem();
+
+    QPen pen;
+    pen.setWidth(GetChosedThickness());
+    pen.setColor(GetPenColor());
+
+    newPolygonItem->setBrush(GetBrushColor());
+    newPolygonItem->setPen(pen);
+    newPolygonItem->setScale(GetFigureExternalRepresentation()->scale());
+    newPolygonItem->setRotation((GetFigureExternalRepresentation()->rotation()));
+    newPolygonItem->setTransformOriginPoint(GetFigureCenterPoint());
+    newPolygonItem->setFillRule(Qt::WindingFill);
+    newPolygonItem->setPolygon(ChosedPolygon);
+
+    copiedItem->SetBoundingRect(GetBoundingRect());
+    copiedItem->SetFigureCenterPoint(GetFigureCenterPoint());
+    copiedItem->SetBrushColor(GetBrushColor());
+    copiedItem->SetPenColor(GetPenColor());
+    copiedItem->SetFigureExternalRepresentation(newPolygonItem);
+    copiedItem->SetChosedThickness(GetChosedThickness());
+
+    return copiedItem;
+
 }

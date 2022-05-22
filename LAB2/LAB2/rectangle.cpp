@@ -86,6 +86,7 @@ Figure *Rectangle::CopyItem(){
     newRectItem->setScale(GetFigureExternalRepresentation()->scale());
     newRectItem->setRotation((GetFigureExternalRepresentation()->rotation()));
     newRectItem->setTransformOriginPoint(GetFigureCenterPoint());
+    newRectItem->setGraphicsEffect(GetFigureExternalRepresentation()->graphicsEffect());
 
     copiedItem->SetBoundingRect(GetBoundingRect());
     copiedItem->SetFigureCenterPoint(GetFigureCenterPoint());
