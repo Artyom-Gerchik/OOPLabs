@@ -282,6 +282,9 @@ void MainWindow::tools_serialize(){
                 tr("JSON (*.json)" )
                 );
     mainScene->Dump(filePath);
+    mainScene->SetChosedTool(Initial);
+
+
 }
 
 void MainWindow::tools_de_serialize(){
@@ -292,6 +295,17 @@ void MainWindow::tools_de_serialize(){
                 tr("JSON (*.json)" )
                 );
     mainScene->Load(filePath);
+    if(mainScene->Load(filePath) == 0){
+        QMessageBox msg = QMessageBox();
+        msg.setWindowTitle("PIZDEC");
+        msg.setIcon(msg.Critical);
+        msg.setText("PIZDEC");
+        msg.addButton("OK", msg.AcceptRole);
+        msg.exec();
+    }
+
+    // mainScene->SetChosedTool(Initial);
+
 }
 
 void MainWindow::on_penWidthBox_valueChanged(int arg1)
@@ -304,7 +318,7 @@ void MainWindow::updateFiguresTable(){
     ui->figureTable->setColumnCount(1);
 
     ui->figureTable->setRowCount(mainScene->ImportedFigures->count());
-    ui->figureTable->setHorizontalHeaderLabels(QStringList()<< "Название фигуры");
+    ui->figureTable->setHorizontalHeaderLabels(QStringList()<< "Figure");
 
     for(int row = 0; row < mainScene->ImportedFigures->count(); row++)
     {
@@ -316,11 +330,14 @@ void MainWindow::updateFiguresTable(){
         //        ui->CustomTable->setItem(row, 1, BIK);
         //        ui->CustomTable->item(row, 1)->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsSelectable);
     }
+    ui->choseSpinBox->setMaximum(ui->figureTable->rowCount());
 
 }
 
 void MainWindow::on_choseButton_clicked(){
     int choose = ui->choseSpinBox->value();
-    mainScene->SetChosedFigure(mainScene->ImportedFigures->at(choose - 1));
+    if(choose != 0){
+        mainScene->SetChosedFigure(mainScene->ImportedFigures->at(choose - 1));
+    }
 }
 

@@ -36,7 +36,10 @@ Figure* FigureSerializer::load(QString filePath, FigureFactory* Factory){
 
     QMessageLogger().debug() << "Deserializing:" + jsonObj.value("Type").toString();
 
-    Figure* figure = Factory->CreateFigure(jsonObj.value("Type").toString());
-    return figure -> DeSerializeFigure(jsonObj);
+    Figure* figure = Factory->CreateFigure(jsonObj.value("Type").toString());\
+    if(figure != NULL){
+        return figure -> DeSerializeFigure(jsonObj);
+    }
+    return 0;
 
 }

@@ -279,8 +279,13 @@ void MainScene::Dump(QString FilePath){
     }
 }
 
-void MainScene::Load(QString FilePath){
+int MainScene::Load(QString FilePath){
     Figure* figure = serializer.load(FilePath, Factory);
-    loadedFigure = figure;
-    ChosedTool = Paste;
+    if(figure != NULL){
+        loadedFigure = figure;
+        ChosedTool = Paste;
+    }
+    else{
+        return 0;
+    }
 }

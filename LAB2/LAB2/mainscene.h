@@ -70,7 +70,7 @@ public:
     void DeleteItem();
     void CopyItem(QGraphicsSceneMouseEvent *event);
     void Dump(QString filePath);
-    void Load(QString filePath);
+    int Load(QString filePath);
 
 
 };

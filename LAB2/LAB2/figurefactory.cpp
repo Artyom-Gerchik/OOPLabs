@@ -17,10 +17,13 @@ void FigureFactory::RegistrateNewFigure(Figure *figure)
 
 Figure *FigureFactory::CreateFigure(QString FigureName){
 
-    if(FiguresMap.find(FigureName).value() != NULL){
-        return FiguresMap.find(FigureName).value()->CreateFigure();
+
+    if(FiguresMap.contains(FigureName)){
+        if(FiguresMap.find(FigureName).value() != NULL){
+            QMessageLogger().debug() << "FigureName" << FigureName;
+            QMessageLogger().debug() << "FiguresMap.find(FigureName).value()" << FiguresMap.find(FigureName).value();
+            return FiguresMap.find(FigureName).value()->CreateFigure();
+        }
     }
-
+    return 0;
 }
-
-
